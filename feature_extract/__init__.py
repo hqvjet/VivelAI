@@ -58,6 +58,5 @@ def useFeatureExtractor():
     content = normalize(content)
     title = tokenizeTexts(title)
     content = tokenizeTexts(content)
-    # print(normalize(['oaaaaooa', 'ohh yeeeeees']))
     
 
