@@ -22,18 +22,11 @@ def useFeatureExtractor():
     data = getDataset('res/datasets.xlsx')
     title, content, rating = makeData(data)
 
-    title = normalize(title[:1])
-    content = normalize(content[:1])
+    title = useNormalize(title)
+    content = useNormalize(content)
 
-    title = tokenize(title)
-    content = tokenize(content)
+    title = useTokenize(title)
+    content = useTokenize(content)
 
-    title = np.char.lower(title)
-    content = np.char.lower(content)
-
-    print(content[0])
-
-    # np.savetxt('title.txt', title, fmt='%s')
-    # np.savetxt('content.txt', content, fmt='%s')
-    
-
+    np.savetxt('res/title.txt', title, fmt='%s')
+    np.savetxt('res/content.txt', content, fmt='%s')
