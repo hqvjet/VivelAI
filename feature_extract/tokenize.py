@@ -2,7 +2,7 @@ import numpy as np
 from vncorenlp import VnCoreNLP
 import re
 
-from exception_dict import token_dict
+from feature_extract.exception_dict import token_dict
 
 # INITIALIZE VAR
 rdr = VnCoreNLP("tools/vncorenlp/VnCoreNLP-1.1.1.jar", annotators="wseg", max_heap_size='-Xmx500m')
@@ -35,7 +35,6 @@ def filterRareToken(arr_text):
 
     i = 0
     while i < len(arr_text) - 1:
-        # print(arr_text[i] + ' ' + arr_text[i + 1], (arr_text[i] + ' ' + arr_text[i + 1]) in token_dict)
         if (arr_text[i] + ' ' + arr_text[i + 1]) in token_dict:
             final_token.append(token_dict[(arr_text[i] + ' ' + arr_text[i + 1])])
             i += 1
@@ -43,10 +42,9 @@ def filterRareToken(arr_text):
             final_token.append(arr_text[i])
         i += 1
 
-    if arr_text[-2] + ' ' + arr_text[-1] not in token_dict:
+    if len(arr_text) == 1:
+        final_token.append(arr_text[0])
+    elif arr_text[-2] + ' ' + arr_text[-1] not in token_dict:
         final_token.append(arr_text[-1])
 
     return final_token
-
-s = useTokenize(['Tôi là Hoàng Quốc Việt, đang check in quầy', 'Tôi có 5sao, 1 star, và 3* đánh giá. Còn bạn thì sao?'])
-print(s)
