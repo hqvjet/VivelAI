@@ -25,6 +25,9 @@ def useFeatureExtractor():
     title = useNormalize(title)
     content = useNormalize(content)
 
+    title = useLemma(title)
+    content = useLemma(content)
+
     title = useTokenize(title)
     content = useTokenize(content)
 
