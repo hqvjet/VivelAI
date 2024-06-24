@@ -12,10 +12,10 @@ def getDataset(file_path):
         print('ERROR WHILE READING DATASET')
 
 def makeData(data):
-    titles = data['title'].apply(str)
-    contents = data['content'].apply(str)
-    ratings = data['rating'].apply(int)
-    
+    titles = data['processed_title'].apply(str)
+    contents = data['processed_review'].apply(str)
+    ratings = data['user_rate'].apply(int)
+
     return titles, contents, ratings
         
 def useFeatureExtractor():
@@ -30,6 +30,6 @@ def useFeatureExtractor():
 
     title = useTokenize(title)
     content = useTokenize(content)
-
+    
     np.savetxt('res/title.txt', title, fmt='%s')
     np.savetxt('res/content.txt', content, fmt='%s')
