@@ -1,6 +1,7 @@
 from transformers import AutoModel
 import torch
 import numpy as np
+import math
 
 from constant import PHOBERT_VER, PHOBERT_BATCH_SIZE
 
@@ -11,7 +12,7 @@ def extractFeature(device, ids, attentions):
     phobert.eval()
     phobert = phobert.to(device)
 
-    num_batch = len(ids) // PHOBERT_BATCH_SIZE
+    num_batch = math.ceil(len(ids) / PHOBERT_BATCH_SIZE)
     final_cls_feature = []
     for size in range(num_batch):
         batch_id = torch.tensor(ids[PHOBERT_BATCH_SIZE * size : min(PHOBERT_BATCH_SIZE * (size + 1), len(ids))]).to(device)
@@ -26,4 +27,6 @@ def extractFeature(device, ids, attentions):
 
     final_cls_feature = torch.cat(final_cls_feature, dim=0)
 
-    print(final_cls_feature.size())
+    print(f'Features shape: {final_cls_feature.size()}')
+
+    return final_cls_feature

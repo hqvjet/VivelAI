@@ -22,5 +22,6 @@ lemmatization_dict = {
     '8': 'tám',
     '9': 'chín',
     '10': 'mười',
-    'đồ ăn': 'món ăn'
+    'đồ ăn': 'món ăn',
+    'iu': 'yêu'
 }

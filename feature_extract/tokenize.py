@@ -22,7 +22,7 @@ def useTokenize(texts):
     return np.array([starRating(sentence) for sentence in res])
 
 def starRating(text):
-    pattern = r"\b([0-5])\s*(stars?|sao|\*)?" 
+    pattern = r"\b(không|một|hai|ba|bốn|năm|sáu|bảy|tám|chín|mười)\s*(stars?|sao|\*)" 
     replacement = r"\1_\2"
 
     def replace(match):
