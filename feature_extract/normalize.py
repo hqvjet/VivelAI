@@ -1,5 +1,7 @@
 # Normalizing text input for tokenizing more clearly
 def useNormalize(texts):
+    print('Normalizing Texts')
+
     for m in range(len(texts)):
         tokens = texts[m].strip().split()
         temp = []

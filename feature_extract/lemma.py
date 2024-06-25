@@ -3,6 +3,8 @@ import re
 from feature_extract.exception_dict import lemmatization_dict
 
 def useLemma(texts):
+    print('Lemmatizating Texts')
+
     for i in range(len(texts)):
         arr_text = wordSegment(texts[i])
         texts[i] = filterLemmatization(arr_text)
@@ -10,9 +12,22 @@ def useLemma(texts):
     return texts
 
 def wordSegment(text):
-    pattern = r"\w+|[^\w\s]"
-    words = re.findall(pattern, text)
-    return words
+    final_text = []
+    arr_text = text.split()
+    punc_dict = ['.', ',', '!', '(', ')', '/', '$', '\'', '"', '?', '+', '-', '=', '`']
+    
+    for ele in arr_text:
+        punc = -1
+        for i in range(len(ele)):
+            if ele[i] in punc_dict:
+                punc = i
+                break
+        if punc != -1:
+            final_text.append(ele[:i])
+            final_text.append(ele[i:])
+        else:
+            final_text.append(ele)
+    return final_text
 
 def filterLemmatization(arr_text):
     final_text = []
@@ -34,3 +49,4 @@ def filterLemmatization(arr_text):
         final_text.append(arr_text[-1])
 
     return ' '.join(final_text)
+
