@@ -3,6 +3,8 @@ import re
 from feature_extract.exception_dict import lemmatization_dict
 
 def useLemma(texts):
+    print('Lemmatizating Texts')
+
     for i in range(len(texts)):
         arr_text = wordSegment(texts[i])
         texts[i] = filterLemmatization(arr_text)

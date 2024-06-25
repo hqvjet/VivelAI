@@ -4,6 +4,8 @@ import numpy as np
 from feature_extract.normalize import useNormalize
 from feature_extract.tokenize import useTokenize
 from feature_extract.lemma import useLemma
+from feature_extract.identify import useIdentify
+from feature_extract.extract_feature import extractFeature
 
 def getDataset(file_path):
     try:
@@ -18,7 +20,7 @@ def makeData(data):
 
     return titles, contents, ratings
         
-def useFeatureExtractor():
+def useFeatureExtractor(device):
     data = getDataset('res/datasets.xlsx')
     title, content, rating = makeData(data)
 
@@ -30,6 +32,14 @@ def useFeatureExtractor():
 
     title = useTokenize(title)
     content = useTokenize(content)
+
+    title, title_attention = useIdentify(title)
+    content, content_attention = useIdentify(content)
+
+    content = extractFeature(device, content, content_attention)
+    title = extractFeature(device, title, title_attention)
+
     
-    np.savetxt('res/title.txt', title, fmt='%s')
-    np.savetxt('res/content.txt', content, fmt='%s')
+    
+    # np.savetxt('res/title.txt', title, fmt='%s')
+    # np.savetxt('res/content.txt', content, fmt='%s')

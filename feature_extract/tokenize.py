@@ -8,6 +8,8 @@ from feature_extract.exception_dict import token_dict
 rdr = VnCoreNLP("tools/vncorenlp/VnCoreNLP-1.1.1.jar", annotators="wseg", max_heap_size='-Xmx500m')
 
 def useTokenize(texts):
+    print('Tokenizing Texts')
+
     res = []
     for text in texts:
         temp = []
