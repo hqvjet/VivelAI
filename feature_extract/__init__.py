@@ -21,25 +21,45 @@ def makeData(data):
     return titles, contents, ratings
         
 def useFeatureExtractor(device):
-    data = getDataset('res/datasets.xlsx')
-    title, content, rating = makeData(data)
+    s = ['''Tôi có nhiều thứ như là:
+    1. một con chó
+    2. ba ngôi nhà biệt thự
+    3. tình iu thương
+    Và nhiều thứ khác nữa như là:
+    - Học vấn
+    - Công việc
+    - Copyright (c) 2024 Author. All Rights Reserved.
+    - 3*
+    - 5 sao
+    - 5 *
+    ''']
 
-    title = useNormalize(title)
-    content = useNormalize(content)
+    s = useNormalize(s)
+    print(s)
+    s = useLemma(s)
+    s = useTokenize(s)
+    print(s)
+    # data = getDataset('res/datasets.xlsx')
+    # title, content, rating = makeData(data)
+    #
+    # title = useNormalize(title)
+    # content = useNormalize(content)
+    #
+    # title = useLemma(title)
+    # content = useLemma(content)
+    #
+    # title = useTokenize(title)
+    # content = useTokenize(content)
+    #
+    # title, title_attention = useIdentify(title)
+    # content, content_attention = useIdentify(content)
+    #
+    # title = extractFeature(device, title, title_attention)
+    # content = extractFeature(device, content, content_attention)
+    #
+    # # Save features
+    # np.save('res/features/phobert_title_features.npy', title.cpu())
+    # np.save('res/features/phobert_content_features.npy', content.cpu())
 
-    title = useLemma(title)
-    content = useLemma(content)
-
-    title = useTokenize(title)
-    content = useTokenize(content)
-
-    title, title_attention = useIdentify(title)
-    content, content_attention = useIdentify(content)
-
-    content = extractFeature(device, content, content_attention)
-    title = extractFeature(device, title, title_attention)
-
-    
-    
     # np.savetxt('res/title.txt', title, fmt='%s')
     # np.savetxt('res/content.txt', content, fmt='%s')

@@ -1,3 +1,5 @@
+import re
+
 # Normalizing text input for tokenizing more clearly
 def useNormalize(texts):
     print('Normalizing Texts')
@@ -17,5 +19,10 @@ def useNormalize(texts):
                 j += 1
 
             temp.append(tokens[i])
-        texts[m] = ' '.join(temp)
+        texts[m] = killListForm(' '.join(temp))
     return texts
+
+def killListForm(text):
+    text = re.sub(r'[-+]', ',', text)
+    return re.sub(r'\d+[,./]\s*', ',', text)
+
