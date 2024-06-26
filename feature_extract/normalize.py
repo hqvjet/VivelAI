@@ -1,7 +1,4 @@
 import re
-import pandas as pd
-
-stopwords = pd.read_csv('res/stopwords.csv')['stopword'].tolist()
 
 # Normalizing text input for tokenizing more clearly
 def useNormalize(texts):
@@ -9,7 +6,6 @@ def useNormalize(texts):
 
     for m in range(len(texts)):
         tokens = texts[m].strip().split()
-        tokens = removeStopword(tokens)
         temp = []
         for i in range(len(tokens)):
             pre_token = ''
@@ -29,11 +25,3 @@ def useNormalize(texts):
 def killListForm(text):
     text = re.sub(r'[-+]', ',', text)
     return re.sub(r'\d+[,./]\s*', ',', text)
-
-def removeStopword(text):
-    final_text = []
-    for i in range(len(text)):
-        if text[i].lower() not in stopwords:
-            final_text.append(text[i])
-
-    return final_text

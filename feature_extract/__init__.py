@@ -2,8 +2,9 @@ import pandas as pd
 import numpy as np
 
 from feature_extract.normalize import useNormalize
-from feature_extract.tokenize import useTokenize
 from feature_extract.lemma import useLemma
+from feature_extract.tokenize import useTokenize
+from feature_extract.remove_stopword import removeStopword
 from feature_extract.identify import useIdentify
 from feature_extract.extract_feature import extractFeature
 
@@ -21,45 +22,27 @@ def makeData(data):
     return titles, contents, ratings
         
 def useFeatureExtractor(device):
-    s = ['''Tôi có nhiều thứ như là:
-    1. một con chó
-    2. ba ngôi nhà biệt thự
-    3. tình iu thương
-    Và nhiều thứ khác nữa như là:
-    - Học vấn
-    - Công việc
-    - Copyright (c) 2024 Author. All Rights Reserved.
-    - 3*
-    - 5 sao
-    - 5 *
-    ''']
+    data = getDataset('res/datasets.xlsx')
+    title, content, rating = makeData(data)
 
-    s = useNormalize(s)
-    print(s)
-    s = useLemma(s)
-    s = useTokenize(s)
-    print(s)
-    # data = getDataset('res/datasets.xlsx')
-    # title, content, rating = makeData(data)
-    #
-    # title = useNormalize(title)
-    # content = useNormalize(content)
-    #
-    # title = useLemma(title)
-    # content = useLemma(content)
-    #
-    # title = useTokenize(title)
-    # content = useTokenize(content)
-    #
-    # title, title_attention = useIdentify(title)
-    # content, content_attention = useIdentify(content)
-    #
-    # title = extractFeature(device, title, title_attention)
-    # content = extractFeature(device, content, content_attention)
-    #
-    # # Save features
-    # np.save('res/features/phobert_title_features.npy', title.cpu())
-    # np.save('res/features/phobert_content_features.npy', content.cpu())
+    title = useNormalize(title)
+    content = useNormalize(content)
+
+    title = useLemma(title)
+    content = useLemma(content)
+
+    title = useTokenize(title)
+    content = useTokenize(content)
+
+    title, title_attention = useIdentify(title)
+    content, content_attention = useIdentify(content)
+
+    title = extractFeature(device, title, title_attention)
+    content = extractFeature(device, content, content_attention)
+
+    # Save features
+    np.save('res/features/phobert_title_features.npy', title.cpu())
+    np.save('res/features/phobert_content_features.npy', content.cpu())
 
     # np.savetxt('res/title.txt', title, fmt='%s')
     # np.savetxt('res/content.txt', content, fmt='%s')
