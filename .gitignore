@@ -3,3 +3,4 @@ feature_extract/__pycache__
 venv
 res/title.txt
 res/content.txt
+res/features

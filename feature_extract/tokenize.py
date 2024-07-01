@@ -8,6 +8,8 @@ from feature_extract.exception_dict import token_dict
 rdr = VnCoreNLP("tools/vncorenlp/VnCoreNLP-1.1.1.jar", annotators="wseg", max_heap_size='-Xmx500m')
 
 def useTokenize(texts):
+    print('Tokenizing Texts')
+
     res = []
     for text in texts:
         temp = []
@@ -20,7 +22,7 @@ def useTokenize(texts):
     return np.array([starRating(sentence) for sentence in res])
 
 def starRating(text):
-    pattern = r"\b([0-5])\s*(stars?|sao|\*)?" 
+    pattern = r"\b(không|một|hai|ba|bốn|năm|sáu|bảy|tám|chín|mười)\s*(stars?|sao|\*)" 
     replacement = r"\1_\2"
 
     def replace(match):

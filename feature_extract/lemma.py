@@ -3,6 +3,8 @@ import re
 from feature_extract.exception_dict import lemmatization_dict
 
 def useLemma(texts):
+    print('Lemmatizating Texts')
+
     for i in range(len(texts)):
         arr_text = wordSegment(texts[i])
         texts[i] = filterLemmatization(arr_text)
@@ -10,9 +12,22 @@ def useLemma(texts):
     return texts
 
 def wordSegment(text):
-    pattern = r"\w+|[^\w\s]"
-    words = re.findall(pattern, text)
-    return words
+    final_text = []
+    arr_text = text.split()
+    punc_dict = ['.', ',', '!', '(', ')', '/', '$', '\'', '"', '?', '+', '-', '=', '`', ':']
+    
+    for ele in arr_text:
+        punc = -1
+        for i in range(len(ele)):
+            if ele[i] in punc_dict:
+                punc = i
+                break
+        if punc != -1:
+            final_text.append(ele[:i])
+            final_text.append(ele[i:])
+        else:
+            final_text.append(ele)
+    return final_text
 
 def filterLemmatization(arr_text):
     final_text = []
@@ -24,6 +39,19 @@ def filterLemmatization(arr_text):
             i += 1
         elif arr_text[i] in lemmatization_dict:
             final_text.append(lemmatization_dict[arr_text[i]])
+        elif len(arr_text[i]) > 1 and arr_text[i][0].isnumeric():
+            pos = 0
+            while pos < len(arr_text[i]) and arr_text[i][pos].isnumeric():
+                pos += 1
+            if arr_text[i][:pos] in lemmatization_dict:
+                final_text.append(lemmatization_dict[arr_text[i][:pos]])
+            elif arr_text[i][:pos] not in lemmatization_dict:
+                final_text.append(arr_text[i][:pos])
+            if pos < len(arr_text[i]) and arr_text[i][pos:] in lemmatization_dict:
+                final_text.append(lemmatization_dict[arr_text[i][pos:]])
+            else:
+                final_text.append(arr_text[i][pos:])
+
         else:
             final_text.append(arr_text[i])
         i += 1
