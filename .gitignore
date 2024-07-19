@@ -4,3 +4,5 @@ venv
 res/title.txt
 res/content.txt
 res/features
+__pycache__
+.vector_cache

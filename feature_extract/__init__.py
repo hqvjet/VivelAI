@@ -11,8 +11,9 @@ from feature_extract.extract_feature import extractFeature
 def getDataset(file_path):
     try:
         return pd.read_excel(file_path, engine='openpyxl')
-    except:
+    except Exception as error:
         print('ERROR WHILE READING DATASET')
+        print(error)
 
 def makeData(data):
     titles = data['processed_title'].apply(str)
@@ -33,16 +34,36 @@ def useFeatureExtractor(device):
 
     title = useTokenize(title)
     content = useTokenize(content)
+ 
+    key = input('Choose feature extractor method:\n1. PhoBERT\n2. PhoW2V\nYour Input: ')
+    
+    if key == '1':
+        model = 'PhoBERT'
+        key1 = input('Choose PhoBERT type:\n1. Total\n2. Detail\nYour Input: ')
+        if key1 == '1':
+            mode = 'total'
+        elif key1 == '2':
+            mode = 'detail'
+        else:
+            print('Wrong method, please try again')
 
-    title, title_attention = useIdentify(title)
-    content, content_attention = useIdentify(content)
+    elif key == '2':
+        model = 'Phow2v'
+    else:
+        print('Wrong method, please try again')
 
-    title = extractFeature(device, title, title_attention)
-    content = extractFeature(device, content, content_attention)
+    if key == 1:
+        title, title_attention = useIdentify(title)
+        content, content_attention = useIdentify(content)
 
-    # Save features
-    np.save('res/features/phobert_title_features.npy', title.cpu())
-    np.save('res/features/phobert_content_features.npy', content.cpu())
+    title = extractFeature(device, title, mode=mode, model=model)
+    content = extractFeature(device, content, mode=mode, model=model)
 
-    # np.savetxt('res/title.txt', title, fmt='%s')
-    # np.savetxt('res/content.txt', content, fmt='%s')
+    if key == 1 and key1 == 1:
+        name = 'phobert_total'
+    elif key == 1 and key1 == 2:
+        name = 'phobet_detail'
+    else:
+        name = 'phow2v'
+    np.save(f'res/features/{name}_title_features.npy', title.cpu())
+    np.save(f'res/features/{name}_content_features.npy', content.cpu())

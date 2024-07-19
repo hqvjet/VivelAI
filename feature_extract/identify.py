@@ -3,11 +3,10 @@ import numpy as np
 
 from constant import PHOBERT_VER, MAX_LEN
 
-tokenizer = AutoTokenizer.from_pretrained(PHOBERT_VER)
 def useIdentify(texts):
     print('Identifying Texts')
 
-
+    tokenizer = AutoTokenizer.from_pretrained(PHOBERT_VER)
     data_ids = []
 
     for text in texts:
@@ -18,7 +17,8 @@ def useIdentify(texts):
         if len(data_ids[i]) < MAX_LEN:
             data_ids[i] = data_ids[i] + [1] * (MAX_LEN - len(data_ids[i]))
         elif len(data_ids[i]) > MAX_LEN:
-            data_ids[i] = data_ids[i][:MAX_LEN - 1] + [2]
+            data_ids[i] = data_ids[:MAX_LEN - 1] + [2]
+            print(data_ids[i])
 
     mask_attentions = []
 

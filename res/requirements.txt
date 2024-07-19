@@ -4,3 +4,5 @@ openpyxl
 torch
 vncorenlp
 transformers
+torchtext
+tqdm
