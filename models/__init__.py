@@ -25,7 +25,7 @@ def startTraining(device):
     key = input('Choose one of these model to train:\n1. BERT\nYour Input: ')
 
     if key == '1':
-        trainBERT(device, title, content)
+        trainBERT(device, title, content, debug=True)
     else:
         print('Wrong key of model, please choose again')
 
