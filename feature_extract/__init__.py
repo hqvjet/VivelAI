@@ -10,21 +10,21 @@ from feature_extract.extract_feature import extractFeature
 
 def getDataset(file_path):
     try:
-        return pd.read_excel(file_path, engine='openpyxl')
+        # return pd.read_excel(file_path, engine='openpyxl')
+        return pd.read_csv(file_path)
     except Exception as error:
         print('ERROR WHILE READING DATASET')
         print(error)
 
 def makeData(data):
-    titles = data['processed_title'].apply(str)
-    contents = data['processed_review'].apply(str)
-    ratings = data['user_rate'].apply(int)
+    titles = data['Title'][:8804].apply(str)
+    contents = data['Content'][:8804].apply(str)
 
-    return titles, contents, ratings
+    return titles, contents
         
 def useFeatureExtractor(device):
-    data = getDataset('res/datasets.xlsx')
-    title, content, rating = makeData(data)
+    data = getDataset('res/data.csv')
+    title, content = makeData(data)
 
     title = useNormalize(title)
     content = useNormalize(content)
@@ -55,6 +55,9 @@ def useFeatureExtractor(device):
     if key == 1:
         title, title_attention = useIdentify(title)
         content, content_attention = useIdentify(content)
+
+    else:
+        mode=None
 
     title = extractFeature(device, title, mode=mode, model=model)
     content = extractFeature(device, content, mode=mode, model=model)

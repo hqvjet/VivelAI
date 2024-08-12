@@ -3,7 +3,7 @@ import torch
 import math
 
 class PositionalEncodingLayer(nn.Module):
-    def __init__(self, device, max_len=200, d_model=300):
+    def __init__(self, max_len=200, d_model=300):
         super(PositionalEncodingLayer, self).__init__()
         
         pe = torch.zeros(max_len, d_model)
@@ -14,13 +14,6 @@ class PositionalEncodingLayer(nn.Module):
         pe[:, 1::2] = torch.cos(position * div_term)
         
         self.register_buffer('pe', pe.unsqueeze(0))
-        self.device = device
         
     def forward(self, x):
-        """
-        x: Tensor, shape [record, max_len, d_model]
-        """
-        self.pe = self.pe.to(self.device)
-        x += self.pe
-        self.pe = self.pe.cpu()
-        return x 
+        return x + self.pe
