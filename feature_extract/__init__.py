@@ -17,13 +17,13 @@ def getDataset(file_path):
         print(error)
 
 def makeData(data):
-    titles = data['Title'][:8804].apply(str)
-    contents = data['Content'][:8804].apply(str)
+    titles = data['title'].apply(str)
+    contents = data['text'].apply(str)
 
     return titles, contents
         
 def useFeatureExtractor(device):
-    data = getDataset('res/data.csv')
+    data = getDataset('res/data_service.csv')
     title, content = makeData(data)
 
     title = useNormalize(title)
@@ -38,35 +38,18 @@ def useFeatureExtractor(device):
     key = input('Choose feature extractor method:\n1. PhoBERT\n2. PhoW2V\nYour Input: ')
     
     if key == '1':
-        model = 'PhoBERT'
-        key1 = input('Choose PhoBERT type:\n1. Total\n2. Detail\nYour Input: ')
-        if key1 == '1':
-            mode = 'total'
-        elif key1 == '2':
-            mode = 'detail'
-        else:
-            print('Wrong method, please try again')
-
+        model = 'phobert'
     elif key == '2':
-        model = 'Phow2v'
+        model = 'phow2v'
     else:
         print('Wrong method, please try again')
 
-    if key == 1:
+    if key == '1':
         title, title_attention = useIdentify(title)
         content, content_attention = useIdentify(content)
 
-    else:
-        mode=None
+    title = extractFeature(device, title, title_attention, model=model)
+    content = extractFeature(device, content, content_attention, model=model)
 
-    title = extractFeature(device, title, mode=mode, model=model)
-    content = extractFeature(device, content, mode=mode, model=model)
-
-    if key == 1 and key1 == 1:
-        name = 'phobert_total'
-    elif key == 1 and key1 == 2:
-        name = 'phobet_detail'
-    else:
-        name = 'phow2v'
-    np.save(f'res/features/{name}_title_features.npy', title.cpu())
-    np.save(f'res/features/{name}_content_features.npy', content.cpu())
+    np.save(f'res/features/{model}_title_features.npy', title.cpu())
+    np.save(f'res/features/{model}_content_features.npy', content.cpu())

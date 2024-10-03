@@ -7,15 +7,14 @@ from feature_extract.vocabulary import Vocabulary
 
 from constant import PHOBERT_VER, PHOBERT_BATCH_SIZE, MAX_LEN
 
-MODE = ['detail', 'total']
-MODEL = ['PhoBERT', 'Phow2v']
+MODEL = ['phobert', 'phow2v']
 
-def extractFeature(device, ids, attentions=[], mode='detail', model='PhoBERT'):
+def extractFeature(device, ids, attentions=[], model='PhoBERT'):
     if model not in MODEL:
         raise Exception(f'No model named {model}')
 
     if model == MODEL[0]:
-        return usingPhoBERT(device, ids, attentions, mode)
+        return usingPhoBERT(device, ids, attentions)
     else:
         return usingPhow2v(device, ids)
 
@@ -62,13 +61,8 @@ def usingPhow2v(device, texts):
     
     return res
 
-def usingPhoBERT(device, ids, attentions, mode='detail'):
-    if mode not in MODE:
-        raise Exception(f'No mode named {mode}')
-
-    print(f'EXTRACTING FEATURE FROM PHOBERT using {mode} mode')
-
-    phobert = AutoModel.from_pretrained(PHOBERT_VER, output_hidden_states=(True if mode == MODE[1] else False))
+def usingPhoBERT(device, ids, attentions):
+    phobert = AutoModel.from_pretrained(PHOBERT_VER, output_hidden_states=True)
     phobert.eval()
     phobert = phobert.to(device)
 
@@ -77,15 +71,12 @@ def usingPhoBERT(device, ids, attentions, mode='detail'):
     for size in range(num_batch):
         batch_id = torch.tensor(ids[PHOBERT_BATCH_SIZE * size : min(PHOBERT_BATCH_SIZE * (size + 1), len(ids))]).to(device)
         batch_attention = torch.tensor(attentions[PHOBERT_BATCH_SIZE * size : min(PHOBERT_BATCH_SIZE * (size + 1), len(ids))]).to(device)
+        print(batch_id.size(), batch_attention.size())
         
         with torch.no_grad():
             output = phobert(input_ids=batch_id, attention_mask=batch_attention)
 
-        if mode == MODE[1]:
-            res_emb = torch.cat((output[2][-1][:, 0, :], output[2][-2][:, 0, :], output[2][-3][:, 0, :], output[2][-4][:, 0, :]), dim=-1)
-        else:
-            res_emb = ouput.last_hidden_state
-
+        res_emb = torch.cat((output[2][-1][:, 0, :], output[2][-2][:, 0, :], output[2][-3][:, 0, :], output[2][-4][:, 0, :]), dim=-1)
         final_feature.append(res_emb)
 
         print(f'Batch {size + 1} has done!, Shape: {res_emb.size()}')
