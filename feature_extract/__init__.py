@@ -23,7 +23,7 @@ def makeData(data):
     return titles, contents
         
 def useFeatureExtractor(device):
-    data = getDataset('res/data_service.csv')
+    data = getDataset('res/true_data.csv')
     title, content = makeData(data)
 
     title = useNormalize(title)

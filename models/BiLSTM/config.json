@@ -1,0 +1,12 @@
+{
+    "phobert": {
+        "input_size": 6144,
+        "hidden_size": 512,
+        "num_layers": 2
+    },
+    "phow2v": {
+        "input_size": 300,
+        "hidden_size": 128,
+        "num_layers": 1
+    }
+}

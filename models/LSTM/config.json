@@ -1,7 +1,7 @@
 {
     "phobert": {
         "input_size": 6144,
-        "hidden_size": 256,
+        "hidden_size": 512,
         "num_layers": 2
     
     },

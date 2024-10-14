@@ -1,10 +1,9 @@
 tools
 feature_extract/__pycache__
 venv
-res/title.txt
-res/content.txt
 res/features
 __pycache__
 **/__pycache__
 res/*.csv
 .vector_cache
+res/models
