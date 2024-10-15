@@ -12,6 +12,7 @@ from sklearn.metrics import classification_report, accuracy_score
 from models.LSTM import LSTM
 from models.BiLSTM import BiLSTM
 from models.CNN import CNN2d
+from models.XGBoost import XGBoost
 from models.FullyConnected import FC
 
 with open('models/global_config.json', 'r') as file:
@@ -132,6 +133,8 @@ def startTraining(device):
         train(BiLSTM(device=device, dropout=0.1), input=data, output=rating, device=device)      
     elif key == '3':
         train(CNN2d(device=device, dropout=0.1), input=data, output=rating, device=device)      
+    elif key == '4':
+        train(XGBoost(), input=data, output=rating, device=device)      
     elif key == '5':
         train(FC(emb_dim=data.size(-1), device=device), input=data, output=rating, device=device)
     else:
@@ -139,52 +142,107 @@ def startTraining(device):
 
 def train(model, input, output, device):
     model.to(device)
-    criterion = nn.CrossEntropyLoss()
-    optimizer = opt.Adam(model.parameters(), lr=0.00001)
 
     # Splitting dataset
     train_size = int(0.8*input.size(0))
     val_size = int(0.1*train_size)
     train_size -= val_size
-    test_size = int(0.2*input.size(0))
+    test_size = input.size(0) - train_size - val_size
 
-    # dataset = TensorDataset(input, output)
-    train_data = DataLoader(TensorDataset(input[:train_size], output[:train_size]), batch_size=batch_size, shuffle=True)
-    valid_data = DataLoader(TensorDataset(input[train_size:train_size+val_size], output[train_size:train_size+val_size]), batch_size=batch_size, shuffle=True)
-    test_data = DataLoader(TensorDataset(input[-1*test_size:], output[-1*test_size:]), batch_size=batch_size, shuffle=True)
+    if model.model_name == 'XGBoost':
+        _, output = torch.max(output, 1)
+        output = output.numpy()
+        train_size += val_size
+        train_data = input[:train_size].cpu().numpy()
+        train_label = output[:train_size]
+        test_data = input[train_size:].cpu().numpy()
+        test_label = output[train_size:]
 
-    best_acc = 0
-    best_loss = 10000
-    val_train_history = {
-        'accuracy': [],
-        'epoch': []
-    }
-
-    for epoch in range(num_epoch):
-        train_bar = tqdm(train_data, desc=f"Epoch {epoch+1}/{num_epoch}:")
-        val_bar = tqdm(valid_data, desc=f"Epoch {epoch + 1}/{num_epoch}:")
-
+        print("Training")
         model.train()
-        for batch in train_bar:
-            input_ids = batch[0].to(device)
-            true_output = batch[1].float().to(device)
-        
-            pred_output = model(input_ids)
-            loss = criterion(pred_output, true_output)
+        model(train_data, train_label)
 
-            optimizer.zero_grad()
-            loss.backward()
-            optimizer.step()
-
-            train_bar.set_postfix(loss=loss.item())
-
-        # Validation
         model.eval()
-        total_val_loss = 0
-        total = 0
-        correct = 0
+        pred = model(x=test_data, train=False)
 
-        for batch in val_bar:
+        report = classification_report(test_label, pred)
+        print(report)
+
+    else:
+        criterion = nn.CrossEntropyLoss()
+        optimizer = opt.Adam(model.parameters(), lr=0.00001)
+        # dataset = TensorDataset(input, output)
+        train_data = DataLoader(TensorDataset(input[:train_size], output[:train_size]), batch_size=batch_size, shuffle=True)
+        valid_data = DataLoader(TensorDataset(input[train_size:train_size+val_size], output[train_size:train_size+val_size]), batch_size=batch_size, shuffle=True)
+        test_data = DataLoader(TensorDataset(input[-1*test_size:], output[-1*test_size:]), batch_size=batch_size, shuffle=True)
+
+        best_acc = 0
+        best_loss = 10000
+        val_train_history = {
+            'accuracy': [],
+            'epoch': []
+        }
+
+        for epoch in range(num_epoch):
+            train_bar = tqdm(train_data, desc=f"Epoch {epoch+1}/{num_epoch}:")
+            val_bar = tqdm(valid_data, desc=f"Epoch {epoch + 1}/{num_epoch}:")
+
+            model.train()
+            for batch in train_bar:
+                input_ids = batch[0].to(device)
+                true_output = batch[1].float().to(device)
+            
+                pred_output = model(input_ids)
+                loss = criterion(pred_output, true_output)
+
+                optimizer.zero_grad()
+                loss.backward()
+                optimizer.step()
+
+                train_bar.set_postfix(loss=loss.item())
+
+            # Validation
+            model.eval()
+            total_val_loss = 0
+            total = 0
+            correct = 0
+
+            for batch in val_bar:
+                input_ids = batch[0].to(device)
+                true_output = batch[1].float().to(device)
+            
+                pred_output = model(input_ids)
+                loss = criterion(pred_output, true_output)
+
+                total_val_loss += loss.item()
+
+                _, predicted = torch.max(pred_output.data, 1)
+                _, label = torch.max(true_output, 1)
+                total += label.size(0)
+                correct += (predicted == label).sum().item()
+
+            avg_val_loss = total_val_loss / len(valid_data)
+            accuracy = correct / total
+
+            print(f'Epoch {epoch + 1}/{num_epoch}: Val Loss: {avg_val_loss:.4f}, Accuracy: {accuracy:.4f}')
+
+            val_train_history['accuracy'].append(accuracy)
+            val_train_history['epoch'].append(epoch + 1)
+
+            # Compare current model with previous model
+            if best_acc < accuracy or (best_acc == accuracy and best_loss > avg_val_loss):
+                torch.save(model.state_dict(), 'res/models/' + model.model_name + '.pth')
+                best_acc = accuracy
+                best_loss = avg_val_loss
+                print('Model saved, current accuracy:', best_acc)
+
+        # Test model performance
+        test_bar = tqdm(test_data, desc=f"Epoch {epoch + 1}/{num_epoch}:")
+        model.eval()
+
+        predicted = []
+        label = []
+        for batch in test_bar:
             input_ids = batch[0].to(device)
             true_output = batch[1].float().to(device)
         
@@ -193,54 +251,19 @@ def train(model, input, output, device):
 
             total_val_loss += loss.item()
 
-            _, predicted = torch.max(pred_output.data, 1)
-            _, label = torch.max(true_output, 1)
-            total += label.size(0)
-            correct += (predicted == label).sum().item()
+            _, temp_predicted = torch.max(pred_output.data, 1)
+            _, temp_label = torch.max(true_output, 1)
+            temp_predicted = temp_predicted.cpu().numpy()
+            temp_label = temp_label.cpu().numpy()
 
-        avg_val_loss = total_val_loss / len(valid_data)
-        accuracy = correct / total
-
-        print(f'Epoch {epoch + 1}/{num_epoch}: Val Loss: {avg_val_loss:.4f}, Accuracy: {accuracy:.4f}')
-
-        val_train_history['accuracy'].append(accuracy)
-        val_train_history['epoch'].append(epoch + 1)
-
-        # Compare current model with previous model
-        if best_acc < accuracy or (best_acc == accuracy and best_loss > avg_val_loss):
-            torch.save(model.state_dict(), 'res/models/' + model.model_name + '.pth')
-            best_acc = accuracy
-            best_loss = avg_val_loss
-            print('Model saved, current accuracy:', best_acc)
-
-    # Test model performance
-    test_bar = tqdm(test_data, desc=f"Epoch {epoch + 1}/{num_epoch}:")
-    model.eval()
-
-    predicted = []
-    label = []
-    for batch in test_bar:
-        input_ids = batch[0].to(device)
-        true_output = batch[1].float().to(device)
-    
-        pred_output = model(input_ids)
-        loss = criterion(pred_output, true_output)
-
-        total_val_loss += loss.item()
-
-        _, temp_predicted = torch.max(pred_output.data, 1)
-        _, temp_label = torch.max(true_output, 1)
-        temp_predicted = temp_predicted.cpu().numpy()
-        temp_label = temp_label.cpu().numpy()
-
-        predicted.append(temp_predicted)
-        label.append(temp_label)
+            predicted.append(temp_predicted)
+            label.append(temp_label)
 
 
-    predicted = np.array(predicted[0])
-    label = np.array(label[0])
-    report = classification_report(label, predicted)
-    print(report)
+        predicted = np.array(predicted[0])
+        label = np.array(label[0])
+        report = classification_report(label, predicted)
+        print(report)
 
     # Save report
     with open(f'res/report/{model.model_name}.txt', 'w') as file:

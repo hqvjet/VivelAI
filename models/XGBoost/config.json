@@ -1,0 +1,20 @@
+{
+    "phobert": {
+        "objective": "multi:softmax",
+        "num_class": 3,
+        "max_depth": 6,
+        "eta": 0.3,
+        "eval_metric":"mlogloss",
+        "num_boost_round": 100,
+        "tree_method": "hist"
+    },
+    "phow2v": {
+        "objective": "multi:softmax",
+        "num_class": 3,
+        "max_depth": 6,
+        "eta": 0.3,
+        "eval_metric":"mlogloss",
+        "num_boost_round": 100,
+        "tree_method": "hist"
+    }
+}

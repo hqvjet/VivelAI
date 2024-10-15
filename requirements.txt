@@ -6,3 +6,4 @@ vncorenlp
 transformers
 torchtext
 tqdm
+'xgboost[gpu]'
