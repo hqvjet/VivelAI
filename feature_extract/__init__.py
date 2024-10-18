@@ -47,9 +47,11 @@ def useFeatureExtractor(device):
     if key == '1':
         title, title_attention = useIdentify(title)
         content, content_attention = useIdentify(content)
-
-    title = extractFeature(device, title, title_attention, model=model)
-    content = extractFeature(device, content, content_attention, model=model)
+        title = extractFeature(device, title, title_attention, model=model)
+        content = extractFeature(device, content, content_attention, model=model)
+    else:
+        title = extractFeature(device, title, model=model)
+        content = extractFeature(device, content, model=model)
 
     np.save(f'res/features/{model}_title_features.npy', title.cpu())
     np.save(f'res/features/{model}_content_features.npy', content.cpu())

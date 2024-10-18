@@ -10,7 +10,7 @@ with open('models/XGBoost/config.json', 'r') as file:
 config = config['phobert']
 
 class XGBoost(nn.Module):
-    def __init__(self):
+    def __init__(self, emb_tech):
         super(XGBoost, self).__init__()
         self.model_name = 'XGBoost'
         self.params = {
@@ -23,8 +23,13 @@ class XGBoost(nn.Module):
             'device': 'cuda'
         }
         self.num_boost_round = config['num_boost_round']
+        self.pool = nn.AdaptiveAvgPool1d(1)
+        self.emb_tech = emb_tech
 
     def forward(self, x, y=None, train=True):
+        if self.emb_tech == 2:
+            x = x.reshape(x.shape[0], -1)
+
         if train:
             data = xgb.DMatrix(x, label=y)
 

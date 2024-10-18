@@ -126,17 +126,18 @@ def startTraining(device):
     key = input('Choose one of these classification to train:\n1. LSTM\n2. BiLSTM\n3. CNN\n4. XGBoost\n5. FC\nYour Input: ')
 
     data = torch.cat((title, content), dim=-1)
+    emb_tech = 1 if source == 'phobert' else 2
 
     if key == '1':
-        train(LSTM(device=device, dropout=0.1), input=data, output=rating, device=device)      
+        train(LSTM(device=device, dropout=0.3, emb_tech=emb_tech), input=data, output=rating, device=device)      
     elif key == '2':
-        train(BiLSTM(device=device, dropout=0.1), input=data, output=rating, device=device)      
+        train(BiLSTM(device=device, dropout=0.1, emb_tech=emb_tech), input=data, output=rating, device=device)      
     elif key == '3':
-        train(CNN2d(device=device, dropout=0.1), input=data, output=rating, device=device)      
+        train(CNN2d(device=device, dropout=0.1, emb_tech=emb_tech), input=data, output=rating, device=device)      
     elif key == '4':
-        train(XGBoost(), input=data, output=rating, device=device)      
+        train(XGBoost(emb_tech=emb_tech), input=data, output=rating, device=device)      
     elif key == '5':
-        train(FC(emb_dim=data.size(-1), device=device), input=data, output=rating, device=device)
+        train(FC(emb_dim=data.size(-1), device=device, emb_tech=emb_tech), input=data, output=rating, device=device)
     else:
         print('Wrong key of model, please choose again')
 
@@ -170,7 +171,7 @@ def train(model, input, output, device):
 
     else:
         criterion = nn.CrossEntropyLoss()
-        optimizer = opt.Adam(model.parameters(), lr=0.00001)
+        optimizer = opt.Adam(model.parameters(), lr=0.01)
         # dataset = TensorDataset(input, output)
         train_data = DataLoader(TensorDataset(input[:train_size], output[:train_size]), batch_size=batch_size, shuffle=True)
         valid_data = DataLoader(TensorDataset(input[train_size:train_size+val_size], output[train_size:train_size+val_size]), batch_size=batch_size, shuffle=True)
@@ -266,7 +267,8 @@ def train(model, input, output, device):
         print(report)
 
     # Save report
-    with open(f'res/report/{model.model_name}.txt', 'w') as file:
+    direction = 'phobert' if model.emb_tech == 1 else 'phow2v'
+    with open(f'res/report/{direction}/{model.model_name}.txt', 'w') as file:
         file.write(report)
 
     # Visualize model val train processing
@@ -276,5 +278,5 @@ def train(model, input, output, device):
     plt.ylabel('Accuracy')
     plt.xlabel('Epoch')
     plt.legend()
-    plt.savefig(f'res/train_process/{model.model_name}.png')
+    plt.savefig(f'res/train_process/{direction}/{model.model_name}.png')
     plt.close()
