@@ -10,16 +10,15 @@ phow2v_config = config['phow2v']
 num_classes = 3
 
 class BiLSTM(nn.Module):
-    def __init__(self, device, emb_tech, dropout=0.1):
+    def __init__(self, device, input_shape, emb_tech, dropout=0.1):
         super(BiLSTM, self).__init__()
         config = phobert_config if emb_tech == 1 else phow2v_config
         self.model_name = 'BiLSTM'
-        self.input_size = config['input_size']
         self.hidden_size = config['hidden_size']
         self.num_layers = config['num_layers']
         self.emb_tech = emb_tech
 
-        self.lstm = nn.LSTM(input_size=self.input_size, hidden_size=self.hidden_size,\
+        self.lstm = nn.LSTM(input_size=input_shape[-1], hidden_size=self.hidden_size,\
                             num_layers=self.num_layers, device=device, dropout=dropout,\
                             batch_first=True, bidirectional=True)
 

@@ -14,6 +14,9 @@ from models.BiLSTM import BiLSTM
 from models.CNN import CNN2d
 from models.XGBoost import XGBoost
 from models.FullyConnected import FC
+from models.LR import LR
+from models.CNN_LSTM import CNNnLSTM
+from models.CNN_BILSTM import CNNnBiLSTM
 
 with open('models/global_config.json', 'r') as file:
     config = json.load(file)
@@ -123,26 +126,41 @@ def startTraining(device):
     print(f'Content Shape: {content.size()}')
     print(f'Label Shape: {rating.size()}')
 
-    key = input('Choose one of these classification to train:\n1. LSTM\n2. BiLSTM\n3. CNN\n4. XGBoost\n5. FC\nYour Input: ')
+    key = input('Use Title and Content ?\n1. Yes\n2. No\nYour Input: ')
+    if key == '1':
+        data = torch.cat((title, content), dim=-1)
+    else:
+        data = content
+    useTitle = False if key == '2' else True
 
-    data = torch.cat((title, content), dim=-1)
+    key = input('Choose one of these classification to train:\n1. LSTM\n2. BiLSTM\n3. CNN\n4. XGBoost\n5. FC\n6. LG\n7. Ensemble CNN LSTM\n8. Ensemble CNN BiLSTM\nYour Input: ')
     emb_tech = 1 if source == 'phobert' else 2
+    input_shape = data.size()
 
     if key == '1':
-        train(LSTM(device=device, dropout=0.3, emb_tech=emb_tech), input=data, output=rating, device=device)      
+        train(LSTM(device=device, dropout=0.3, emb_tech=emb_tech, input_shape=input_shape), input=data, output=rating, device=device, useTitle=useTitle)
     elif key == '2':
-        train(BiLSTM(device=device, dropout=0.1, emb_tech=emb_tech), input=data, output=rating, device=device)      
+        train(BiLSTM(device=device, dropout=0.1, emb_tech=emb_tech, input_shape=input_shape), input=data, output=rating, device=device, useTitle=useTitle)      
     elif key == '3':
-        train(CNN2d(device=device, dropout=0.1, emb_tech=emb_tech), input=data, output=rating, device=device)      
+        train(CNN2d(device=device, input_shape=input_shape, dropout=0.1, emb_tech=emb_tech), input=data, output=rating, device=device, useTitle=useTitle)      
     elif key == '4':
-        train(XGBoost(emb_tech=emb_tech), input=data, output=rating, device=device)      
+        train(XGBoost(emb_tech=emb_tech, useTitle=useTitle), input=data, output=rating, device=device, useTitle=useTitle)      
     elif key == '5':
-        train(FC(emb_dim=data.size(-1), device=device, emb_tech=emb_tech), input=data, output=rating, device=device)
+        train(FC(input_shape=input_shape, device=device, emb_tech=emb_tech), input=data, output=rating, device=device, useTitle=useTitle)
+    elif key == '6':
+        train(LR(emb_tech=emb_tech, useTitle=useTitle), input=data, output=rating, device=device, useTitle=useTitle)
+    elif key == '7':
+        train(CNNnLSTM(device=device, input_shape=input_shape, useTitle=useTitle, emb_tech=emb_tech, dropout=0.1), input=data, output=rating, device=device, useTitle=useTitle)
+    elif key == '8':
+        train(CNNnBiLSTM(device=device, input_shape=input_shape, useTitle=useTitle, emb_tech=emb_tech, dropout=0.1), input=data, output=rating, device=device, useTitle=useTitle)
     else:
         print('Wrong key of model, please choose again')
 
-def train(model, input, output, device):
+def train(model, input, output, device, useTitle):
     model.to(device)
+    direction = 'with_title' if useTitle else 'no_title'
+    model_direction = 'phobert' if model.emb_tech == 1 else 'phow2v'
+    ML_model = ['XGBoost', 'Logistic_Regression']
 
     # Splitting dataset
     train_size = int(0.8*input.size(0))
@@ -150,7 +168,7 @@ def train(model, input, output, device):
     train_size -= val_size
     test_size = input.size(0) - train_size - val_size
 
-    if model.model_name == 'XGBoost':
+    if model.model_name in ML_model:
         _, output = torch.max(output, 1)
         output = output.numpy()
         train_size += val_size
@@ -171,7 +189,7 @@ def train(model, input, output, device):
 
     else:
         criterion = nn.CrossEntropyLoss()
-        optimizer = opt.Adam(model.parameters(), lr=0.01)
+        optimizer = opt.Adam(model.parameters(), lr=0.001)
         # dataset = TensorDataset(input, output)
         train_data = DataLoader(TensorDataset(input[:train_size], output[:train_size]), batch_size=batch_size, shuffle=True)
         valid_data = DataLoader(TensorDataset(input[train_size:train_size+val_size], output[train_size:train_size+val_size]), batch_size=batch_size, shuffle=True)
@@ -232,13 +250,14 @@ def train(model, input, output, device):
 
             # Compare current model with previous model
             if best_acc < accuracy or (best_acc == accuracy and best_loss > avg_val_loss):
-                torch.save(model.state_dict(), 'res/models/' + model.model_name + '.pth')
+                torch.save(model.state_dict(), f'res/models/{direction}/{model_direction}/{model.model_name}.pth')
                 best_acc = accuracy
                 best_loss = avg_val_loss
                 print('Model saved, current accuracy:', best_acc)
 
         # Test model performance
         test_bar = tqdm(test_data, desc=f"Epoch {epoch + 1}/{num_epoch}:")
+        model.load_state_dict(torch.load(f'res/models/{direction}/{model_direction}/{model.model_name}.pth'))
         model.eval()
 
         predicted = []
@@ -260,16 +279,15 @@ def train(model, input, output, device):
             predicted.append(temp_predicted)
             label.append(temp_label)
 
-
         predicted = np.array(predicted[0])
         label = np.array(label[0])
         report = classification_report(label, predicted)
         print(report)
 
     # Save report
-    direction = 'phobert' if model.emb_tech == 1 else 'phow2v'
-    with open(f'res/report/{direction}/{model.model_name}.txt', 'w') as file:
+    with open(f'res/report/{direction}/{model_direction}/{model.model_name}.txt', 'w') as file:
         file.write(report)
+    print(f'REPORT saved - res/report/{direction}/{model_direction}/{model.model_name}.txt')
 
     # Visualize model val train processing
     plt.figure()
@@ -278,5 +296,7 @@ def train(model, input, output, device):
     plt.ylabel('Accuracy')
     plt.xlabel('Epoch')
     plt.legend()
-    plt.savefig(f'res/train_process/{direction}/{model.model_name}.png')
+    plt.savefig(f'res/train_process/{direction}/{model_direction}/{model.model_name}.png')
     plt.close()
+
+    print(f'Image saved - res/train_process/{direction}/{model_direction}/{model.model_name}.png')

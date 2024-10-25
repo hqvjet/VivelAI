@@ -1,10 +1,10 @@
 {
     "phobert": {
         "input_size": 6144,
-        "num_filter": 258
+        "num_filter": 256
     },
     "phow2v": {
-        "input_size": 6144,
+        "input_size": 600,
         "num_filter": 128
     }
 }

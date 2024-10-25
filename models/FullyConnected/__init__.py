@@ -4,13 +4,13 @@ import torch.nn as nn
 num_classes = 3
 
 class FC(nn.Module):
-    def __init__(self, emb_dim, device, emb_tech, dropout=0.1):
+    def __init__(self, input_shape, device, emb_tech, dropout=0.1):
         super(FC, self).__init__()
         self.model_name = 'FullyConnected'
-        self.fc1 = nn.Linear(emb_dim, 1024)
+        self.fc1 = nn.Linear(input_shape[-1], 1024)
         self.fc2 = nn.Linear(1024, 128)
         self.fc3 = nn.Linear(128, num_classes)
-        self.fc4 = nn.Linear(emb_dim, num_classes)
+        self.fc4 = nn.Linear(input_shape[-1], num_classes)
         self.sm = nn.Softmax(dim=1)
         self.dropout = nn.Dropout(p=dropout)
         self.emb_tech = emb_tech

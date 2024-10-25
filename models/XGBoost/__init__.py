@@ -10,7 +10,7 @@ with open('models/XGBoost/config.json', 'r') as file:
 config = config['phobert']
 
 class XGBoost(nn.Module):
-    def __init__(self, emb_tech):
+    def __init__(self, emb_tech, useTitle):
         super(XGBoost, self).__init__()
         self.model_name = 'XGBoost'
         self.params = {
@@ -25,6 +25,9 @@ class XGBoost(nn.Module):
         self.num_boost_round = config['num_boost_round']
         self.pool = nn.AdaptiveAvgPool1d(1)
         self.emb_tech = emb_tech
+        self.direction = 'with_title' if useTitle else 'no_title'
+        self.model_direction = 'phobert' if emb_tech == 1 else 'phow2v'
+
 
     def forward(self, x, y=None, train=True):
         if self.emb_tech == 2:
@@ -37,11 +40,11 @@ class XGBoost(nn.Module):
             print('XGB training has done!')
 
             # Save model
-            model.save_model(f'res/models/{self.model_name}.json')
+            model.save_model(f'res/models/{self.direction}/{self.model_direction}/{self.model_name}.json')
 
         else:
             model = xgb.Booster()
-            model.load_model(f'res/models/{self.model_name}.json')
+            model.load_model(f'res/models/{self.direction}/{self.model_direction}/{self.model_name}.json')
 
             data = xgb.DMatrix(x)   
             predicted = model.predict(data)
