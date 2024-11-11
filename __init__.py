@@ -8,7 +8,7 @@ if __name__ == '__main__':
         print('USING CPU')
         device = torch.device('cpu')
 
-    key = input('What do you want to do ?:\n1. Extract Feature\n2. Train Model\nYour Input: ')
+    key = input('What do you want to do ?:\n1. Extract Feature\n2. Train Model\n3. Run server\nYour Input: ')
 
     if key == '1':
         from feature_extract import useFeatureExtractor
@@ -16,6 +16,14 @@ if __name__ == '__main__':
     elif key == '2':
         from models import startTraining
         startTraining(device)
+    elif key == '3':
+        import uvicorn
+        uvicorn.run(
+            "app:app",
+            host="0.0.0.0",
+            port=4567,
+            reload=True
+        )
     else:
         print('Key error!')
     print('End Session !')

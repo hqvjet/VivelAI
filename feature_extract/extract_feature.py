@@ -9,7 +9,7 @@ from constant import PHOBERT_VER, PHOBERT_BATCH_SIZE, MAX_LEN
 
 MODEL = ['phobert', 'phow2v']
 
-def extractFeature(device, ids, attentions=[], model='PhoBERT'):
+def extractFeature(device, ids, attentions=[], model='phobert'):
     if model not in MODEL:
         raise Exception(f'No model named {model}')
 
