@@ -1,19 +1,19 @@
 from fastapi import FastAPI
-from fastapi.middleware.cors import CORSMiddleware
+# from fastapi.middleware.cors import CORSMiddleware
 from schemas import Title_Comment, Comment
 from input_handler import handle_input_with_title, handle_input_no_title
 
 app = FastAPI()
 
-# Set up CORS
-allowed_origins = ['http://localhost:4567']
-app.add_middleware(
-    CORSMiddleware,
-    allow_origins=[allowed_origins],
-    allow_credentials=True,
-    allow_methods=["*"],
-    allow_headers=["*"],
-)
+# # Set up CORS
+# allowed_origins = ['http://localhost:4567']
+# app.add_middleware(
+#     CORSMiddleware,
+#     allow_origins=[allowed_origins],
+#     allow_credentials=True,
+#     allow_methods=["*"],
+#     allow_headers=["*"],
+# )
 
 @app.post("/api/v1/predict/title")
 def read_root(req: Title_Comment):
@@ -21,7 +21,7 @@ def read_root(req: Title_Comment):
     if res == 0:
         res = 'Negative'
     elif res == 1:
-        res = 'Neural'
+        res = 'Neutral'
     else:
         res = 'Positive'
 
@@ -33,7 +33,7 @@ def read_root(req: Comment):
     if res == 0:
         res = 'Negative'
     elif res == 1:
-        res = 'Neural'
+        res = 'Neutral'
     else:
         res = 'Positive'
 
