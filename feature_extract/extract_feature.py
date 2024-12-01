@@ -45,7 +45,7 @@ def getWordEmbedding(word_embedding, corpus):
 
 def usingPhow2v(device, texts):
     print('EXTRACTING FEATURE FROM PHOW2V')
-    word_embedding = tvocab.Vectors(name='tools/phow2v_300.txt', unk_init=torch.Tensor.normal_)
+    word_embedding = tvocab.Vectors(name='res/features/phow2v_300.txt', unk_init=torch.Tensor.normal_)
     print(f'Phow2v original shape: {word_embedding.vectors.shape}')
     
     vocab = Vocabulary()

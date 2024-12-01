@@ -1,9 +1,8 @@
-pandas
-numpy
-openpyxl
-torch
-vncorenlp
-transformers
-torchtext
-tqdm
-'xgboost[gpu]'
+pandas==2.2.3
+numpy==2.1.3
+torch==2.3.0
+vncorenlp==1.0.3
+transformers==4.46.3
+torchtext==0.18
+tqdm==4.67.1
+xgboost[gpu]==2.1.3
