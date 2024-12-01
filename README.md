@@ -26,7 +26,7 @@
 - `mkdir res/train_process/with_icon/phow2v`
 ### Download PhoW2V Model:
 - Access `https://drive.google.com/drive/folders/1NZhZFYbcwKzLpvvGdJUdPbwEVdVW4E3j` and dowload the file
-- Move the dowloaded file to `/res/features`
+- Move the dowloaded file to `/res/features/`
 - Name the file is `phow2v_300.txt`
 ### Install Requirements Libs:
 - `python3 -m venv venv` for creating virtual enviroment, you can active this env by `source venv/bin/activate` - Linux or `venv/script/activate` - Window
