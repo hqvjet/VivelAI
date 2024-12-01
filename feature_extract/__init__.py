@@ -17,8 +17,8 @@ def getDataset(file_path):
         print(error)
 
 def makeData(data):
-    titles = data['title'].apply(str)
-    contents = data['text'].apply(str)
+    titles = data['title'].apply(str)[:200]
+    contents = data['text'].apply(str)[:200]
 
     return titles, contents
         
@@ -34,6 +34,9 @@ def useFeatureExtractor(device):
 
     title = useTokenize(title)
     content = useTokenize(content)
+
+    title = removeStopword(title)
+    content = removeStopword(content)
  
     key = input('Choose feature extractor method:\n1. PhoBERT\n2. PhoW2V\nYour Input: ')
     
