@@ -1,0 +1,11 @@
+{
+    "phobert": {
+        "num_layers": 8
+    
+    },
+    "phow2v": {
+        "input_size": 600,
+        "hidden_size": 64,
+        "num_layers": 2
+    }
+}

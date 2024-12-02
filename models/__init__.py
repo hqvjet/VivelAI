@@ -17,6 +17,9 @@ from models.FullyConnected import FC
 from models.LR import LR
 from models.CNN_LSTM import CNNnLSTM
 from models.CNN_BILSTM import CNNnBiLSTM
+from models.Transformer import Transformer
+from models.GRU import GRU
+from models.BiGRU import BiGRU
 
 with open('models/global_config.json', 'r') as file:
     config = json.load(file)
@@ -142,17 +145,19 @@ def startTraining(device):
     elif key == '2':
         train(BiLSTM(device=device, dropout=0.1, emb_tech=emb_tech, input_shape=input_shape), input=data, output=rating, device=device, useTitle=useTitle)      
     elif key == '3':
-        train(CNN2d(device=device, input_shape=input_shape, dropout=0.1, emb_tech=emb_tech), input=data, output=rating, device=device, useTitle=useTitle)      
-    elif key == '4':
         train(XGBoost(emb_tech=emb_tech, useTitle=useTitle), input=data, output=rating, device=device, useTitle=useTitle)      
-    elif key == '5':
-        train(FC(input_shape=input_shape, device=device, emb_tech=emb_tech), input=data, output=rating, device=device, useTitle=useTitle)
-    elif key == '6':
+    elif key == '4':
         train(LR(emb_tech=emb_tech, useTitle=useTitle), input=data, output=rating, device=device, useTitle=useTitle)
-    elif key == '7':
+    elif key == '5':
         train(CNNnLSTM(device=device, input_shape=input_shape, useTitle=useTitle, emb_tech=emb_tech, dropout=0.1), input=data, output=rating, device=device, useTitle=useTitle)
-    elif key == '8':
+    elif key == '6':
         train(CNNnBiLSTM(device=device, input_shape=input_shape, useTitle=useTitle, emb_tech=emb_tech, dropout=0.1), input=data, output=rating, device=device, useTitle=useTitle)
+    elif key == '7':
+        train(GRU(device=device, input_shape=input_shape, emb_tech=emb_tech, dropout=0.1), input=data, output=rating, device=device, useTitle=useTitle)
+    elif key == '8':
+        train(BiGRU(device=device, input_shape=input_shape, emb_tech=emb_tech, dropout=0.1), input=data, output=rating, device=device, useTitle=useTitle)
+    elif key == '9':
+        train(Transformer(device=device, input_shape=input_shape, emb_tech=emb_tech, dropout=0.1), input=data, output=rating, device=device, useTitle=useTitle)
     else:
         print('Wrong key of model, please choose again')
 
