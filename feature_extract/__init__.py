@@ -7,6 +7,7 @@ from feature_extract.tokenize import useTokenize
 from feature_extract.remove_stopword import removeStopword
 from feature_extract.identify import useIdentify
 from feature_extract.extract_feature import extractFeature
+from feature_extract.emoji_handling import emojiHandling
 
 def getDataset(file_path):
     try:
@@ -37,6 +38,10 @@ def useFeatureExtractor(device):
 
     title = removeStopword(title)
     content = removeStopword(content)
+
+    title = emojiHandling(title)
+    content = emojiHandling(content)
+    print(content)
  
     key = input('Choose feature extractor method:\n1. PhoBERT\n2. PhoW2V\nYour Input: ')
     
@@ -56,5 +61,5 @@ def useFeatureExtractor(device):
         title = extractFeature(device, title, model=model)
         content = extractFeature(device, content, model=model)
 
-    np.save(f'res/features/{model}_title_features.npy', title.cpu())
-    np.save(f'res/features/{model}_content_features.npy', content.cpu())
+    np.save(f'res/features/{model}_title_features_icon.npy', title.cpu())
+    np.save(f'res/features/{model}_content_features_icon.npy', content.cpu())

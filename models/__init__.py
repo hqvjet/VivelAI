@@ -87,8 +87,8 @@ def startTraining(device):
     else:
         print('Wrong source, please try again')
 
-    title = np.load(f'res/features/{source}_title_features.npy')
-    content = np.load(f'res/features/{source}_content_features.npy')
+    title = np.load(f'res/features/{source}_title_features_icon.npy')
+    content = np.load(f'res/features/{source}_content_features_icon.npy')
     data = pd.read_csv('res/true_data.csv')
     rating = data['rating'].apply(int)
     rating -= 1
@@ -136,7 +136,7 @@ def startTraining(device):
         data = content
     useTitle = False if key == '2' else True
 
-    key = input('Choose one of these classification to train:\n1. LSTM\n2. BiLSTM\n3. CNN\n4. XGBoost\n5. FC\n6. LG\n7. Ensemble CNN LSTM\n8. Ensemble CNN BiLSTM\nYour Input: ')
+    key = input('Choose one of these classification to train:\n1. LSTM\n2. BiLSTM\n3. XGBoost\n4. LG\n5. Ensemble CNN LSTM\n6. Ensemble CNN BiLSTM\n7. GRU\n8. BiGRU\n9. Transformer\nYour Input: ')
     emb_tech = 1 if source == 'phobert' else 2
     input_shape = data.size()
 
@@ -255,14 +255,14 @@ def train(model, input, output, device, useTitle):
 
             # Compare current model with previous model
             if best_acc < accuracy or (best_acc == accuracy and best_loss > avg_val_loss):
-                torch.save(model.state_dict(), f'res/models/{direction}/{model_direction}/{model.model_name}.pth')
+                torch.save(model.state_dict(), f'res/models/{direction}/{model_direction}/{model.model_name}_icon.pth')
                 best_acc = accuracy
                 best_loss = avg_val_loss
                 print('Model saved, current accuracy:', best_acc)
 
         # Test model performance
         test_bar = tqdm(test_data, desc=f"Epoch {epoch + 1}/{num_epoch}:")
-        model.load_state_dict(torch.load(f'res/models/{direction}/{model_direction}/{model.model_name}.pth'))
+        model.load_state_dict(torch.load(f'res/models/{direction}/{model_direction}/{model.model_name}_icon.pth'))
         model.eval()
 
         predicted = []
@@ -290,9 +290,9 @@ def train(model, input, output, device, useTitle):
         print(report)
 
     # Save report
-    with open(f'res/report/{direction}/{model_direction}/{model.model_name}.txt', 'w') as file:
+    with open(f'res/report/{direction}/{model_direction}/{model.model_name}_icon.txt', 'w') as file:
         file.write(report)
-    print(f'REPORT saved - res/report/{direction}/{model_direction}/{model.model_name}.txt')
+    print(f'REPORT saved - res/report/{direction}/{model_direction}/{model.model_name}_icon.txt')
 
     # Visualize model val train processing
     plt.figure()
@@ -301,7 +301,7 @@ def train(model, input, output, device, useTitle):
     plt.ylabel('Accuracy')
     plt.xlabel('Epoch')
     plt.legend()
-    plt.savefig(f'res/train_process/{direction}/{model_direction}/{model.model_name}.png')
+    plt.savefig(f'res/train_process/{direction}/{model_direction}/{model.model_name}_icon.png')
     plt.close()
 
-    print(f'Image saved - res/train_process/{direction}/{model_direction}/{model.model_name}.png')
+    print(f'Image saved - res/train_process/{direction}/{model_direction}/{model.model_name}_icon.png')

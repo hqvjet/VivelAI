@@ -40,11 +40,11 @@ class XGBoost(nn.Module):
             print('XGB training has done!')
 
             # Save model
-            model.save_model(f'res/models/{self.direction}/{self.model_direction}/{self.model_name}.json')
+            model.save_model(f'res/models/{self.direction}/{self.model_direction}/{self.model_name}_icon.json')
 
         else:
             model = xgb.Booster()
-            model.load_model(f'res/models/{self.direction}/{self.model_direction}/{self.model_name}.json')
+            model.load_model(f'res/models/{self.direction}/{self.model_direction}/{self.model_name}_icon.json')
 
             data = xgb.DMatrix(x)   
             predicted = model.predict(data)
