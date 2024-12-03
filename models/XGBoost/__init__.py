@@ -3,6 +3,7 @@ import torch
 import torch.nn as nn
 from tqdm import tqdm
 import json
+from constant import DRIVE_PATH
 
 with open('models/XGBoost/config.json', 'r') as file:
     config = json.load(file)
@@ -41,6 +42,7 @@ class XGBoost(nn.Module):
 
             # Save model
             model.save_model(f'res/models/{self.direction}/{self.model_direction}/{self.model_name}_icon.json')
+            model.save_model(f'{DRIVE_PATH}/models/{self.direction}/{self.model_direction}/{self.model_name}_icon.json')
 
         else:
             model = xgb.Booster()

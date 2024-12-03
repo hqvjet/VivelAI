@@ -20,6 +20,7 @@ from models.CNN_BILSTM import CNNnBiLSTM
 from models.Transformer import Transformer
 from models.GRU import GRU
 from models.BiGRU import BiGRU
+from constant import DRIVE_PATH
 
 with open('models/global_config.json', 'r') as file:
     config = json.load(file)
@@ -266,6 +267,7 @@ def train(model, input, output, device, useTitle):
         # Test model performance
         test_bar = tqdm(test_data, desc=f"Epoch {epoch + 1}/{num_epoch}:")
         model.load_state_dict(torch.load(f'res/models/{direction}/{model_direction}/{model.model_name}_icon.pth'))
+        torch.save(model.state_dict(), f'{DRIVE_PATH}/models/{direction}/{model_direction}/{model.model_name}_icon.pth')
         model.eval()
 
         predicted = []
@@ -293,9 +295,9 @@ def train(model, input, output, device, useTitle):
         print(report)
 
     # Save report
-    with open(f'res/report/{direction}/{model_direction}/{model.model_name}_icon.txt', 'w') as file:
+    with open(f'{DRIVE_PATH}/report/{direction}/{model_direction}/{model.model_name}_icon.txt', 'w') as file:
         file.write(report)
-    print(f'REPORT saved - res/report/{direction}/{model_direction}/{model.model_name}_icon.txt')
+    print(f'REPORT saved - {DRIVE_PATH}/report/{direction}/{model_direction}/{model.model_name}_icon.txt')
 
     # Visualize model val train processing
     plt.figure()
@@ -304,7 +306,7 @@ def train(model, input, output, device, useTitle):
     plt.ylabel('Accuracy')
     plt.xlabel('Epoch')
     plt.legend()
-    plt.savefig(f'res/train_process/{direction}/{model_direction}/{model.model_name}_icon.png')
+    plt.savefig(f'{DRIVE_PATH}/train_process/{direction}/{model_direction}/{model.model_name}_icon.png')
     plt.close()
 
-    print(f'Image saved - res/train_process/{direction}/{model_direction}/{model.model_name}_icon.png')
+    print(f'Image saved - {DRIVE_PATH}/train_process/{direction}/{model_direction}/{model.model_name}_icon.png')
