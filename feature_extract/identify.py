@@ -1,12 +1,10 @@
-from transformers import AutoModel, AutoTokenizer
 import numpy as np
 
 from constant import PHOBERT_VER, MAX_LEN
 
-def useIdentify(texts):
+def useIdentify(texts, tokenizer):
     print('Identifying Texts')
 
-    tokenizer = AutoTokenizer.from_pretrained(PHOBERT_VER)
     data_ids = []
 
     for text in texts:

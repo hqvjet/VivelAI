@@ -8,10 +8,10 @@ from feature_extract.remove_stopword import removeStopword
 from feature_extract.identify import useIdentify
 from feature_extract.extract_feature import extractFeature
 from feature_extract.emoji_handling import emojiHandling
+from feature_extract.get_tokenizer import getTokenizer
 
 def getDataset(file_path):
     try:
-        # return pd.read_excel(file_path, engine='openpyxl')
         return pd.read_csv(file_path)
     except Exception as error:
         print('ERROR WHILE READING DATASET')
@@ -53,10 +53,11 @@ def useFeatureExtractor(device):
         print('Wrong method, please try again')
 
     if key == '1':
-        title, title_attention = useIdentify(title)
-        content, content_attention = useIdentify(content)
-        title = extractFeature(device, title, title_attention, model=model)
-        content = extractFeature(device, content, content_attention, model=model)
+        tokenizer = getTokenizer()
+        title, title_attention = useIdentify(title, tokenizer)
+        content, content_attention = useIdentify(content, tokenizer)
+        title = extractFeature(device, title, title_attention, model=model, tokenizer=tokenizer)
+        content = extractFeature(device, content, content_attention, model=model, tokenizer=tokenizer)
     else:
         title = extractFeature(device, title, model=model)
         content = extractFeature(device, content, model=model)

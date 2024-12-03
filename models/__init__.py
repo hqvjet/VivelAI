@@ -195,7 +195,7 @@ def train(model, input, output, device, useTitle):
     else:
         criterion = nn.CrossEntropyLoss()
         optimizer = opt.Adam(model.parameters(), lr=0.001)
-        # dataset = TensorDataset(input, output)
+        scheduler = opt.lr_scheduler.ReduceLROnPlateau(optimizer, mode='min', patience=5, factor=0.5, verbose=True)
         train_data = DataLoader(TensorDataset(input[:train_size], output[:train_size]), batch_size=batch_size, shuffle=True)
         valid_data = DataLoader(TensorDataset(input[train_size:train_size+val_size], output[train_size:train_size+val_size]), batch_size=batch_size, shuffle=True)
         test_data = DataLoader(TensorDataset(input[-1*test_size:], output[-1*test_size:]), batch_size=batch_size, shuffle=True)
@@ -259,6 +259,9 @@ def train(model, input, output, device, useTitle):
                 best_acc = accuracy
                 best_loss = avg_val_loss
                 print('Model saved, current accuracy:', best_acc)
+
+            scheduler.step(avg_val_loss)
+            print(f"Current Learning Rate: {optimizer.param_groups[0]['lr']}")
 
         # Test model performance
         test_bar = tqdm(test_data, desc=f"Epoch {epoch + 1}/{num_epoch}:")

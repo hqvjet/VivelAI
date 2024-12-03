@@ -9,12 +9,12 @@ from constant import PHOBERT_VER, PHOBERT_BATCH_SIZE, MAX_LEN
 
 MODEL = ['phobert', 'phow2v']
 
-def extractFeature(device, ids, attentions=[], model='phobert'):
+def extractFeature(device, ids, attentions=[], model='phobert', tokenizer=None):
     if model not in MODEL:
         raise Exception(f'No model named {model}')
 
     if model == MODEL[0]:
-        return usingPhoBERT(device, ids, attentions)
+        return usingPhoBERT(device, ids, attentions, tokenizer)
     else:
         return usingPhow2v(device, ids)
 
@@ -61,9 +61,10 @@ def usingPhow2v(device, texts):
     
     return res
 
-def usingPhoBERT(device, ids, attentions):
+def usingPhoBERT(device, ids, attentions, tokenizer):
     phobert = AutoModel.from_pretrained(PHOBERT_VER, output_hidden_states=True)
-    phobert.eval()
+    phobert.resize_token_embeddings(len(tokenizer))
+    phobert.train()
     phobert = phobert.to(device)
 
     num_batch = math.ceil(len(ids) / PHOBERT_BATCH_SIZE)

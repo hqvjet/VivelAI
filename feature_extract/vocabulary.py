@@ -1,5 +1,6 @@
 import torch
 from tqdm import tqdm
+from constant import EMOJI_NEG, EMOJI_NEU, EMOJI_POS
 
 class Vocabulary:
     """
@@ -11,6 +12,9 @@ class Vocabulary:
         self.word2id = dict()
         self.word2id['<pad>'] = 0   # Pad Token
         self.word2id['<unk>'] = 1   # Unknown Token
+        self.word2id[EMOJI_NEG] = 2
+        self.word2id[EMOJI_NEU] = 3
+        self.word2id[EMOJI_POS] = 4
         self.unk_id = self.word2id['<unk>']
         self.id2word = {v: k for k, v in self.word2id.items()}
 
