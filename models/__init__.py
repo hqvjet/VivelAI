@@ -137,7 +137,7 @@ def startTraining(device):
         data = content
     useTitle = False if key == '2' else True
 
-    key = input('Choose one of these classification to train:\n1. LSTM\n2. BiLSTM\n3. XGBoost\n4. LG\n5. Ensemble CNN LSTM\n6. Ensemble CNN BiLSTM\n7. GRU\n8. BiGRU\n9. Transformer\nYour Input: ')
+    key = input('Choose one of these classification to train:\n1. LSTM\n2. BiLSTM\n3. XGBoost\n4. LG\n5. Ensemble CNN LSTM\n6. Ensemble CNN BiLSTM\n7. GRU\n8. BiGRU\n9. Transformer\n10. CNN\nYour Input: ')
     emb_tech = 1 if source == 'phobert' else 2
     input_shape = data.size()
 
@@ -159,6 +159,8 @@ def startTraining(device):
         train(BiGRU(device=device, input_shape=input_shape, emb_tech=emb_tech, dropout=0.1), input=data, output=rating, device=device, useTitle=useTitle)
     elif key == '9':
         train(Transformer(device=device, input_shape=input_shape, emb_tech=emb_tech, dropout=0.1), input=data, output=rating, device=device, useTitle=useTitle)
+    elif key == '10':
+        train(CNN2d(device=device, input_shape=input_shape, emb_tech=emb_tech, dropout=0.1), input=data, output=rating, device=device, useTitle=useTitle)
     else:
         print('Wrong key of model, please choose again')
 
