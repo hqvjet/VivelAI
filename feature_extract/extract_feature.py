@@ -10,12 +10,12 @@ from constant import PHOBERT_VER, PHOBERT_BATCH_SIZE, MAX_LEN
 
 MODEL = ['phobert', 'phow2v']
 
-def extractFeature(device, ids, attentions=[], model='phobert', tokenizer=None):
+def extractFeature(device, ids, attentions=[], model='phobert', tokenizer=None, emoji_matrix=None):
     if model not in MODEL:
         raise Exception(f'No model named {model}')
 
     if model == MODEL[0]:
-        return usingPhoBERT(device, ids, attentions, tokenizer)
+        return usingPhoBERT(device, ids, attentions, tokenizer, emoji_matrix)
     else:
         return usingPhow2v(device, ids)
 
@@ -62,9 +62,15 @@ def usingPhow2v(device, texts):
     
     return res
 
-def usingPhoBERT(device, ids, attentions, tokenizer):
+def usingPhoBERT(device, ids, attentions, tokenizer, e_matrix):
     phobert = AutoModel.from_pretrained(PHOBERT_VER, output_hidden_states=True)
     phobert.resize_token_embeddings(len(tokenizer))
+
+    with torch.no_grad():
+        for token in e_matrix.keys():
+            token_id = tokenizer.convert_tokens_to_ids(token)
+            phobert.embeddings.word_embeddings.weight[token_id] = e_matrix[token]
+
     phobert.train()
     phobert = phobert.to(device)
 
@@ -84,6 +90,7 @@ def usingPhoBERT(device, ids, attentions, tokenizer):
         print(f'Batch {size + 1} has done!, Shape: {res_emb.size()}')
 
     final_feature = torch.cat(final_feature, dim=0)
+    print(final_feature, final_feature.size())
 
     print(f'Features shape: {final_feature.size()}')
 
