@@ -38,19 +38,19 @@ def separate_equally_dataset(title, content, rating, NEG, NEU, POS):
     }
 
     neg_filter = {
-        'title': [title for title, rating in zip(data['title'], data['rating']) if rating == 0],
-        'content': [content for content, rating in zip(data['content'], data['rating']) if rating == 0],
-        'rating': [rating for rating in data['rating'] if rating == 0]
+        'title': [title for title, rating in zip(data['title'], data['rating']) if rating == 'neg'],
+        'content': [content for content, rating in zip(data['content'], data['rating']) if rating == 'neg'],
+        'rating': [0 for rating in data['rating'] if rating == 'neg']
     }
     neu_filter = {
-        'title': [title for title, rating in zip(data['title'], data['rating']) if rating == 1],
-        'content': [content for content, rating in zip(data['content'], data['rating']) if rating == 1],
-        'rating': [rating for rating in data['rating'] if rating == 1]
+        'title': [title for title, rating in zip(data['title'], data['rating']) if rating == 'neu'],
+        'content': [content for content, rating in zip(data['content'], data['rating']) if rating == 'neu'],
+        'rating': [1 for rating in data['rating'] if rating == 'neu']
     }
     pos_filter = {
-        'title': [title for title, rating in zip(data['title'], data['rating']) if rating == 2],
-        'content': [content for content, rating in zip(data['content'], data['rating']) if rating == 2],
-        'rating': [rating for rating in data['rating'] if rating == 2]
+        'title': [title for title, rating in zip(data['title'], data['rating']) if rating == 'pos'],
+        'content': [content for content, rating in zip(data['content'], data['rating']) if rating == 'pos'],
+        'rating': [2 for rating in data['rating'] if rating == 'pos']
     }
 
     print(len(neg_filter['title']), len(neu_filter['title']), len(pos_filter['title']))
@@ -90,16 +90,17 @@ def startTraining(device):
 
     title = np.load(f'res/features/{source}_title_features_icon.npy')
     content = np.load(f'res/features/{source}_content_features_icon.npy')
-    data = pd.read_csv('res/true_data.csv')
-    rating = data['rating'].apply(int)
-    rating -= 1
+    data = pd.read_csv('res/dataset.csv')
+    mapping = {'neg': 0, 'neu': 1, 'pos': 2}
+    rating = data['rating'].apply(str).map(mapping)
+    # rating -= 1
 
     o, t, tr = 0, 0, 0
 
     for r in rating:
-        if r == 0:
+        if r == 'neg':
             o += 1
-        elif r == 1:
+        elif r == 'neu':
             t += 1
         else:
             tr += 1

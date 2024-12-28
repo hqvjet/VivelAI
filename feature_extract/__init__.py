@@ -18,13 +18,13 @@ def getDataset(file_path):
         print(error)
 
 def makeData(data):
-    titles = data['title'].apply(str)[:100]
-    contents = data['text'].apply(str)[:100]
+    titles = data['title'].apply(str)
+    contents = data['text'].apply(str)
 
     return titles, contents
         
 def useFeatureExtractor(device):
-    data = getDataset('res/true_data.csv')
+    data = getDataset('res/dataset.csv')
     title, content = makeData(data)
 
     title = useNormalize(title)

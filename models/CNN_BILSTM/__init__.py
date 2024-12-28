@@ -14,8 +14,8 @@ class CNNnBiLSTM(nn.Module):
         self.emb_tech = emb_tech
         model_direction = 'phobert' if emb_tech == 1 else 'phow2v'
         direction = 'with_title' if useTitle else 'no_title'
-        self.cnn.load_state_dict(torch.load(f'res/models/{direction}/{model_direction}/CNN.pth'))
-        self.lstm.load_state_dict(torch.load(f'res/models/{direction}/{model_direction}/BiLSTM.pth'))
+        self.cnn.load_state_dict(torch.load(f'res/models/{direction}/{model_direction}/CNN_icon.pth'))
+        self.lstm.load_state_dict(torch.load(f'res/models/{direction}/{model_direction}/BiLSTM_icon.pth'))
 
         self.fc1 = nn.Linear(num_classes, 128)
         self.fc2 = nn.Linear(128, 32)
