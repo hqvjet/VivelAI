@@ -19,7 +19,7 @@ def getDataset(file_path):
 
 def makeData(data):
     titles = data['title'].apply(str)
-    contents = data['text'].apply(str)
+    contents = data['content'].apply(str)
 
     return titles, contents
         
