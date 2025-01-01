@@ -271,7 +271,7 @@ def train(model, input, output, device, useTitle):
         test_bar = tqdm(test_data, desc=f"Epoch {epoch + 1}/{num_epoch}:")
         model.load_state_dict(torch.load(f'res/models/{direction}/{model_direction}/{model.model_name}_icon.pth'))
         torch.save(model.state_dict(), f'{DRIVE_PATH}/models/{direction}/{model_direction}/{model.model_name}_icon.pth')
-        model.eval()
+       model.eval()
 
         predicted = []
         label = []

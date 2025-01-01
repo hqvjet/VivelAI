@@ -3,9 +3,11 @@ from constant import EMOJI_NEG, EMOJI_NEU, EMOJI_POS
 import pandas as pd
 import re
 import torch
+import torchtext.vocab as tvocab
 import torch.nn as nn
 
 emoji_data = pd.read_csv('res/emoji_sentiment.csv')
+word_embedding = tvocab.Vectors(name=f'res/emoji2vec.txt', unk_init=torch.Tensor.normal_)
 
 # def convert_emoji2text(text):
 #     emoji_list = emoji.emoji_list(text)
@@ -55,22 +57,19 @@ def emojiHandling(texts):
     return returned
 
 def getEmojiEmbeddingMatrix():
-    emojis = emoji_data.values
+    def convert_emoji2unicode(emoji):
+        return f"0x{ord(emoji):x}"
+
+    list_emoji = list(word_embedding.stoi.keys())
     e_matrix = {}
-    linear = nn.Linear(1, 768)
+    linear = nn.Linear(300, 768)
 
-    for emoji in emojis:
-        occu = emoji[3]
-        for status in emoji[4:7]:
-            emb = []
-            if status != 0:
-                emb.append(occu / status)
-            else:
-                emb.append(0)
-
-        emb = torch.tensor(emb, dtype=torch.float)
-        emb = emb.unsqueeze(0)
-        emb = linear(emb)
-        e_matrix[emoji[1]] = emb
+    for emoji in list_emoji:
+        if len(emoji) == 1:
+            key = convert_emoji2unicode(emoji)
+            val = word_embedding.vectors[word_embedding.stoi[emoji]]
+            val = torch.tensor(val, dtype=torch.float)
+            emb = linear(val)
+            e_matrix[key] = emb
 
     return e_matrix
