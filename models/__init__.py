@@ -153,7 +153,7 @@ def startTraining(device):
 
     key = input('Choose one of these classification to train:\n1. LSTM\n2. BiLSTM\n3. XGBoost\n4. LG\n5. Ensemble CNN LSTM\n6. Ensemble CNN BiLSTM\n7. GRU\n8. BiGRU\n9. Transformer\n10. CNN\nYour Input: ')
     emb_tech = 1 if source == 'phobert' else 2
-    input_shape = data.size()
+    input_shape = train_data.size()
 
     if key == '1':
         train(LSTM(device=device, dropout=0.3, emb_tech=emb_tech, input_shape=input_shape), train_input=train_data, train_output=train_rating, test_input=test_data, test_output=test_rating, device=device, useTitle=useTitle)
