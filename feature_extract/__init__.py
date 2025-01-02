@@ -84,7 +84,7 @@ def useFeatureExtractor(device):
         test_title = extractFeature(device, test_title, model=model)
         test_content = extractFeature(device, test_content, model=model)
 
-    np.save(f'res/features/{model}_train_title_features_icon.npy', title.cpu())
-    np.save(f'res/features/{model}_train_content_features_icon.npy', content.cpu())
+    np.save(f'res/features/{model}_train_title_features_icon.npy', train_title.cpu())
+    np.save(f'res/features/{model}_train_content_features_icon.npy', train_content.cpu())
     np.save(f'res/features/{model}_test_title_features_icon.npy', test_title.cpu())
     np.save(f'res/features/{model}_test_content_features_icon.npy', test_content.cpu())
