@@ -2,7 +2,7 @@ import torch
 import torch.nn as nn
 import json
 
-with open('models/AttentionBiLSTM/config.json', 'r') as file:
+with open('models/Attention_BiLSTM/config.json', 'r') as file:
     config = json.load(file)
 
 phobert_config = config['phobert']
