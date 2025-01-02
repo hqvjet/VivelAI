@@ -1,5 +1,6 @@
 import torch
 import torch.nn as nn
+import torch.nn.functional as F
 import json
 
 with open('models/Attention_BiLSTM/config.json', 'r') as file:
