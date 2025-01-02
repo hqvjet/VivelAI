@@ -20,6 +20,7 @@ from models.CNN_BILSTM import CNNnBiLSTM
 from models.Transformer import Transformer
 from models.GRU import GRU
 from models.BiGRU import BiGRU
+from models.Attention_BiLSTM import AttentionBiLSTM
 from constant import DRIVE_PATH
 
 with open('models/global_config.json', 'r') as file:
@@ -175,6 +176,8 @@ def startTraining(device):
         train(Transformer(device=device, input_shape=input_shape, emb_tech=emb_tech, dropout=0.1), train_input=train_data, train_output=train_rating, test_input=test_data, test_output=test_rating, device=device, useTitle=useTitle)
     elif key == '10':
         train(CNN2d(device=device, input_shape=input_shape, emb_tech=emb_tech, dropout=0.1), train_input=train_data, train_output=train_rating, test_input=test_data, test_output=test_rating, input=data, output=rating, device=device, useTitle=useTitle)
+    elif key == '11':
+        train(AttentionBiLSTM(device=device, dropout=0.1, emb_tech=emb_tech, input_shape=input_shape), train_input=train_data, train_output=train_rating, test_input=test_data, test_output=test_rating, device=device, useTitle=useTitle)      
     else:
         print('Wrong key of model, please choose again')
 
