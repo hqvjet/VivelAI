@@ -88,54 +88,67 @@ def startTraining(device):
     else:
         print('Wrong source, please try again')
 
-    title = np.load(f'res/features/{source}_title_features_icon.npy')
-    content = np.load(f'res/features/{source}_content_features_icon.npy')
-    data = pd.read_csv('res/dataset.csv')
+    train_title = np.load(f'res/features/{source}_train_title_features_icon.npy')
+    train_content = np.load(f'res/features/{source}_train_content_features_icon.npy')
+    test_title = np.load(f'res/features/{source}_test_title_features_icon.npy')
+    test_content = np.load(f'res/features/{source}_test_content_features_icon.npy')
+
+    train_data = pd.read_csv('res/train.csv')
+    test_data = pd.read_csv('res/test.csv')
+
     mapping = {'neg': 0, 'neu': 1, 'pos': 2}
-    rating = data['rating'].apply(str).map(mapping)
-    # rating -= 1
 
-    o, t, tr = 0, 0, 0
+    train_rating = data['rating'].apply(str).map(mapping)
+    test_rating = test_data['rating'].apply(str).map(mapping)
 
-    for r in rating:
-        if r == 'neg':
-            o += 1
-        elif r == 'neu':
-            t += 1
-        else:
-            tr += 1
-
-    print(f'Negative: {o}, Neural: {t}, Positive: {tr}')
+    # o, t, tr = 0, 0, 0
+    #
+    # for r in rating:
+    #     if r == 'neg':
+    #         o += 1
+    #     elif r == 'neu':
+    #         t += 1
+    #     else:
+    #         tr += 1
+    #
+    # print(f'Negative: {o}, Neural: {t}, Positive: {tr}')
 
     # title, content, rating = separate_equally_dataset(title, content, rating, o, t, tr)
 
-    o, t, tr = 0, 0, 0
+    # o, t, tr = 0, 0, 0
+    #
+    # for r in rating:
+    #     if r == 0:
+    #         o += 1
+    #     elif r == 1:
+    #         t += 1
+    #     else:
+    #         tr += 1
+    #
+    # print(f'After separate: Negative: {o}, Neural: {t}, Positive: {tr}')
 
-    for r in rating:
-        if r == 0:
-            o += 1
-        elif r == 1:
-            t += 1
-        else:
-            tr += 1
+    train_title = torch.tensor(train_title)
+    train_content = torch.tensor(train_content)
+    train_rating = torch.tensor(train_rating)
+    train_rating = torch.nn.functional.one_hot(train_rating, num_classes=3)
 
-    print(f'After separate: Negative: {o}, Neural: {t}, Positive: {tr}')
-
-    title = torch.tensor(title)
-    content = torch.tensor(content)
-    rating = torch.tensor(rating)
-    rating = torch.nn.functional.one_hot(rating, num_classes=3)
+    test_title = torch.tensor(test_title)
+    test_content = torch.tensor(test_content)
+    test_rating = torch.tensor(test_rating)
+    test_rating = torch.nn.functional.one_hot(test_rating, num_classes=3)
 
     print('Loading Done')
-    print(f'Title Shape: {title.size()}')
-    print(f'Content Shape: {content.size()}')
-    print(f'Label Shape: {rating.size()}')
+    print(f'Title Shape: {train_title.size()}')
+    print(f'Content Shape: {train_content.size()}')
+    print(f'Label Shape: {train_rating.size()}')
 
     key = input('Use Title and Content ?\n1. Yes\n2. No\nYour Input: ')
     if key == '1':
-        data = torch.cat((title, content), dim=-1)
+        train_data = torch.cat((train_title, train_content), dim=-1)
+        test_data = torch.cat((test_title, test_content), dim=-1)
     else:
-        data = content
+        train_data = train_content
+        test_data = test_content
     useTitle = False if key == '2' else True
 
     key = input('Choose one of these classification to train:\n1. LSTM\n2. BiLSTM\n3. XGBoost\n4. LG\n5. Ensemble CNN LSTM\n6. Ensemble CNN BiLSTM\n7. GRU\n8. BiGRU\n9. Transformer\n10. CNN\nYour Input: ')
@@ -143,48 +156,46 @@ def startTraining(device):
     input_shape = data.size()
 
     if key == '1':
-        train(LSTM(device=device, dropout=0.3, emb_tech=emb_tech, input_shape=input_shape), input=data, output=rating, device=device, useTitle=useTitle)
+        train(LSTM(device=device, dropout=0.3, emb_tech=emb_tech, input_shape=input_shape), train_input=train_data, train_output=train_rating, test_input=test_data, test_output=test_rating, device=device, useTitle=useTitle)
     elif key == '2':
-        train(BiLSTM(device=device, dropout=0.1, emb_tech=emb_tech, input_shape=input_shape), input=data, output=rating, device=device, useTitle=useTitle)      
+        train(BiLSTM(device=device, dropout=0.1, emb_tech=emb_tech, input_shape=input_shape), train_input=train_data, train_output=train_rating, test_input=test_data, test_output=test_rating, device=device, useTitle=useTitle)      
     elif key == '3':
-        train(XGBoost(emb_tech=emb_tech, useTitle=useTitle), input=data, output=rating, device=device, useTitle=useTitle)      
+        train(XGBoost(emb_tech=emb_tech, useTitle=useTitle), train_input=train_data, train_output=train_rating, test_input=test_data, test_output=test_rating, device=device, useTitle=useTitle)      
     elif key == '4':
-        train(LR(emb_tech=emb_tech, useTitle=useTitle), input=data, output=rating, device=device, useTitle=useTitle)
+        train(LR(emb_tech=emb_tech, useTitle=useTitle), train_input=train_data, train_output=train_rating, test_input=test_data, test_output=test_rating, device=device, useTitle=useTitle)
     elif key == '5':
-        train(CNNnLSTM(device=device, input_shape=input_shape, useTitle=useTitle, emb_tech=emb_tech, dropout=0.1), input=data, output=rating, device=device, useTitle=useTitle)
+        train(CNNnLSTM(device=device, input_shape=input_shape, useTitle=useTitle, emb_tech=emb_tech, dropout=0.1), train_input=train_data, train_output=train_rating, test_input=test_data, test_output=test_rating, device=device, useTitle=useTitle)
     elif key == '6':
-        train(CNNnBiLSTM(device=device, input_shape=input_shape, useTitle=useTitle, emb_tech=emb_tech, dropout=0.1), input=data, output=rating, device=device, useTitle=useTitle)
+        train(CNNnBiLSTM(device=device, input_shape=input_shape, useTitle=useTitle, emb_tech=emb_tech, dropout=0.1), train_input=train_data, train_output=train_rating, test_input=test_data, test_output=test_rating, device=device, useTitle=useTitle)
     elif key == '7':
-        train(GRU(device=device, input_shape=input_shape, emb_tech=emb_tech, dropout=0.1), input=data, output=rating, device=device, useTitle=useTitle)
+        train(GRU(device=device, input_shape=input_shape, emb_tech=emb_tech, dropout=0.1), train_input=train_data, train_output=train_rating, test_input=test_data, test_output=test_rating, device=device, useTitle=useTitle)
     elif key == '8':
-        train(BiGRU(device=device, input_shape=input_shape, emb_tech=emb_tech, dropout=0.1), input=data, output=rating, device=device, useTitle=useTitle)
+        train(BiGRU(device=device, input_shape=input_shape, emb_tech=emb_tech, dropout=0.1), train_input=train_data, train_output=train_rating, test_input=test_data, test_output=test_rating, device=device, useTitle=useTitle)
     elif key == '9':
-        train(Transformer(device=device, input_shape=input_shape, emb_tech=emb_tech, dropout=0.1), input=data, output=rating, device=device, useTitle=useTitle)
+        train(Transformer(device=device, input_shape=input_shape, emb_tech=emb_tech, dropout=0.1), train_input=train_data, train_output=train_rating, test_input=test_data, test_output=test_rating, device=device, useTitle=useTitle)
     elif key == '10':
-        train(CNN2d(device=device, input_shape=input_shape, emb_tech=emb_tech, dropout=0.1), input=data, output=rating, device=device, useTitle=useTitle)
+        train(CNN2d(device=device, input_shape=input_shape, emb_tech=emb_tech, dropout=0.1), train_input=train_data, train_output=train_rating, test_input=test_data, test_output=test_rating, input=data, output=rating, device=device, useTitle=useTitle)
     else:
         print('Wrong key of model, please choose again')
 
-def train(model, input, output, device, useTitle):
+def train(model, train_input, train_output, test_input, test_output, device, useTitle):
     model.to(device)
     direction = 'with_title' if useTitle else 'no_title'
     model_direction = 'phobert' if model.emb_tech == 1 else 'phow2v'
     ML_model = ['XGBoost', 'Logistic_Regression']
 
     # Splitting dataset
-    train_size = int(0.8*input.size(0))
-    val_size = int(0.1*train_size)
-    train_size -= val_size
-    test_size = input.size(0) - train_size - val_size
+    train_size = int(0.9*train_input.size(0))
 
     if model.model_name in ML_model:
-        _, output = torch.max(output, 1)
-        output = output.numpy()
-        train_size += val_size
-        train_data = input[:train_size].cpu().numpy()
-        train_label = output[:train_size]
-        test_data = input[train_size:].cpu().numpy()
-        test_label = output[train_size:]
+        _, train_output = torch.max(train_output, 1)
+        _, test_output = torch.max(test_output, 1)
+        train_output = train_output.numpy()
+        test_output = test_output.numpy()
+        train_data = train_input.cpu().numpy()
+        train_label = train_output
+        test_data = test_input.cpu().numpy()
+        test_label = test_output
 
         print("Training")
         model.train()
@@ -198,11 +209,11 @@ def train(model, input, output, device, useTitle):
 
     else:
         criterion = nn.CrossEntropyLoss()
-        optimizer = opt.Adam(model.parameters(), lr=0.001)
-        scheduler = opt.lr_scheduler.ReduceLROnPlateau(optimizer, mode='min', patience=5, factor=0.5, verbose=True)
-        train_data = DataLoader(TensorDataset(input[:train_size], output[:train_size]), batch_size=batch_size, shuffle=True)
-        valid_data = DataLoader(TensorDataset(input[train_size:train_size+val_size], output[train_size:train_size+val_size]), batch_size=batch_size, shuffle=True)
-        test_data = DataLoader(TensorDataset(input[-1*test_size:], output[-1*test_size:]), batch_size=batch_size, shuffle=True)
+        optimizer = opt.Adam(model.parameters(), lr=0.00001)
+        scheduler = opt.lr_scheduler.ReduceLROnPlateau(optimizer, mode='min', patience=15, factor=0.5, verbose=True)
+        train_data = DataLoader(TensorDataset(train_input[:train_size], train_output[:train_size]), batch_size=batch_size, shuffle=True)
+        valid_data = DataLoader(TensorDataset(train_input[train_size:], train_output[train_size:]), batch_size=batch_size, shuffle=True)
+        test_data = DataLoader(TensorDataset(test_input, test_output), batch_size=batch_size, shuffle=True)
 
         best_acc = 0
         best_loss = 10000
