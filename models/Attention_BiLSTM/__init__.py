@@ -41,6 +41,7 @@ class AttentionBiLSTM(nn.Module):
         else:
             lstm_out = lstm_out.contiguous()
 
+        print(lstm_out.shape)
         attn_scores = self.attention_w(lstm_out)  # [batch_size, seq_len]
         attn_weights = F.softmax(attn_scores.squeeze(-1), dim=-1)              # Normalize scores: [batch_size, seq_len]
 
