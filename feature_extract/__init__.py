@@ -67,7 +67,7 @@ def useFeatureExtractor(device):
         print('Wrong method, please try again')
 
     if key == '1':
-        tokenizer = getTokenizer(e_matrix)
+        tokenizer = getTokenizer(e_matrix=e_matrix)
         train_title, train_title_attention = useIdentify(train_title, tokenizer)
         train_content, train_content_attention = useIdentify(train_content, tokenizer)
         test_title, test_title_attention = useIdentify(test_title, tokenizer)
