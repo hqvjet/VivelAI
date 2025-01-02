@@ -23,8 +23,8 @@ class AttentionBiLSTM(nn.Module):
                             batch_first=True, bidirectional=True)
 
         first_emb = 256 if emb_tech == 1 else 32
-        self.attention_w = nn.Linear(input_shape[-1]*2, 1)
-        self.fc1 = nn.Linear(input_shape[-1]*2, 256)
+        self.attention_w = nn.Linear(self.hidden_size*2, 1)
+        self.fc1 = nn.Linear(self.hidden_size*2, 256)
         self.fc2 = nn.Linear(first_emb, 128)
         self.fc3 = nn.Linear(128, num_classes)
         self.softmax = nn.Softmax(dim=1)
