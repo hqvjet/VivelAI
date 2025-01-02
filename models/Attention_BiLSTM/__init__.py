@@ -57,6 +57,7 @@ class AttentionBiLSTM(nn.Module):
             h0 = torch.zeros(self.num_layers*2, x.size(0), self.hidden_size).to(x.device)
             c0 = torch.zeros(self.num_layers*2, x.size(0), self.hidden_size).to(x.device)
             out, _ = self.lstm(x, (h0, c0))
+            out = out[:, -1, :]
             out = self.attention_layer(out)
 
         else:
