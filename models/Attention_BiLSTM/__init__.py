@@ -42,7 +42,7 @@ class AttentionBiLSTM(nn.Module):
         attn_weights = F.softmax(attn_scores, dim=1)              # Normalize scores: [batch_size, seq_len]
         weighted_out = attn_weights * lstm_out
         
-        return weighted_sum
+        return weighted_out
 
     def forward(self, x):
         if self.emb_tech == 1:
