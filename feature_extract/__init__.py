@@ -13,7 +13,6 @@ from feature_extract.get_tokenizer import getTokenizer
 def getDataset(file_path):
     try:
         df = pd.read_csv(file_path)
-        df = df.sample(frac=1, random_state=42).reset_index(drop=True)
         return df
     except Exception as error:
         print('ERROR WHILE READING DATASET')
