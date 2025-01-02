@@ -37,7 +37,6 @@ class AttentionBiLSTM(nn.Module):
         Returns: weighted sum of lstm outputs
         """
         # Compute attention scores
-        print(lstm_out.shape)
         attn_scores = self.attention_w(lstm_out)  # [batch_size, seq_len]
         attn_weights = F.softmax(attn_scores, dim=1)              # Normalize scores: [batch_size, seq_len]
         weighted_out = attn_weights * lstm_out
