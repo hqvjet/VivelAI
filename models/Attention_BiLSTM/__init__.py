@@ -27,7 +27,6 @@ class AttentionBiLSTM(nn.Module):
         self.fc1 = nn.Linear(input_shape[-1]*2, 256)
         self.fc2 = nn.Linear(first_emb, 128)
         self.fc3 = nn.Linear(128, num_classes)
-        self.attention = nn.MultiheadAttention(embed_dim=input_shape[-1]*2, num_heads=6, batch_first=True)
         self.softmax = nn.Softmax(dim=1)
         self.dropout = nn.Dropout(p=dropout)
 
@@ -37,9 +36,13 @@ class AttentionBiLSTM(nn.Module):
         Returns: weighted sum of lstm outputs
         """
         # Compute attention scores
-        print(lstm_out.shape)
-        attn_scores = self.attention_w(lstm_out).squeeze(-1)  # [batch_size, seq_len]
-        attn_weights = F.softmax(attn_scores, dim=1)              # Normalize scores: [batch_size, seq_len]
+        if lstm_out.size(1) == 1:
+            lstm_out = lstm_out.squeeze(1)
+        else:
+            lstm_out = lstm_out.contiguous()
+
+        attn_scores = self.attention_w(lstm_out)  # [batch_size, seq_len]
+        attn_weights = F.softmax(attn_scores.squeeze(-1), dim=-1)              # Normalize scores: [batch_size, seq_len]
 
         # Weighted sum of LSTM outputs
         weighted_sum = torch.bmm(attn_weights.unsqueeze(1), lstm_out).squeeze(1)  # [batch_size, hidden_dim*2]
