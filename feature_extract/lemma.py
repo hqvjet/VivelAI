@@ -56,7 +56,7 @@ def filterLemmatization(arr_text):
             final_text.append(arr_text[i])
         i += 1
 
-    if len(arr_text) != 1 and arr_text[-1] in lemmatization_dict:
+    if len(arr_text) != 0 and arr_text[-1] in lemmatization_dict:
         final_text.append(lemmatization_dict[arr_text[-1]])
     else:
         final_text.append(arr_text[-1])
