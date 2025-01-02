@@ -98,7 +98,7 @@ def startTraining(device):
 
     mapping = {'neg': 0, 'neu': 1, 'pos': 2}
 
-    train_rating = data['rating'].apply(str).map(mapping)
+    train_rating = train_data['rating'].apply(str).map(mapping)
     test_rating = test_data['rating'].apply(str).map(mapping)
 
     # o, t, tr = 0, 0, 0
