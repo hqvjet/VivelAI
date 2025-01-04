@@ -25,8 +25,8 @@ def makeData(data):
     return titles, contents
         
 def useFeatureExtractor(device):
-    train_data = getDataset('res/train2.csv')
-    test_data = getDataset('res/test2.csv')
+    train_data = getDataset('res/train.csv')
+    test_data = getDataset('res/test.csv')
     train_title, train_content = makeData(train_data)
     test_title, test_content = makeData(test_data)
 
