@@ -50,12 +50,12 @@ def useFeatureExtractor(device):
     test_title = removeStopword(test_title)
     test_content = removeStopword(test_content)
 
-    train_title = emojiHandling(train_title)
-    train_content = emojiHandling(train_content)
-    test_title = emojiHandling(test_title)
-    test_content = emojiHandling(test_content)
+    # train_title = emojiHandling(train_title)
+    # train_content = emojiHandling(train_content)
+    # test_title = emojiHandling(test_title)
+    # test_content = emojiHandling(test_content)
 
-    e_matrix = getEmojiEmbeddingMatrix()
+    # e_matrix = getEmojiEmbeddingMatrix()
  
     key = input('Choose feature extractor method:\n1. PhoBERT\n2. PhoW2V\nYour Input: ')
     
@@ -67,21 +67,21 @@ def useFeatureExtractor(device):
         print('Wrong method, please try again')
 
     if key == '1':
-        tokenizer = getTokenizer(e_matrix)
+        tokenizer = getTokenizer()
         train_title, train_title_attention = useIdentify(train_title, tokenizer)
         train_content, train_content_attention = useIdentify(train_content, tokenizer)
         test_title, test_title_attention = useIdentify(test_title, tokenizer)
         test_content, test_content_attention = useIdentify(test_content, tokenizer)
 
-        train_title = extractFeature(device, train_title, train_title_attention, model=model, tokenizer=tokenizer, emoji_matrix=e_matrix)
-        train_content = extractFeature(device, train_content, train_content_attention, model=model, tokenizer=tokenizer, emoji_matrix=e_matrix)
-        test_title = extractFeature(device, test_title, test_title_attention, model=model, tokenizer=tokenizer, emoji_matrix=e_matrix)
-        test_content = extractFeature(device, test_content, test_content_attention, model=model, tokenizer=tokenizer, emoji_matrix=e_matrix)
+        # train_title = extractFeature(device, train_title, train_title_attention, model=model, tokenizer=tokenizer, emoji_matrix=e_matrix)
+        # train_content = extractFeature(device, train_content, train_content_attention, model=model, tokenizer=tokenizer, emoji_matrix=e_matrix)
+        # test_title = extractFeature(device, test_title, test_title_attention, model=model, tokenizer=tokenizer, emoji_matrix=e_matrix)
+        # test_content = extractFeature(device, test_content, test_content_attention, model=model, tokenizer=tokenizer, emoji_matrix=e_matrix)
 
-        # train_title = extractFeature(device, train_title, train_title_attention, model=model, tokenizer=tokenizer)
-        # train_content = extractFeature(device, train_content, train_content_attention, model=model, tokenizer=tokenizer)
-        # test_title = extractFeature(device, test_title, test_title_attention, model=model, tokenizer=tokenizer)
-        # test_content = extractFeature(device, test_content, test_content_attention, model=model, tokenizer=tokenizer)
+        train_title = extractFeature(device, train_title, train_title_attention, model=model, tokenizer=tokenizer)
+        train_content = extractFeature(device, train_content, train_content_attention, model=model, tokenizer=tokenizer)
+        test_title = extractFeature(device, test_title, test_title_attention, model=model, tokenizer=tokenizer)
+        test_content = extractFeature(device, test_content, test_content_attention, model=model, tokenizer=tokenizer)
 
     else:
         train_title = extractFeature(device, train_title, model=model)

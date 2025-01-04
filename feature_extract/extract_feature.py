@@ -66,10 +66,10 @@ def usingPhoBERT(device, ids, attentions, tokenizer, e_matrix):
     phobert = AutoModel.from_pretrained(PHOBERT_VER, output_hidden_states=True)
     phobert.resize_token_embeddings(len(tokenizer))
 
-    with torch.no_grad():
-        for token in e_matrix.keys():
-            token_id = tokenizer.convert_tokens_to_ids(token)
-            phobert.embeddings.word_embeddings.weight[token_id] = e_matrix[token]
+    # with torch.no_grad():
+    #     for token in e_matrix.keys():
+    #         token_id = tokenizer.convert_tokens_to_ids(token)
+    #         phobert.embeddings.word_embeddings.weight[token_id] = e_matrix[token]
 
     phobert.train()
     phobert = phobert.to(device)
