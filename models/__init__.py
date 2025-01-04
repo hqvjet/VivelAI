@@ -94,8 +94,8 @@ def startTraining(device):
     test_title = np.load(f'res/features/{source}_test_title_features_icon.npy')
     test_content = np.load(f'res/features/{source}_test_content_features_icon.npy')
 
-    train_data = pd.read_csv('res/train.csv')
-    test_data = pd.read_csv('res/test.csv')
+    train_data = pd.read_csv('res/train_emoji.csv')
+    test_data = pd.read_csv('res/test_emoji.csv')
 
     mapping = {'neg': 0, 'neu': 1, 'pos': 2}
 
