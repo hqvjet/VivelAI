@@ -4,36 +4,39 @@ import re
 
 # Các nhóm biểu tượng
 icons_mapping = {
-    "pos": ["😍", "😘", "😄", "😊", "😜","👏", "🌟", "💖", "😂", "❤","♥","🥰", "😎", "👌", "💕", "😁", "☺"
-                "♡", "👍", "🙏", "✌", "😉", "😋", "💪", "😌", "😆", "😅", "😛", "😙", "⭐"],
-    "neu": ["🙌", "😇", "🤔", "😶", "🙈", "😄", "😃"],
-    "neg": ["😭", "😢", "😱", "😡", "😔", "😩", "😞", "😖", "😩", "😒", "😴", "😕", "😤", "😑", "😰"
-                "😓", "😣", "😐", "😨", "👎", ],
-    "food": [
-        "🍎", "🍉", "🍇", "🍓", "🍒", "🍍", "🥭", "🥝", "🍔", "🍟", "🍕", "🌭",
-        "🥪", "🌮", "🌯", "🍣", "🍤", "🍩", "🍰", "🎂", "🍨", "🍧", "🍦", "☕",
-        "🍹", "🥤", "🍷", "🍺", "🍻", "🥂", "🥃"
+    "pos": [  # Positive
+        "😀", "😃", "😄", "😁", "😆", "😅", "😂", "🤣", "😊", "😇",
+        "🙂", "😉", "😌", "😍", "🥰", "😘", "😗", "😙", "😚", "🤗",
+        "🤩", "🤭", "🤠", "🥳", "💖", "💓", "💞", "💕", "💗", "💘",
+        "💝", "🌟", "✨", "💫", "🎉", "🎊", "👏", "🙌", "👍", "💪",
+        "🆗", "💖", "❤️", "🧡", "💛", "💚", "💙", "💜", "🖤", "🤍"
     ],
-    "transport": [
-        "✈", "🚗", "🚕", "🚙", "🚌", "🚎", "🏎", "🚓", "🚑", "🚒", "🚐", "🚚",
-        "🚜", "🚲", "🛵", "🏍", "🚤", "⛵", "🚢", "🚁", "🚂", "🚆", "🚊", "🚉",
-        "🚀", "🛸", "🛳"
+    "neu": [  # Neutral
+        "😐", "😑", "😶", "🙃", "🧐", "🤨", "😏", "😒", "😬", "🤔",
+        "🤷", "😕", "😟", "🤝", "👌", "✌️",
+        "🤞", "🤙", "💆", "🙆",
+        "👐", "🙌", "🤲", "🤝", "👋", "🤚", "🖖", "✋", "🤏"
     ],
-    "nature": [
-        "🌸", "🌼", "🌻", "🌺", "🌷", "🌹", "🌲", "🌳", "🌴", "🌵", "🌾", "🌱",
-        "☀", "🌤", "⛅", "🌥", "☁", "🌧", "⛈", "🌩", "🌪", "🌈", "❄", "🌊", "🔥"
-    ],
-    "activity": [
-        "🎉", "🎊", "🎈", "🎁", "🎀", "🎯", "🎮", "🎲", "🎵", "🎶", "🎤", "🎧",
-        "🎷", "🎸", "🎻", "🥁", "🏀", "⚽", "🏈", "🎾", "🥎", "🏐", "🏉", "🎳",
-        "🎿", "🏂", "🏋", "🚴", "🚶", "🏌", "🤸"
+    "neg": [  # Negative
+        "😞", "😠", "😡", "🤬", "😭", "😢", "😿", "🙀", "💔", "😔",
+        "😖", "😣", "😤", "😩", "😫", "🥵", "🥶", "🤒", "🤕", "🤧",
+        "🥴", "😵", "🤯", "😰", "😨", "😧", "😦", "😬", "😿",
+        "🙄", "💀", "☠️", "👿", "😈", "😒", "😓", "😑", "😞", "💢",
+        "🤡", "👎", "🙅", "🚫", "❌", "🛑", "🤦"
     ]
 }
 
 # Hàm chọn biểu tượng dựa trên nhãn
 def get_icons_by_rating(rating, num_icons=3):
-    if rating in icons_mapping:
-        icons = icons_mapping[rating]
+    if rating == 0:
+        r = 'neg'
+    elif rating == 1:
+        r = 'neu'
+    elif rating == 2:
+        r = 'pos'
+
+    if r in icons_mapping:
+        icons = icons_mapping[r]
     else:
         icons = []  # Nếu không xác định được nhãn, không thêm biểu tượng
     return random.sample(icons, min(num_icons, len(icons)))
@@ -47,32 +50,24 @@ def distribute_icons(text, icons):
     # Thêm biểu tượng vào giữa hoặc cuối câu
     for i, sentence in enumerate(sentences):
         if i < len(icons):  # Đảm bảo không vượt quá số lượng biểu tượng
-            icon_position = random.choice(['middle', 'end'])  # Vị trí thêm biểu tượng
-            if icon_position == 'middle':
-                words = sentence.split()
-                if len(words) > 1:
-                    mid_index = len(words) // 2
-                    words.insert(mid_index, icons[i])
-                    sentences[i] = " ".join(words)
-            elif icon_position == 'end':
-                sentences[i] += f" {icons[i]}"
+            sentences[i] += f" {icons[i]}"
     return " ".join(sentences)
 
 # Đọc dữ liệu từ file Excel
-input_file = "res/test.csv"  # Đường dẫn file của bạn
+input_file = "res/benchmark_test.csv"  # Đường dẫn file của bạn
 data = pd.read_csv(input_file)
 
 # Kiểm tra cột 'text' và 'rating' có tồn tại
-if 'content' not in data.columns or 'rating' not in data.columns:
+if 'comment' not in data.columns or 'label' not in data.columns:
     raise KeyError("Cột 'content' hoặc 'rating' không tồn tại trong file dữ liệu!")
 
 # Áp dụng hàm cho từng dòng dữ liệu
-data['content'] = data.apply(
-    lambda row: distribute_icons(row['content'], get_icons_by_rating(row['rating'], num_icons=3)), axis=1
+data['comment'] = data.apply(
+    lambda row: distribute_icons(row['comment'], get_icons_by_rating(row['label'], num_icons=3)), axis=1
 )
 
 # Lưu kết quả ra file Excel
-output_file = 'res/test_emoji.csv'
+output_file = 'res/benchmark_test_emoji.csv'
 data.to_csv(output_file, index=False)
 
 print(f"Kết quả đã được lưu vào file: {output_file}")
