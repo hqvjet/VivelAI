@@ -19,43 +19,34 @@ def getDataset(file_path):
         print(error)
 
 def makeData(data):
-    titles = data['title'].apply(str)
-    contents = data['content'].apply(str)
+    # titles = data['title'].apply(str)
+    contents = data['comment'].apply(str)
 
-    return titles, contents
+    # return titles, contents
+    return contents
         
 def useFeatureExtractor(device):
-    train_data = getDataset('res/train_emoji.csv')
-    test_data = getDataset('res/test_emoji.csv')
-    train_title, train_content = makeData(train_data)
-    test_title, test_content = makeData(test_data)
+    train_data = getDataset('res/benchmark_train_emoji.csv')
+    test_data = getDataset('res/benchmark_test_emoji.csv')
+    train_content = makeData(train_data)
+    test_content = makeData(test_data)
 
-    train_title = useNormalize(train_title)
     train_content = useNormalize(train_content)
-    test_title = useNormalize(test_title)
     test_content = useNormalize(test_content)
 
-    train_title = useLemma(train_title)
     train_content = useLemma(train_content)
-    test_title = useLemma(test_title)
     test_content = useLemma(test_content)
 
-    train_title = useTokenize(train_title)
     train_content = useTokenize(train_content)
-    test_title = useTokenize(test_title)
     test_content = useTokenize(test_content)
 
-    train_title = removeStopword(train_title)
     train_content = removeStopword(train_content)
-    test_title = removeStopword(test_title)
     test_content = removeStopword(test_content)
 
-    # train_title = emojiHandling(train_title)
-    # train_content = emojiHandling(train_content)
-    # test_title = emojiHandling(test_title)
-    # test_content = emojiHandling(test_content)
+    train_content = emojiHandling(train_content)
+    test_content = emojiHandling(test_content)
 
-    # e_matrix = getEmojiEmbeddingMatrix()
+    e_matrix = getEmojiEmbeddingMatrix()
  
     key = input('Choose feature extractor method:\n1. PhoBERT\n2. PhoW2V\nYour Input: ')
     
@@ -68,28 +59,18 @@ def useFeatureExtractor(device):
 
     if key == '1':
         tokenizer = getTokenizer()
-        train_title, train_title_attention = useIdentify(train_title, tokenizer)
-        train_content, train_content_attention = useIdentify(train_content, tokenizer)
-        test_title, test_title_attention = useIdentify(test_title, tokenizer)
-        test_content, test_content_attention = useIdentify(test_content, tokenizer)
+        # train_content, train_content_attention = useIdentify(train_content, tokenizer)
+        # test_content, test_content_attention = useIdentify(test_content, tokenizer)
 
-        # train_title = extractFeature(device, train_title, train_title_attention, model=model, tokenizer=tokenizer, emoji_matrix=e_matrix)
-        # train_content = extractFeature(device, train_content, train_content_attention, model=model, tokenizer=tokenizer, emoji_matrix=e_matrix)
-        # test_title = extractFeature(device, test_title, test_title_attention, model=model, tokenizer=tokenizer, emoji_matrix=e_matrix)
-        # test_content = extractFeature(device, test_content, test_content_attention, model=model, tokenizer=tokenizer, emoji_matrix=e_matrix)
+        train_content = extractFeature(device, train_content, train_content_attention, model=model, tokenizer=tokenizer, emoji_matrix=e_matrix)
+        test_content = extractFeature(device, test_content, test_content_attention, model=model, tokenizer=tokenizer, emoji_matrix=e_matrix)
 
-        train_title = extractFeature(device, train_title, train_title_attention, model=model, tokenizer=tokenizer)
         train_content = extractFeature(device, train_content, train_content_attention, model=model, tokenizer=tokenizer)
-        test_title = extractFeature(device, test_title, test_title_attention, model=model, tokenizer=tokenizer)
         test_content = extractFeature(device, test_content, test_content_attention, model=model, tokenizer=tokenizer)
 
     else:
-        train_title = extractFeature(device, train_title, model=model)
         train_content = extractFeature(device, train_content, model=model)
-        test_title = extractFeature(device, test_title, model=model)
         test_content = extractFeature(device, test_content, model=model)
 
-    np.save(f'res/features/{model}_train_title_features_icon.npy', train_title.cpu())
     np.save(f'res/features/{model}_train_content_features_icon.npy', train_content.cpu())
-    np.save(f'res/features/{model}_test_title_features_icon.npy', test_title.cpu())
     np.save(f'res/features/{model}_test_content_features_icon.npy', test_content.cpu())

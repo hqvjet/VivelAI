@@ -29,54 +29,6 @@ with open('models/global_config.json', 'r') as file:
 batch_size = config.get('batch_size')
 num_epoch = config.get('num_epoch')
 
-def separate_equally_dataset(title, content, rating, NEG, NEU, POS):
-    n = title.shape[0]
-
-    data = {
-        'title': title,
-        'content': content,
-        'rating': rating
-    }
-
-    neg_filter = {
-        'title': [title for title, rating in zip(data['title'], data['rating']) if rating == 'neg'],
-        'content': [content for content, rating in zip(data['content'], data['rating']) if rating == 'neg'],
-        'rating': [0 for rating in data['rating'] if rating == 'neg']
-    }
-    neu_filter = {
-        'title': [title for title, rating in zip(data['title'], data['rating']) if rating == 'neu'],
-        'content': [content for content, rating in zip(data['content'], data['rating']) if rating == 'neu'],
-        'rating': [1 for rating in data['rating'] if rating == 'neu']
-    }
-    pos_filter = {
-        'title': [title for title, rating in zip(data['title'], data['rating']) if rating == 'pos'],
-        'content': [content for content, rating in zip(data['content'], data['rating']) if rating == 'pos'],
-        'rating': [2 for rating in data['rating'] if rating == 'pos']
-    }
-
-    print(len(neg_filter['title']), len(neu_filter['title']), len(pos_filter['title']))
-    
-    temp_title, temp_content, temp_rating = [], [], []
-    def append(index, dict):
-        temp_title.append(dict['title'][index])
-        temp_content.append(dict['content'][index])
-        temp_rating.append(dict['rating'][index])
-
-    i = 0
-    while(NEG > i // 3 and NEU > i // 3 and POS > i // 3):
-        if i % 3 == 0:
-            append(i // 3, neg_filter)
-        elif i % 3 == 1:
-            append(i // 3, neu_filter)
-        elif i % 3 == 2:
-            append(i // 3, pos_filter)
-
-        i += 1
-
-    print(temp_rating)
-
-    return temp_title, temp_content, temp_rating
-
 def startTraining(device):
     key = input('Choose feature source:\n1. PhoBERT\n2. PhoW2V\nYour Input: ')
 
@@ -89,51 +41,21 @@ def startTraining(device):
     else:
         print('Wrong source, please try again')
 
-    train_title = np.load(f'res/features/{source}_train_title_features_icon.npy')
     train_content = np.load(f'res/features/{source}_train_content_features_icon.npy')
-    test_title = np.load(f'res/features/{source}_test_title_features_icon.npy')
     test_content = np.load(f'res/features/{source}_test_content_features_icon.npy')
 
-    train_data = pd.read_csv('res/train_emoji.csv')
-    test_data = pd.read_csv('res/test_emoji.csv')
+    train_data = pd.read_csv('res/benchmark_train_emoji.csv')
+    test_data = pd.read_csv('res/benchmark_test_emoji.csv')
 
-    mapping = {'neg': 0, 'neu': 1, 'pos': 2}
+    # mapping = {'neg': 0, 'neu': 1, 'pos': 2}
 
-    train_rating = train_data['rating'].apply(str).map(mapping)
-    test_rating = test_data['rating'].apply(str).map(mapping)
+    train_rating = train_data['rating'].apply(int)
+    test_rating = test_data['rating'].apply(int)
 
-    # o, t, tr = 0, 0, 0
-    #
-    # for r in rating:
-    #     if r == 'neg':
-    #         o += 1
-    #     elif r == 'neu':
-    #         t += 1
-    #     else:
-    #         tr += 1
-    #
-    # print(f'Negative: {o}, Neural: {t}, Positive: {tr}')
-
-    # title, content, rating = separate_equally_dataset(title, content, rating, o, t, tr)
-
-    # o, t, tr = 0, 0, 0
-    #
-    # for r in rating:
-    #     if r == 0:
-    #         o += 1
-    #     elif r == 1:
-    #         t += 1
-    #     else:
-    #         tr += 1
-    #
-    # print(f'After separate: Negative: {o}, Neural: {t}, Positive: {tr}')
-
-    train_title = torch.tensor(train_title)
     train_content = torch.tensor(train_content)
     train_rating = torch.tensor(train_rating)
     train_rating = torch.nn.functional.one_hot(train_rating, num_classes=3)
 
-    test_title = torch.tensor(test_title)
     test_content = torch.tensor(test_content)
     test_rating = torch.tensor(test_rating)
     test_rating = torch.nn.functional.one_hot(test_rating, num_classes=3)
