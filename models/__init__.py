@@ -49,8 +49,8 @@ def startTraining(device):
 
     # mapping = {'neg': 0, 'neu': 1, 'pos': 2}
 
-    train_rating = train_data['rating'].apply(int)
-    test_rating = test_data['rating'].apply(int)
+    train_rating = train_data['label'].apply(int)
+    test_rating = test_data['label'].apply(int)
 
     train_content = torch.tensor(train_content)
     train_rating = torch.tensor(train_rating)
