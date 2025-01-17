@@ -7,7 +7,7 @@ with open('models/LSTM/config.json', 'r') as file:
 
 phobert_config = config['phobert']
 phow2v_config = config['phow2v']
-num_classes = 2
+num_classes = 3
 
 class GRU(nn.Module):
     def __init__(self, device, input_shape, emb_tech, dropout=0.1):
