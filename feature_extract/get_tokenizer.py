@@ -2,7 +2,7 @@ from transformers import AutoModel, AutoTokenizer
 from constant import PHOBERT_VER, EMOJI_NEG, EMOJI_NEU, EMOJI_POS
 
 def getTokenizer(e_matrix=None):
-    tokenizer = AutoTokenizer.from_pretrained(PHOBERT_VER)
+    tokenizer = AutoTokenizer.from_pretrained(PHOBERT_VER, use_fast=False, force_download=True)
     # toks = [EMOJI_NEG, EMOJI_NEU, EMOJI_POS]
     # toks = list(e_matrix.keys())
     #
