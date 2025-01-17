@@ -21,7 +21,7 @@ from models.Transformer import Transformer
 from models.GRU import GRU
 from models.BiGRU import BiGRU
 from models.Attention_BiLSTM import AttentionBiLSTM
-from constant import DRIVE_PATH
+from constant import DRIVE_PATH, DATASET_PATH
 
 with open('models/global_config.json', 'r') as file:
     config = json.load(file)
@@ -44,8 +44,8 @@ def startTraining(device):
     train_content = np.load(f'res/features/{source}_train_content_features_icon.npy')
     test_content = np.load(f'res/features/{source}_test_content_features_icon.npy')
 
-    train_data = pd.read_csv('res/benchmark_train_emoji.csv')
-    test_data = pd.read_csv('res/benchmark_test_emoji.csv')
+    train_data = pd.read_csv(f'{DATASET_PATH}/AIVIVN_train_emoji.csv')
+    test_data = pd.read_csv(f'{DATASET_PATH}/AIVIVN_test_emoji.csv')
 
     # mapping = {'neg': 0, 'neu': 1, 'pos': 2}
 
@@ -54,11 +54,11 @@ def startTraining(device):
 
     train_content = torch.tensor(train_content)
     train_rating = torch.tensor(train_rating)
-    train_rating = torch.nn.functional.one_hot(train_rating, num_classes=3)
+    train_rating = torch.nn.functional.one_hot(train_rating, num_classes=2)
 
     test_content = torch.tensor(test_content)
     test_rating = torch.tensor(test_rating)
-    test_rating = torch.nn.functional.one_hot(test_rating, num_classes=3)
+    test_rating = torch.nn.functional.one_hot(test_rating, num_classes=2)
 
     print('Loading Done')
     print(f'Content Shape: {train_content.size()}')
