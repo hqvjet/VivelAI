@@ -46,6 +46,8 @@ def useFeatureExtractor(device):
     train_content = emojiHandling(train_content)
     test_content = emojiHandling(test_content)
 
+    print(train_content[:10])
+
     e_matrix = getEmojiEmbeddingMatrix()
  
     key = input('Choose feature extractor method:\n1. PhoBERT\n2. PhoW2V\nYour Input: ')

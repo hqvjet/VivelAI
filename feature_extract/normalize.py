@@ -24,6 +24,6 @@ def useNormalize(texts):
 
 def killListForm(text):
     text = re.sub(r'[-+]', ',', text)
-    text = re.sub(r'[^\w\s.,!?]', '', text) # Remove emoji
+    # text = re.sub(r'[^\w\s.,!?]', '', text) # Remove emoji
     return re.sub(r'\d+[,./]\s*', ',', text)
 
