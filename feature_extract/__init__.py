@@ -59,14 +59,14 @@ def useFeatureExtractor(device):
 
     if key == '1':
         tokenizer = getTokenizer()
-        # train_content, train_content_attention = useIdentify(train_content, tokenizer)
-        # test_content, test_content_attention = useIdentify(test_content, tokenizer)
+        train_content, train_content_attention = useIdentify(train_content, tokenizer)
+        test_content, test_content_attention = useIdentify(test_content, tokenizer)
 
         train_content = extractFeature(device, train_content, train_content_attention, model=model, tokenizer=tokenizer, emoji_matrix=e_matrix)
         test_content = extractFeature(device, test_content, test_content_attention, model=model, tokenizer=tokenizer, emoji_matrix=e_matrix)
 
-        train_content = extractFeature(device, train_content, train_content_attention, model=model, tokenizer=tokenizer)
-        test_content = extractFeature(device, test_content, test_content_attention, model=model, tokenizer=tokenizer)
+        # train_content = extractFeature(device, train_content, train_content_attention, model=model, tokenizer=tokenizer)
+        # test_content = extractFeature(device, test_content, test_content_attention, model=model, tokenizer=tokenizer)
 
     else:
         train_content = extractFeature(device, train_content, model=model)
