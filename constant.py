@@ -9,3 +9,4 @@ EMOJI_NEU = '<EMOJI_NEUTRAL>'
 EMOJI_POS = '<EMOJI_POSITIVE>'
 
 DRIVE_PATH = '/content/drive/My Drive/NCKH_resultsAndModels'
+DATASET_PATH = '/content/drive/My Drive/arxiv_datasets'

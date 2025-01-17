@@ -9,6 +9,7 @@ from feature_extract.identify import useIdentify
 from feature_extract.extract_feature import extractFeature
 from feature_extract.emoji_handling import emojiHandling, getEmojiEmbeddingMatrix
 from feature_extract.get_tokenizer import getTokenizer
+from constant import DATASET_PATH
 
 def getDataset(file_path):
     try:
@@ -26,8 +27,8 @@ def makeData(data):
     return contents
         
 def useFeatureExtractor(device):
-    train_data = getDataset('res/benchmark_train_emoji.csv')
-    test_data = getDataset('res/benchmark_test_emoji.csv')
+    train_data = getDataset(f'{DATASET_PATH}/AIVIVN_train_emoji.csv')
+    test_data = getDataset(f'{DATASET_PATH}/AIVIVN_test_emoji.csv')
     train_content = makeData(train_data)
     test_content = makeData(test_data)
 

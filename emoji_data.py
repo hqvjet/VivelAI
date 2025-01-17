@@ -27,12 +27,12 @@ icons_mapping = {
 }
 
 # Hàm chọn biểu tượng dựa trên nhãn
-def get_icons_by_rating(rating, num_icons=3):
+def get_icons_by_rating(rating, num_icons):
     if rating == 0:
         r = 'neg'
-    elif rating == 1:
+    elif num_icons == 3 and rating == 1:
         r = 'neu'
-    elif rating == 2:
+    else:
         r = 'pos'
 
     if r in icons_mapping:
@@ -54,21 +54,20 @@ def distribute_icons(text, icons):
     return " ".join(sentences)
 
 # Đọc dữ liệu từ file Excel
-input_file = "res/benchmark_test.csv"  # Đường dẫn file của bạn
-data = pd.read_csv(input_file)
+input_files = ['AIVIVN_train', 'AIVIVN_test', 'UIT_VSFC_train', 'UIT_VSFC_test', 'UIT_ViHSD_train', 'UIT_ViHSD_test']  # Đường dẫn file của bạn
+two_label_file = ['AIVIVN_train', 'AIVIVN_test']
+for input_file in input_files:
+    data = pd.read_csv(f'res/{input_file}.csv')
 
-# Kiểm tra cột 'text' và 'rating' có tồn tại
-if 'comment' not in data.columns or 'label' not in data.columns:
-    raise KeyError("Cột 'content' hoặc 'rating' không tồn tại trong file dữ liệu!")
+    if 'comment' not in data.columns or 'label' not in data.columns:
+        raise KeyError("Cột 'content' hoặc 'rating' không tồn tại trong file dữ liệu!")
 
-# Áp dụng hàm cho từng dòng dữ liệu
-data['comment'] = data.apply(
-    lambda row: distribute_icons(row['comment'], get_icons_by_rating(row['label'], num_icons=3)), axis=1
-)
+    data['comment'] = data.apply(
+        lambda row: distribute_icons(row['comment'], get_icons_by_rating(row['label'], num_icons=2 if input_file in two_label_file else 3)), axis=1
+    )
 
-# Lưu kết quả ra file Excel
-output_file = 'res/benchmark_test_emoji.csv'
-data.to_csv(output_file, index=False)
+    output_file = f'res/{input_file}_emoji.csv'
+    data.to_csv(output_file, index=False)
 
-print(f"Kết quả đã được lưu vào file: {output_file}")
+    print(f"Kết quả đã được lưu vào file: {output_file}")
 
