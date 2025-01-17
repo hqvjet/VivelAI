@@ -43,13 +43,8 @@ def useFeatureExtractor(device):
     train_content = removeStopword(train_content)
     test_content = removeStopword(test_content)
 
-    train_content = emojiHandling(train_content)
-    test_content = emojiHandling(test_content)
-
     print(train_content[:10])
 
-    e_matrix = getEmojiEmbeddingMatrix()
- 
     key = input('Choose feature extractor method:\n1. PhoBERT\n2. PhoW2V\nYour Input: ')
     
     if key == '1':
@@ -60,19 +55,15 @@ def useFeatureExtractor(device):
         print('Wrong method, please try again')
 
     if key == '1':
-        tokenizer = getTokenizer(e_matrix)
         train_content, train_content_attention = useIdentify(train_content, tokenizer)
         test_content, test_content_attention = useIdentify(test_content, tokenizer)
 
-        train_content = extractFeature(device, train_content, train_content_attention, model=model, tokenizer=tokenizer, emoji_matrix=e_matrix)
-        test_content = extractFeature(device, test_content, test_content_attention, model=model, tokenizer=tokenizer, emoji_matrix=e_matrix)
-
-        # train_content = extractFeature(device, train_content, train_content_attention, model=model, tokenizer=tokenizer)
-        # test_content = extractFeature(device, test_content, test_content_attention, model=model, tokenizer=tokenizer)
+        train_content = extractFeature(device, train_content, train_content_attention, model=model, tokenizer=tokenizer)
+        test_content = extractFeature(device, test_content, test_content_attention, model=model, tokenizer=tokenizer)
 
     else:
         train_content = extractFeature(device, train_content, model=model)
         test_content = extractFeature(device, test_content, model=model)
 
-    np.save(f'res/features/{model}_train_content_features_icon.npy', train_content.cpu())
-    np.save(f'res/features/{model}_test_content_features_icon.npy', test_content.cpu())
+    np.save(f'res/features/{model}_train_content_features.npy', train_content.cpu())
+    np.save(f'res/features/{model}_test_content_features.npy', test_content.cpu())
