@@ -61,14 +61,13 @@ def startTraining(device):
     test_rating = torch.nn.functional.one_hot(test_rating, num_classes=3)
 
     print('Loading Done')
-    print(f'Title Shape: {train_title.size()}')
     print(f'Content Shape: {train_content.size()}')
     print(f'Label Shape: {train_rating.size()}')
 
     key = input('Use Title and Content ?\n1. Yes\n2. No\nYour Input: ')
     if key == '1':
-        train_data = torch.cat((train_title, train_content), dim=-1)
-        test_data = torch.cat((test_title, test_content), dim=-1)
+        train_data = train_content
+        test_data = test_content
     else:
         train_data = train_content
         test_data = test_content
