@@ -9,7 +9,7 @@ class BiGRU_CNN_Trans_Enc(nn.Module):
         self.emb_tech = emb_tech
 
         self.bigru = nn.GRU(input_size=input_shape[-1], hidden_size=hidden_size,\
-                            num_layers=gru_layers, device=device, dropout=dropout,\
+                            num_layers=gru_layer, device=device, dropout=dropout,\
                             bidirectional=True, batch_first=True)
 
         self.convs = nn.ModuleList([
