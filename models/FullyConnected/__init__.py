@@ -6,7 +6,7 @@ num_classes = 3
 class FC(nn.Module):
     def __init__(self, input_shape, device, emb_tech, dropout=0.1):
         super(FC, self).__init__()
-        self.model_name = 'FullyConnected'
+        self.model_name = 'FFNN'
         self.fc1 = nn.Linear(input_shape[-1], 1024)
         self.fc2 = nn.Linear(1024, 128)
         self.fc3 = nn.Linear(128, num_classes)

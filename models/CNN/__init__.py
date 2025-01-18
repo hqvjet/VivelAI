@@ -7,11 +7,11 @@ with open('models/CNN/config.json', 'r') as file:
     config = json.load(file)
 
 config = config['phobert']
-num_classes = 3
-filters = [2, 3, 4]
+num_classes = 2
+filters = [2, 3, 4, 5]
 
 class CNN2d(nn.Module):
-    def __init__(self, device, input_shape, emb_tech, dropout=0.0):
+    def __init__(self, device, input_shape, emb_tech, dropout=0.1):
         super(CNN2d, self).__init__()
         self.model_name = 'CNN'
         self.emb_tech = emb_tech

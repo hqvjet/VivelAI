@@ -22,6 +22,7 @@ from models.GRU import GRU
 from models.BiGRU import BiGRU
 from models.Attention_BiLSTM import AttentionBiLSTM
 from models.SVM import SVM
+from models.CNN_Trans_Enc import CNN_Trans_Enc
 from constant import DRIVE_PATH, DATASET_PATH
 
 with open('models/global_config.json', 'r') as file:
@@ -46,8 +47,8 @@ def startTraining(device):
     test_content = np.load(f'res/features/{source}_test_content_features_viso.npy')
 
 
-    train_data = pd.read_csv(f'{DATASET_PATH}/benchmark_train_emoji.csv')
-    test_data = pd.read_csv(f'{DATASET_PATH}/benchmark_test_emoji.csv')
+    train_data = pd.read_csv(f'{DATASET_PATH}/AIVIVN_train_emoji.csv')
+    test_data = pd.read_csv(f'{DATASET_PATH}/AIVIVN_test_emoji.csv')
 
     # mapping = {'neg': 0, 'neu': 1, 'pos': 2}
 
@@ -56,11 +57,11 @@ def startTraining(device):
 
     train_content = torch.tensor(train_content)
     train_rating = torch.tensor(train_rating)
-    train_rating = torch.nn.functional.one_hot(train_rating, num_classes=3)
+    train_rating = torch.nn.functional.one_hot(train_rating, num_classes=2)
 
     test_content = torch.tensor(test_content)
     test_rating = torch.tensor(test_rating)
-    test_rating = torch.nn.functional.one_hot(test_rating, num_classes=3)
+    test_rating = torch.nn.functional.one_hot(test_rating, num_classes=2)
 
     print('Loading Done')
     print(f'Content Shape: {train_content.size()}')
@@ -103,6 +104,8 @@ def startTraining(device):
         train(AttentionBiLSTM(device=device, dropout=0.1, emb_tech=emb_tech, input_shape=input_shape), train_input=train_data, train_output=train_rating, test_input=test_data, test_output=test_rating, device=device, useTitle=useTitle)      
     elif key == '12':
         train(SVM(emb_tech=emb_tech, useTitle=useTitle), train_input=train_data, train_output=train_rating, test_input=test_data, test_output=test_rating, device=device, useTitle=useTitle)
+    elif key == '13':
+        train(CNN_Trans_Enc(input_shape=input_shape, dropout=0.1), train_input=train_data, train_output=train_rating, test_input=test_data, test_output=test_rating, device=device, useTitle=useTitle)
     else:
         print('Wrong key of model, please choose again')
 

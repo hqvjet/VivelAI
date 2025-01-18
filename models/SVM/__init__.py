@@ -22,11 +22,11 @@ class SVM(nn.Module):
         if train:
             self.model.fit(x, y)
 
-            joblib.dump(self.model, (f'res/models/{self.direction}/{self.model_direction}/{self.model_name}_icon.pkl'))
-            joblib.dump(self.model, (f'{DRIVE_PATH}/models/{self.direction}/{self.model_direction}/{self.model_name}_icon.pkl'))
+            joblib.dump(self.model, (f'res/models/{self.direction}/{self.model_direction}/{self.model_name}_viso.pkl'))
+            joblib.dump(self.model, (f'{DRIVE_PATH}/models/{self.direction}/{self.model_direction}/{self.model_name}_viso.pkl'))
 
         else:
-            self.model = joblib.load(f'res/models/{self.direction}/{self.model_direction}/{self.model_name}_icon.pkl')
+            self.model = joblib.load(f'res/models/{self.direction}/{self.model_direction}/{self.model_name}_viso.pkl')
 
             predicted = self.model.predict(x)
             return predicted

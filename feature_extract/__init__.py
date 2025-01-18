@@ -27,8 +27,8 @@ def makeData(data):
     return contents
         
 def useFeatureExtractor(device):
-    train_data = getDataset(f'{DATASET_PATH}/benchmark_train_emoji.csv')
-    test_data = getDataset(f'{DATASET_PATH}/benchmark_test_emoji.csv')
+    train_data = getDataset(f'{DATASET_PATH}/AIVIVN_train_emoji.csv')
+    test_data = getDataset(f'{DATASET_PATH}/AIVIVN_test_emoji.csv')
     train_content = makeData(train_data)
     test_content = makeData(test_data)
 
