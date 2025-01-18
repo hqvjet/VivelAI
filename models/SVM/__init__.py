@@ -10,13 +10,7 @@ class SVM(nn.Module):
     def __init__(self, emb_tech, useTitle):
         super(SVM, self).__init__()
         self.model_name = 'SVM'
-        params = {
-            'C': [0.1, 1, 10, 100],
-            'kernel': ['linear', 'rbf'],
-            'gamma': ['scale', 'auto']
-        }
-        self.gridsearch = GridSearchCV(SVC(), params, cv=3, scoring='accuracy', n_jobs=-1, verbose=2)
-        self.model = None
+        self.model = SVC(C=0.1, kernel='rbf', gamma='auto')
         self.emb_tech = emb_tech
         self.direction = 'with_title' if useTitle else 'no_title'
         self.model_direction = 'phobert' if emb_tech == 1 else 'phow2v'
@@ -26,9 +20,6 @@ class SVM(nn.Module):
             x = x.reshape(x.shape[0], -1)
 
         if train:
-            self.gridsearch.fit(x, y)
-            print('Best Params:', self.gridsearch.best_params_)
-            self.model = SVC(**self.gridsearch.best_params_)
             self.model.fit(x, y)
 
             joblib.dump(self.model, (f'res/models/{self.direction}/{self.model_direction}/{self.model_name}_icon.pkl'))
