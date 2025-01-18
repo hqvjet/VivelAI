@@ -12,7 +12,7 @@ class CNN_Trans_Enc(nn.Module):
         self.emb_tech = emb_tech
 
         self.convs = nn.ModuleList([
-            nn.Conv1d(in_channels=input_shape[-1], out_channels=128, kernel_size=k, padding=1)
+            nn.Conv1d(in_channels=input_shape[-1], out_channels=128, kernel_size=k, padding=k//2)
             for k in kerner_size
         ])
 
