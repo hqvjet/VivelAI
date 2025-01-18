@@ -44,8 +44,8 @@ def startTraining(device):
     else:
         print('Wrong source, please try again')
 
-    train_content = np.load(f'res/features/{source}_train_content_features_viso.npy')
-    test_content = np.load(f'res/features/{source}_test_content_features_viso.npy')
+    train_content = np.load(f'res/features/{source}_train_content_features.npy')
+    test_content = np.load(f'res/features/{source}_test_content_features.npy')
 
 
     train_data = pd.read_csv(f'{DATASET_PATH}/AIVIVN_train_emoji.csv')
@@ -204,7 +204,7 @@ def train(model, train_input, train_output, test_input, test_output, device, use
 
             # Compare current model with previous model
             if best_acc < accuracy or (best_acc == accuracy and best_loss > avg_val_loss):
-                torch.save(model.state_dict(), f'res/models/{direction}/{model_direction}/{model.model_name}_viso.pth')
+                torch.save(model.state_dict(), f'res/models/{direction}/{model_direction}/{model.model_name}.pth')
                 best_acc = accuracy
                 best_loss = avg_val_loss
                 print('Model saved, current accuracy:', best_acc)
@@ -214,8 +214,8 @@ def train(model, train_input, train_output, test_input, test_output, device, use
 
         # Test model performance
         test_bar = tqdm(test_data, desc=f"Epoch {epoch + 1}/{num_epoch}:")
-        model.load_state_dict(torch.load(f'res/models/{direction}/{model_direction}/{model.model_name}_viso.pth'))
-        torch.save(model.state_dict(), f'{DRIVE_PATH}/models/{direction}/{model_direction}/{model.model_name}_viso.pth')
+        model.load_state_dict(torch.load(f'res/models/{direction}/{model_direction}/{model.model_name}.pth'))
+        torch.save(model.state_dict(), f'{DRIVE_PATH}/models/{direction}/{model_direction}/{model.model_name}.pth')
         model.eval()
 
         predicted = []
@@ -243,9 +243,9 @@ def train(model, train_input, train_output, test_input, test_output, device, use
         print(report)
 
     # Save report
-    with open(f'{DRIVE_PATH}/report/{direction}/{model_direction}/{model.model_name}_viso.txt', 'w') as file:
+    with open(f'{DRIVE_PATH}/report/{direction}/{model_direction}/{model.model_name}.txt', 'w') as file:
         file.write(report)
-    print(f'REPORT saved - {DRIVE_PATH}/report/{direction}/{model_direction}/{model.model_name}_viso.txt')
+    print(f'REPORT saved - {DRIVE_PATH}/report/{direction}/{model_direction}/{model.model_name}.txt')
 
     # Visualize model val train processing
     plt.figure()
@@ -254,7 +254,7 @@ def train(model, train_input, train_output, test_input, test_output, device, use
     plt.ylabel('Accuracy')
     plt.xlabel('Epoch')
     plt.legend()
-    plt.savefig(f'{DRIVE_PATH}/train_process/{direction}/{model_direction}/{model.model_name}_viso.png')
+    plt.savefig(f'{DRIVE_PATH}/train_process/{direction}/{model_direction}/{model.model_name}.png')
     plt.close()
 
-    print(f'Image saved - {DRIVE_PATH}/train_process/{direction}/{model_direction}/{model.model_name}_viso.png')
+    print(f'Image saved - {DRIVE_PATH}/train_process/{direction}/{model_direction}/{model.model_name}.png')
