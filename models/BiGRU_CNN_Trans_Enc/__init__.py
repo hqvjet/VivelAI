@@ -10,6 +10,7 @@ class BiGRU_CNN_Trans_Enc(nn.Module):
         self.model_name = 'BiGRU_CNN_Trans_Enc'
         self.emb_tech = emb_tech
         self.num_layers = gru_layer
+        self.hidden_size = hidden_size
 
         self.bigru = nn.GRU(input_size=input_shape[-1], hidden_size=hidden_size,\
                             num_layers=gru_layer, device=device, dropout=dropout,\
