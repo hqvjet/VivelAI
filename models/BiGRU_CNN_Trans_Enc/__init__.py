@@ -3,7 +3,7 @@ import torch.nn as nn
 import torch.nn.functional as F
 
 class BiGRU_CNN_Trans_Enc(nn.Module):
-    def __init__(self, input_shape, emb_tech, hidden_size=256, gru_layer=2, kerner_size=[2,3,4,5], cnn_filter=128, trans_layer=2, num_head=8, dropout=0.1):
+    def __init__(self, input_shape, emb_tech, hidden_size=256, device=device, gru_layer=2, kerner_size=[2,3,4,5], cnn_filter=128, trans_layer=2, num_head=8, dropout=0.1):
         super(BiGRU_CNN_Trans_Enc, self).__init__()
         self.model_name = 'BiGRU_CNN_Trans_Enc'
         self.emb_tech = emb_tech

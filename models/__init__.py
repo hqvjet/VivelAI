@@ -108,7 +108,7 @@ def startTraining(device):
     elif key == '13':
         train(CNN_Trans_Enc(input_shape=input_shape, emb_tech=emb_tech, dropout=0.1), train_input=train_data, train_output=train_rating, test_input=test_data, test_output=test_rating, device=device, useTitle=useTitle)
     elif key == '14':
-        train(BiGRU_CNN_Trans_Enc(input_shape=input_shape, emb_tech=emb_tech, dropout=0.1), train_input=train_data, train_output=train_rating, test_input=test_data, test_output=test_rating, device=device, useTitle=useTitle)
+        train(BiGRU_CNN_Trans_Enc(input_shape=input_shape, device=device, emb_tech=emb_tech, dropout=0.1), train_input=train_data, train_output=train_rating, test_input=test_data, test_output=test_rating, device=device, useTitle=useTitle)
     else:
         print('Wrong key of model, please choose again')
 
