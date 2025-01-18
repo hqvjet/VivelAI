@@ -21,6 +21,7 @@ from models.Transformer import Transformer
 from models.GRU import GRU
 from models.BiGRU import BiGRU
 from models.Attention_BiLSTM import AttentionBiLSTM
+from models.SVM import SVM
 from constant import DRIVE_PATH, DATASET_PATH
 
 with open('models/global_config.json', 'r') as file:
@@ -100,6 +101,8 @@ def startTraining(device):
         train(CNN2d(device=device, input_shape=input_shape, emb_tech=emb_tech, dropout=0.1), train_input=train_data, train_output=train_rating, test_input=test_data, test_output=test_rating, input=data, output=rating, device=device, useTitle=useTitle)
     elif key == '11':
         train(AttentionBiLSTM(device=device, dropout=0.1, emb_tech=emb_tech, input_shape=input_shape), train_input=train_data, train_output=train_rating, test_input=test_data, test_output=test_rating, device=device, useTitle=useTitle)      
+    elif key == '12':
+        train(SVM(emb_tech=emb_tech, useTitle=useTitle), train_input=train_data, train_output=train_rating, test_input=test_data, test_output=test_rating, device=device, useTitle=useTitle)
     else:
         print('Wrong key of model, please choose again')
 
@@ -107,7 +110,7 @@ def train(model, train_input, train_output, test_input, test_output, device, use
     model.to(device)
     direction = 'with_title' if useTitle else 'no_title'
     model_direction = 'phobert' if model.emb_tech == 1 else 'phow2v'
-    ML_model = ['XGBoost', 'Logistic_Regression']
+    ML_model = ['XGBoost', 'Logistic_Regression', 'SVM']
 
     # Splitting dataset
     train_size = int(0.9*train_input.size(0))
