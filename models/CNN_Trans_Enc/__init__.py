@@ -1,6 +1,7 @@
 import torch
 import torch.nn as nn
 import torch.nn.functional as F
+import numpy as np
 
 num_classes = 2
 
@@ -25,7 +26,7 @@ class CNN_Trans_Enc(nn.Module):
         x = x.unsqueeze(2)
         cnn_out = [F.relu(conv(x)).squeeze(2) for conv in self.convs]
         print(cnn_out, len(cnn_out))
-        cnn_out = torch.tensor(cnn_out)
+        cnn_out = torch.tensor(np.array(cnn_out))
         print(cnn_out.size())
         cnn_out = torch.cat(cnn_out, dim=1)
 
