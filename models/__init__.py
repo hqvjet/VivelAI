@@ -21,6 +21,9 @@ from models.Transformer import Transformer
 from models.GRU import GRU
 from models.BiGRU import BiGRU
 from models.Attention_BiLSTM import AttentionBiLSTM
+from models.SVM import SVM
+from models.CNN_Trans_Enc import CNN_Trans_Enc
+from models.BiGRU_CNN_Trans_Enc import BiGRU_CNN_Trans_Enc
 from constant import DRIVE_PATH, DATASET_PATH
 
 with open('models/global_config.json', 'r') as file:
@@ -41,11 +44,12 @@ def startTraining(device):
     else:
         print('Wrong source, please try again')
 
-    train_content = np.load(f'res/features/{source}_train_content_features.npy')
-    test_content = np.load(f'res/features/{source}_test_content_features.npy')
+    train_content = np.load(f'res/features/{source}_train_content_features_viso.npy')
+    test_content = np.load(f'res/features/{source}_test_content_features_viso.npy')
 
-    train_data = pd.read_csv(f'{DATASET_PATH}/UIT_VSFC_train_emoji.csv')
-    test_data = pd.read_csv(f'{DATASET_PATH}/UIT_VSFC_test_emoji.csv')
+
+    train_data = pd.read_csv(f'{DATASET_PATH}/AIVIVN_train_emoji.csv')
+    test_data = pd.read_csv(f'{DATASET_PATH}/AIVIVN_test_emoji.csv')
 
     # mapping = {'neg': 0, 'neu': 1, 'pos': 2}
 
@@ -54,11 +58,11 @@ def startTraining(device):
 
     train_content = torch.tensor(train_content)
     train_rating = torch.tensor(train_rating)
-    train_rating = torch.nn.functional.one_hot(train_rating, num_classes=3)
+    train_rating = torch.nn.functional.one_hot(train_rating, num_classes=2)
 
     test_content = torch.tensor(test_content)
     test_rating = torch.tensor(test_rating)
-    test_rating = torch.nn.functional.one_hot(test_rating, num_classes=3)
+    test_rating = torch.nn.functional.one_hot(test_rating, num_classes=2)
 
     print('Loading Done')
     print(f'Content Shape: {train_content.size()}')
@@ -73,7 +77,7 @@ def startTraining(device):
         test_data = test_content
     useTitle = False if key == '2' else True
 
-    key = input('Choose one of these classification to train:\n1. LSTM\n2. BiLSTM\n3. XGBoost\n4. LG\n5. Ensemble CNN LSTM\n6. Ensemble CNN BiLSTM\n7. GRU\n8. BiGRU\n9. Transformer\n10. CNN\nYour Input: ')
+    key = input('Choose one of these classification to train:\n1. LSTM\n2. BiLSTM\n3. XGBoost\n4. LG\n5. Ensemble CNN LSTM\n6. Ensemble CNN BiLSTM\n7. GRU\n8. BiGRU\n9. Transformer\n10. CNN\n11. A-BiLSTM\n12. SVM\nYour Input: ')
     emb_tech = 1 if source == 'phobert' else 2
     input_shape = train_data.size()
 
@@ -96,9 +100,15 @@ def startTraining(device):
     elif key == '9':
         train(Transformer(device=device, input_shape=input_shape, emb_tech=emb_tech, dropout=0.1), train_input=train_data, train_output=train_rating, test_input=test_data, test_output=test_rating, device=device, useTitle=useTitle)
     elif key == '10':
-        train(CNN2d(device=device, input_shape=input_shape, emb_tech=emb_tech, dropout=0.1), train_input=train_data, train_output=train_rating, test_input=test_data, test_output=test_rating, input=data, output=rating, device=device, useTitle=useTitle)
+        train(CNN2d(device=device, input_shape=input_shape, emb_tech=emb_tech, dropout=0.1), train_input=train_data, train_output=train_rating, test_input=test_data, test_output=test_rating, device=device, useTitle=useTitle)
     elif key == '11':
         train(AttentionBiLSTM(device=device, dropout=0.1, emb_tech=emb_tech, input_shape=input_shape), train_input=train_data, train_output=train_rating, test_input=test_data, test_output=test_rating, device=device, useTitle=useTitle)      
+    elif key == '12':
+        train(SVM(emb_tech=emb_tech, useTitle=useTitle), train_input=train_data, train_output=train_rating, test_input=test_data, test_output=test_rating, device=device, useTitle=useTitle)
+    elif key == '13':
+        train(CNN_Trans_Enc(input_shape=input_shape, emb_tech=emb_tech, dropout=0.1), train_input=train_data, train_output=train_rating, test_input=test_data, test_output=test_rating, device=device, useTitle=useTitle)
+    elif key == '14':
+        train(BiGRU_CNN_Trans_Enc(input_shape=input_shape, device=device, emb_tech=emb_tech, dropout=0.1), train_input=train_data, train_output=train_rating, test_input=test_data, test_output=test_rating, device=device, useTitle=useTitle)
     else:
         print('Wrong key of model, please choose again')
 
@@ -106,7 +116,7 @@ def train(model, train_input, train_output, test_input, test_output, device, use
     model.to(device)
     direction = 'with_title' if useTitle else 'no_title'
     model_direction = 'phobert' if model.emb_tech == 1 else 'phow2v'
-    ML_model = ['XGBoost', 'Logistic_Regression']
+    ML_model = ['XGBoost', 'Logistic_Regression', 'SVM']
 
     # Splitting dataset
     train_size = int(0.9*train_input.size(0))
@@ -133,7 +143,7 @@ def train(model, train_input, train_output, test_input, test_output, device, use
 
     else:
         criterion = nn.CrossEntropyLoss()
-        optimizer = opt.Adam(model.parameters(), lr=0.00001)
+        optimizer = opt.Adam(model.parameters(), lr=0.000003)
         scheduler = opt.lr_scheduler.ReduceLROnPlateau(optimizer, mode='min', patience=15, factor=0.5, verbose=True)
         train_data = DataLoader(TensorDataset(train_input[:train_size], train_output[:train_size]), batch_size=batch_size, shuffle=True)
         valid_data = DataLoader(TensorDataset(train_input[train_size:], train_output[train_size:]), batch_size=batch_size, shuffle=True)
@@ -194,7 +204,7 @@ def train(model, train_input, train_output, test_input, test_output, device, use
 
             # Compare current model with previous model
             if best_acc < accuracy or (best_acc == accuracy and best_loss > avg_val_loss):
-                torch.save(model.state_dict(), f'res/models/{direction}/{model_direction}/{model.model_name}.pth')
+                torch.save(model.state_dict(), f'res/models/{direction}/{model_direction}/{model.model_name}_viso.pth')
                 best_acc = accuracy
                 best_loss = avg_val_loss
                 print('Model saved, current accuracy:', best_acc)
@@ -204,8 +214,8 @@ def train(model, train_input, train_output, test_input, test_output, device, use
 
         # Test model performance
         test_bar = tqdm(test_data, desc=f"Epoch {epoch + 1}/{num_epoch}:")
-        model.load_state_dict(torch.load(f'res/models/{direction}/{model_direction}/{model.model_name}.pth'))
-        torch.save(model.state_dict(), f'{DRIVE_PATH}/models/{direction}/{model_direction}/{model.model_name}.pth')
+        model.load_state_dict(torch.load(f'res/models/{direction}/{model_direction}/{model.model_name}_viso.pth'))
+        torch.save(model.state_dict(), f'{DRIVE_PATH}/models/{direction}/{model_direction}/{model.model_name}_viso.pth')
         model.eval()
 
         predicted = []
@@ -233,9 +243,9 @@ def train(model, train_input, train_output, test_input, test_output, device, use
         print(report)
 
     # Save report
-    with open(f'{DRIVE_PATH}/report/{direction}/{model_direction}/{model.model_name}.txt', 'w') as file:
+    with open(f'{DRIVE_PATH}/report/{direction}/{model_direction}/{model.model_name}_viso.txt', 'w') as file:
         file.write(report)
-    print(f'REPORT saved - {DRIVE_PATH}/report/{direction}/{model_direction}/{model.model_name}.txt')
+    print(f'REPORT saved - {DRIVE_PATH}/report/{direction}/{model_direction}/{model.model_name}_viso.txt')
 
     # Visualize model val train processing
     plt.figure()
@@ -244,7 +254,7 @@ def train(model, train_input, train_output, test_input, test_output, device, use
     plt.ylabel('Accuracy')
     plt.xlabel('Epoch')
     plt.legend()
-    plt.savefig(f'{DRIVE_PATH}/train_process/{direction}/{model_direction}/{model.model_name}.png')
+    plt.savefig(f'{DRIVE_PATH}/train_process/{direction}/{model_direction}/{model.model_name}_viso.png')
     plt.close()
 
-    print(f'Image saved - {DRIVE_PATH}/train_process/{direction}/{model_direction}/{model.model_name}.png')
+    print(f'Image saved - {DRIVE_PATH}/train_process/{direction}/{model_direction}/{model.model_name}_viso.png')
