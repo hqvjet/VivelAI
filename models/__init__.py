@@ -45,8 +45,8 @@ def startTraining(device):
     test_content = np.load(f'res/features/{source}_test_content_features_viso.npy')
 
 
-    train_data = pd.read_csv(f'{DATASET_PATH}/UIT_VSFC_train_emoji.csv')
-    test_data = pd.read_csv(f'{DATASET_PATH}/UIT_VSFC_test_emoji.csv')
+    train_data = pd.read_csv(f'{DATASET_PATH}/benchmark_train_emoji.csv')
+    test_data = pd.read_csv(f'{DATASET_PATH}/benchmark_test_emoji.csv')
 
     # mapping = {'neg': 0, 'neu': 1, 'pos': 2}
 
