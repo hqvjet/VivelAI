@@ -17,7 +17,7 @@ class BiGRU_CNN_Trans_Enc(nn.Module):
                             bidirectional=True, batch_first=True)
 
         self.convs = nn.ModuleList([
-            nn.Conv1d(in_channels=input_shape[-1], out_channels=cnn_filter, kernel_size=k, padding='same', padding_mode='zeros')
+            nn.Conv1d(in_channels=hidden_size*2, out_channels=cnn_filter, kernel_size=k, padding='same', padding_mode='zeros')
             for k in kerner_size
         ])
 
@@ -34,6 +34,8 @@ class BiGRU_CNN_Trans_Enc(nn.Module):
         bigru_out, _ = self.bigru(x, h0)
         bigru_out = bigru_out[:, -1, :]
         print(bigru_out.size())
+
+        x = bigru_out.unsqueeze(2)
 
         cnn_out = [F.relu(conv(x)).squeeze(2) for conv in self.convs]
         cnn_out = torch.cat(cnn_out, dim=1)
