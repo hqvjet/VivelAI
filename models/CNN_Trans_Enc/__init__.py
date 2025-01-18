@@ -33,6 +33,7 @@ class CNN_Trans_Enc(nn.Module):
 
         cnn_out = cnn_out.unsqueeze(1)
         out = self.trans(cnn_out).squeeze(1)
+        print(out.size())
 
         out = self.fc(out)
         return self.softmax(out)
