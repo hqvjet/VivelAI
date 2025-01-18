@@ -25,9 +25,8 @@ class CNN_Trans_Enc(nn.Module):
     def forward(self, x):
         x = x.unsqueeze(2)
         cnn_out = [F.relu(conv(x)).squeeze(2) for conv in self.convs]
-        print(cnn_out, len(cnn_out))
-        cnn_out = torch.tensor(cnn_out.cpu().detach().numpy())
-        print(cnn_out.size())
+        for i in cnn_out:
+            print(i.size())
         cnn_out = torch.cat(cnn_out, dim=1)
 
         cnn_out = cnn_out.unsqueeze(1)
