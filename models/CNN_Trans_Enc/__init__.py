@@ -16,7 +16,7 @@ class CNN_Trans_Enc(nn.Module):
             for k in kerner_size
         ])
 
-        enc_layer = nn.TransformerEncoderLayer(d_model=cnn_filter, nhead=num_head, dim_feedforward=1024, dropout=dropout, batch_first=True)
+        enc_layer = nn.TransformerEncoderLayer(d_model=128*len(kerner_size), nhead=num_head, dim_feedforward=1024, dropout=dropout, batch_first=True)
         self.trans = nn.TransformerEncoder(enc_layer, num_layers=trans_layer)
 
         self.fc = nn.Linear(len(kerner_size) * cnn_filter, num_classes)
