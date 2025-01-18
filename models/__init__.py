@@ -23,6 +23,7 @@ from models.BiGRU import BiGRU
 from models.Attention_BiLSTM import AttentionBiLSTM
 from models.SVM import SVM
 from models.CNN_Trans_Enc import CNN_Trans_Enc
+from models.BiGRU_CNN_Trans_Enc import BiGRU_CNN_Trans_Enc
 from constant import DRIVE_PATH, DATASET_PATH
 
 with open('models/global_config.json', 'r') as file:
@@ -106,6 +107,8 @@ def startTraining(device):
         train(SVM(emb_tech=emb_tech, useTitle=useTitle), train_input=train_data, train_output=train_rating, test_input=test_data, test_output=test_rating, device=device, useTitle=useTitle)
     elif key == '13':
         train(CNN_Trans_Enc(input_shape=input_shape, emb_tech=emb_tech, dropout=0.1), train_input=train_data, train_output=train_rating, test_input=test_data, test_output=test_rating, device=device, useTitle=useTitle)
+    elif key == '14':
+        train(BiGRU_CNN_Trans_Enc(input_shape=input_shape, emb_tech=emb_tech, dropout=0.1), train_input=train_data, train_output=train_rating, test_input=test_data, test_output=test_rating, device=device, useTitle=useTitle)
     else:
         print('Wrong key of model, please choose again')
 
