@@ -48,8 +48,8 @@ def startTraining(device):
     test_content = np.load(f'res/features/{source}_test_content_features_icon.npy')
 
 
-    train_data = pd.read_csv(f'{DATASET_PATH}/AIVIVN_train_emoji.csv')
-    test_data = pd.read_csv(f'{DATASET_PATH}/AIVIVN_test_emoji.csv')
+    train_data = pd.read_csv(f'{DATASET_PATH}/UIT_ViHSD_train_emoji.csv')
+    test_data = pd.read_csv(f'{DATASET_PATH}/UIT_ViHSD_test_emoji.csv')
 
     # mapping = {'neg': 0, 'neu': 1, 'pos': 2}
 
@@ -58,11 +58,11 @@ def startTraining(device):
 
     train_content = torch.tensor(train_content)
     train_rating = torch.tensor(train_rating)
-    train_rating = torch.nn.functional.one_hot(train_rating, num_classes=2)
+    train_rating = torch.nn.functional.one_hot(train_rating, num_classes=3)
 
     test_content = torch.tensor(test_content)
     test_rating = torch.tensor(test_rating)
-    test_rating = torch.nn.functional.one_hot(test_rating, num_classes=2)
+    test_rating = torch.nn.functional.one_hot(test_rating, num_classes=3)
 
     print('Loading Done')
     print(f'Content Shape: {train_content.size()}')
