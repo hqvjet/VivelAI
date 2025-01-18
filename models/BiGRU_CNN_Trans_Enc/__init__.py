@@ -33,7 +33,6 @@ class BiGRU_CNN_Trans_Enc(nn.Module):
 
         bigru_out, _ = self.bigru(x, h0)
         bigru_out = bigru_out[:, -1, :]
-        print(bigru_out.size())
 
         x = bigru_out.unsqueeze(2)
 
