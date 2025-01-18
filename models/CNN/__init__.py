@@ -7,7 +7,7 @@ with open('models/CNN/config.json', 'r') as file:
     config = json.load(file)
 
 config = config['phobert']
-num_classes = 3
+num_classes = 2
 filters = [2, 3, 4]
 
 class CNN2d(nn.Module):

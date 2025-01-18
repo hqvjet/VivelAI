@@ -3,7 +3,7 @@ import torch.nn as nn
 import torch.nn.functional as F
 import numpy as np
 
-num_classes = 3
+num_classes = 2
 
 class CNN_Trans_Enc(nn.Module):
     def __init__(self, input_shape, emb_tech, kerner_size=[2,3,4,5], cnn_filter=128, trans_layer=2, num_head=8, dropout=0.1):

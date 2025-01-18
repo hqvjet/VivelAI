@@ -8,7 +8,7 @@ with open('models/Attention_BiLSTM/config.json', 'r') as file:
 
 phobert_config = config['phobert']
 phow2v_config = config['phow2v']
-num_classes = 3
+num_classes = 2
 
 class AttentionBiLSTM(nn.Module):
     def __init__(self, device, input_shape, emb_tech, dropout=0.1):
