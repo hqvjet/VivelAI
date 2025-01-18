@@ -31,7 +31,7 @@ class BiGRU_CNN_Trans_Enc(nn.Module):
         x = x.unsqueeze(1)
         h0 = torch.zeros(self.num_layers*2, x.size(0), self.hidden_size).to(x.device)
 
-        bigru_out, _ = self.gru(x, h0)
+        bigru_out, _ = self.bigru(x, h0)
         bigru_out = bigru_out[:, -1, :]
         print(bigru_out.size())
 
