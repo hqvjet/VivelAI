@@ -23,7 +23,9 @@ class CNN_Trans_Enc(nn.Module):
         self.softmax = nn.Softmax(dim=1)
 
     def forward(self, x):
+        print(x.size())
         x = x.unsqueeze(2)
+        print(x.size())
         cnn_out = [F.relu(conv(x)) for conv in self.convs]
         for i in cnn_out:
             print(i.size())
