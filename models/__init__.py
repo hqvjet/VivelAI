@@ -9,19 +9,13 @@ import queue
 import pandas as pd
 from torch.utils.data import DataLoader, TensorDataset
 from sklearn.metrics import classification_report, accuracy_score
-from models.LSTM import LSTM
 from models.BiLSTM import BiLSTM
 from models.CNN import CNN2d
 from models.XGBoost import XGBoost
-from models.FullyConnected import FC
 from models.LR import LR
-from models.CNN_LSTM import CNNnLSTM
-from models.CNN_BILSTM import CNNnBiLSTM
-from models.Transformer import Transformer
 from models.GRU import GRU
 from models.BiGRU import BiGRU
 from models.Attention_BiLSTM import AttentionBiLSTM
-from models.SVM import SVM
 from models.CNN_Trans_Enc import CNN_Trans_Enc
 from models.BiGRU_CNN_Trans_Enc import BiGRU_CNN_Trans_Enc
 from constant import DRIVE_PATH, DATASET_PATH
@@ -77,37 +71,28 @@ def startTraining(device):
         test_data = test_content
     useTitle = False if key == '2' else True
 
-    key = input('Choose one of these classification to train:\n1. LSTM\n2. BiLSTM\n3. XGBoost\n4. LG\n5. Ensemble CNN LSTM\n6. Ensemble CNN BiLSTM\n7. GRU\n8. BiGRU\n9. Transformer\n10. CNN\n11. A-BiLSTM\n12. SVM\nYour Input: ')
+    key = input('Choose one of these classification to train:\n1. BiLSTM\n2. XGBoost\n3. LR\n4. GRU\n5. BiGRU\n6. CNN\n7. A-BiLSTM\n8. CNN Trans Enc\n9. BiGRU CNN Trans Enc\nYour Input: ')
     emb_tech = 1 if source == 'phobert' else 2
     input_shape = train_data.size()
 
-    if key == '1':
-        train(LSTM(device=device, dropout=0.3, emb_tech=emb_tech, input_shape=input_shape), train_input=train_data, train_output=train_rating, test_input=test_data, test_output=test_rating, device=device, useTitle=useTitle)
-    elif key == '2':
+    
+    elif key == '1':
         train(BiLSTM(device=device, dropout=0.1, emb_tech=emb_tech, input_shape=input_shape), train_input=train_data, train_output=train_rating, test_input=test_data, test_output=test_rating, device=device, useTitle=useTitle)      
-    elif key == '3':
+    elif key == '2':
         train(XGBoost(emb_tech=emb_tech, useTitle=useTitle), train_input=train_data, train_output=train_rating, test_input=test_data, test_output=test_rating, device=device, useTitle=useTitle)      
-    elif key == '4':
+    elif key == '3':
         train(LR(emb_tech=emb_tech, useTitle=useTitle), train_input=train_data, train_output=train_rating, test_input=test_data, test_output=test_rating, device=device, useTitle=useTitle)
-    elif key == '5':
-        train(CNNnLSTM(device=device, input_shape=input_shape, useTitle=useTitle, emb_tech=emb_tech, dropout=0.1), train_input=train_data, train_output=train_rating, test_input=test_data, test_output=test_rating, device=device, useTitle=useTitle)
-    elif key == '6':
-        train(CNNnBiLSTM(device=device, input_shape=input_shape, useTitle=useTitle, emb_tech=emb_tech, dropout=0.1), train_input=train_data, train_output=train_rating, test_input=test_data, test_output=test_rating, device=device, useTitle=useTitle)
-    elif key == '7':
+    elif key == '4':
         train(GRU(device=device, input_shape=input_shape, emb_tech=emb_tech, dropout=0.1), train_input=train_data, train_output=train_rating, test_input=test_data, test_output=test_rating, device=device, useTitle=useTitle)
-    elif key == '8':
+    elif key == '5':
         train(BiGRU(device=device, input_shape=input_shape, emb_tech=emb_tech, dropout=0.1), train_input=train_data, train_output=train_rating, test_input=test_data, test_output=test_rating, device=device, useTitle=useTitle)
-    elif key == '9':
-        train(Transformer(device=device, input_shape=input_shape, emb_tech=emb_tech, dropout=0.1), train_input=train_data, train_output=train_rating, test_input=test_data, test_output=test_rating, device=device, useTitle=useTitle)
-    elif key == '10':
+    elif key == '6':
         train(CNN2d(device=device, input_shape=input_shape, emb_tech=emb_tech, dropout=0.1), train_input=train_data, train_output=train_rating, test_input=test_data, test_output=test_rating, device=device, useTitle=useTitle)
-    elif key == '11':
+    elif key == '7':
         train(AttentionBiLSTM(device=device, dropout=0.1, emb_tech=emb_tech, input_shape=input_shape), train_input=train_data, train_output=train_rating, test_input=test_data, test_output=test_rating, device=device, useTitle=useTitle)      
-    elif key == '12':
-        train(SVM(emb_tech=emb_tech, useTitle=useTitle), train_input=train_data, train_output=train_rating, test_input=test_data, test_output=test_rating, device=device, useTitle=useTitle)
-    elif key == '13':
+   elif key == '8':
         train(CNN_Trans_Enc(input_shape=input_shape, emb_tech=emb_tech, dropout=0.1), train_input=train_data, train_output=train_rating, test_input=test_data, test_output=test_rating, device=device, useTitle=useTitle)
-    elif key == '14':
+    elif key == '9':
         train(BiGRU_CNN_Trans_Enc(input_shape=input_shape, device=device, emb_tech=emb_tech, dropout=0.1), train_input=train_data, train_output=train_rating, test_input=test_data, test_output=test_rating, device=device, useTitle=useTitle)
     else:
         print('Wrong key of model, please choose again')
