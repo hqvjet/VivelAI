@@ -29,7 +29,8 @@ def makeData(data):
 def useFeatureExtractor(device, extract_model, dataset):
     train_data = getDataset(f'{DATASET_PATH}/{dataset}_train_emoji.csv')
     test_data = getDataset(f'{DATASET_PATH}/{dataset}_test_emoji.csv')
-    print(dataset, train_data.shape, test_data.shape)
+    print(dataset)
+    print(train_data.shape, test_data.shape)
 
     train_content = makeData(train_data)
     test_content = makeData(test_data)
