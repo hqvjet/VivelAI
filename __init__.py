@@ -12,7 +12,6 @@ if __name__ == '__main__':
     ext_model_key = input('Choose feature extraction model:\n1. E2T-PhoBERT\n2. PhoBERT\n3. VISOBERT\n4. E2V-PhoBERT\nYour Input:\n')
     ds_key = input('Choose dataset:\n1. AIVIVN\n2. UIT-ViHSD\n3. UIT-VSFC\nYour Input:\n')
     act_key = input('What do you want to do ?:\n1. Extract Feature\n2. Train Model\n3. Run server\nYour Input:\n')
-    model_key = input('Choose model:\n1. BiLSTM\n2. XGBoost\n3. LR\n4. GRU\n5. BiGRU\n6. CNN\n7. A-BiLSTM\n8. CNN Trans Enc\n9. BiGRU CNN Trans Enc\nYour Input:\n')
 
     if ext_model_key == '1':
         ext_model = E2T_PHOBERT
@@ -37,6 +36,7 @@ if __name__ == '__main__':
     elif act_key == '2':
         from models import startTraining
 
+        model_key = input('Choose model:\n1. BiLSTM\n2. XGBoost\n3. LR\n4. GRU\n5. BiGRU\n6. CNN\n7. A-BiLSTM\n8. CNN Trans Enc\n9. BiGRU CNN Trans Enc\nYour Input:\n')
 
         if model_key == '1':
             model = BILSTM
