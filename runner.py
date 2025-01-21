@@ -1,6 +1,7 @@
 import subprocess
 import time
 from constant import *
+import os
 
 MODEL_CMD = ['1\n', '2\n', '3\n']
 DATASET_CMD = ['1\n', '2\n', '3\n']
