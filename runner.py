@@ -30,7 +30,7 @@ if key == 'y':
         print(f'Start Extracting Features with extraction model {model}')
         for d_c in DATASET_CMD:
             print(f'Extracting Features with extraction model {model} and dataset {d_c}')
-            run(m_c + d_c + EXTRACT_CMD)
+            run(m_c + EXTRACT_CMD)
             print(f'Finish Extracting Features with extraction model {model} and dataset {d_c}')
         print(f'Finish Extracting Features with extraction model {model}')
 
