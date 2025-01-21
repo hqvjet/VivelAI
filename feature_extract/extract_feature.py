@@ -13,7 +13,7 @@ def padding(array):
         return array
     return array + [torch.zeros(300) for _ in range(MAX_LEN - len(array))]
 
-def extractFeature(device, ids, attentions, extract_model, tokenizer, e_matrix):
+def extractFeature(device, ids, attentions, extract_model, tokenizer, emoji_matrix):
     phobert = AutoModel.from_pretrained(PHOBERT_VER if extract_model != VISOBERT else VISOBERT_VER, output_hidden_states=True)
     phobert.eval()
 
