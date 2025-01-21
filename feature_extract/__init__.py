@@ -57,8 +57,8 @@ def useFeatureExtractor(device, extract_model, dataset):
     train_content, train_content_attention = useIdentify(train_content, tokenizer)
     test_content, test_content_attention = useIdentify(test_content, tokenizer)
 
-    train_content = extractFeature(device, train_content, train_content_attention, model=model, tokenizer=tokenizer, emoji_matrix=e_matrix)
-    test_content = extractFeature(device, test_content, test_content_attention, model=model, tokenizer=tokenizer, emoji_matrix=e_matrix)
+    train_content = extractFeature(device, train_content, train_content_attention, extract_model=extract_model, tokenizer=tokenizer, emoji_matrix=e_matrix)
+    test_content = extractFeature(device, test_content, test_content_attention, extract_model=extract_model, tokenizer=tokenizer, emoji_matrix=e_matrix)
 
     np.save(f'res/features/{extract_model}_{dataset}_train_features.npy', train_content.cpu())
     np.save(f'res/features/{extract_model}_{dataset}test_content_features.npy', test_content.cpu())
