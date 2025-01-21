@@ -2,7 +2,6 @@ import subprocess
 import time
 
 MODEL_CMD = ['1\n', '2\n', '3\n']
-EXTRACT_CMD = '1\n1\n'
 DATASET_CMD = ['1\n', '2\n', '3\n']
 TRAINING_CMD = ['2\n1\n2\n1\n', '2\n1\n2\n2\n', '2\n1\n2\n3\n', '2\n1\n2\n4\n', '2\n1\n2\n5\n', '2\n1\n2\n6\n', '2\n1\n2\n7\n', '2\n1\n2\n8\n', '2\n1\n2\n9\n']
 
@@ -30,7 +29,7 @@ if key == 'y':
         print(f'Start Extracting Features with extraction model {model}')
         for d_c in DATASET_CMD:
             print(f'Extracting Features with extraction model {model} and dataset {d_c}')
-            run(m_c + EXTRACT_CMD)
+            run(m_c + d_c)
             print(f'Finish Extracting Features with extraction model {model} and dataset {d_c}')
         print(f'Finish Extracting Features with extraction model {model}')
 
