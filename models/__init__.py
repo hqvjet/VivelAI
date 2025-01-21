@@ -42,8 +42,8 @@ def startTraining(device):
     test_content = np.load(f'res/features/{source}_test_content_features_icon.npy')
 
 
-    train_data = pd.read_csv(f'{DATASET_PATH}/UIT_VSFC_train_emoji.csv')
-    test_data = pd.read_csv(f'{DATASET_PATH}/UIT_VSFC_test_emoji.csv')
+    train_data = pd.read_csv(f'{DATASET_PATH}/UIT_VSFC_train_emoji.csv')[:100]
+    test_data = pd.read_csv(f'{DATASET_PATH}/UIT_VSFC_test_emoji.csv')[:100]
 
     # mapping = {'neg': 0, 'neu': 1, 'pos': 2}
 
@@ -71,11 +71,10 @@ def startTraining(device):
         test_data = test_content
     useTitle = False if key == '2' else True
 
-    key = input('Choose one of these classification to train:\n1. BiLSTM\n2. XGBoost\n3. LR\n4. GRU\n5. BiGRU\n6. CNN\n7. A-BiLSTM\n8. CNN Trans Enc\n9. BiGRU CNN Trans Enc\nYour Input: ')
+    key = input('Choose one of these classification to train:')
     emb_tech = 1 if source == 'phobert' else 2
     input_shape = train_data.size()
 
-    
     if key == '1':
         train(BiLSTM(device=device, dropout=0.1, emb_tech=emb_tech, input_shape=input_shape), train_input=train_data, train_output=train_rating, test_input=test_data, test_output=test_rating, device=device, useTitle=useTitle)      
     elif key == '2':

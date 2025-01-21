@@ -1,43 +1,12 @@
 import emoji
-from constant import EMOJI_NEG, EMOJI_NEU, EMOJI_POS
+from constant import *
 import pandas as pd
 import re
 import torch
 import torchtext.vocab as tvocab
 import torch.nn as nn
 
-emoji_data = pd.read_csv('res/emoji_sentiment.csv')
 word_embedding = tvocab.Vectors(name=f'res/emoji2vec.txt', unk_init=torch.Tensor.normal_)
-
-# def convert_emoji2text(text):
-#     emoji_list = emoji.emoji_list(text)
-#     
-#     unicode_emoji = []
-#     for e in emoji_list:
-#         if len(e['emoji']) == 1:
-#             unicode_emoji.append(f"0x{ord(e['emoji']):x}")
-#         else:
-#             unicode_emoji.append('error')
-#     
-#     for e, unicode_val in zip(emoji_list, unicode_emoji):
-#         emoji_sentiment = emoji_data[emoji_data['Unicode codepoint'] == unicode_val]
-#         if emoji_sentiment.empty:
-#             emoji_sentiment = EMOJI_NEG
-#         else:
-#             neg = emoji_sentiment['Negative'].values[0]
-#             neu = emoji_sentiment['Neutral'].values[0]
-#             pos = emoji_sentiment['Positive'].values[0]
-#
-#             if neg > neu and neg > pos:
-#                 emoji_sentiment = ' ' + EMOJI_NEG + ' '
-#             elif neu > pos:
-#                 emoji_sentiment = ' ' + EMOJI_NEU + ' '
-#             else:
-#                 emoji_sentiment = ' ' + EMOJI_POS + ' '
-#
-#         text = text.replace(e['emoji'], emoji_sentiment)
-#     
-#     return text
 
 def replace_emoji_with_unicode(text):
     def emoji_to_unicode(match):

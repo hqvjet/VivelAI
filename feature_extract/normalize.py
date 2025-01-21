@@ -1,7 +1,8 @@
 import re
+from constant import *
 
 # Normalizing text input for tokenizing more clearly
-def useNormalize(texts):
+def useNormalize(texts, extract_model):
     print('Normalizing Texts')
 
     for m in range(len(texts)):
@@ -22,8 +23,9 @@ def useNormalize(texts):
         texts[m] = killListForm(' '.join(temp))
     return texts
 
-def killListForm(text):
+def killListForm(text, extract_model):
     text = re.sub(r'[-+]', ',', text)
-    # text = re.sub(r'[^\w\s.,!?]', '', text) # Remove emoji
+    if extract_model != E2T_PHOBERT and extract_model != E2V_PHOBERT:
+        text = re.sub(r'[^\w\s.,!?]', '', text) # Remove emoji
     return re.sub(r'\d+[,./]\s*', ',', text)
 

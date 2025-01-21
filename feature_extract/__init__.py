@@ -9,7 +9,7 @@ from feature_extract.identify import useIdentify
 from feature_extract.extract_feature import extractFeature
 from feature_extract.emoji_handling import emojiHandling, getEmojiEmbeddingMatrix
 from feature_extract.get_tokenizer import getTokenizer
-from constant import DATASET_PATH
+from constant import *
 
 def getDataset(file_path):
     try:
@@ -21,20 +21,20 @@ def getDataset(file_path):
 
 def makeData(data):
     # titles = data['title'].apply(str)
-    contents = data['comment'].apply(str)
+    contents = data['comment'].apply(str)[:100]
 
     # return titles, contents
     return contents
         
-def useFeatureExtractor(device):
-    train_data = getDataset(f'{DATASET_PATH}/UIT_VSFC_train_emoji.csv')
-    test_data = getDataset(f'{DATASET_PATH}/UIT_VSFC_test_emoji.csv')
+def useFeatureExtractor(device, extract_model, dataset):
+    train_data = getDataset(f'{DATASET_PATH}/{dataset}_train_emoji.csv')
+    test_data = getDataset(f'{DATASET_PATH}/{dataset}_test_emoji.csv')
 
     train_content = makeData(train_data)
     test_content = makeData(test_data)
 
-    train_content = useNormalize(train_content)
-    test_content = useNormalize(test_content)
+    train_content = useNormalize(train_content, extract_model)
+    test_content = useNormalize(test_content, extract_model)
 
     train_content = useLemma(train_content)
     test_content = useLemma(test_content)
@@ -45,36 +45,20 @@ def useFeatureExtractor(device):
     train_content = removeStopword(train_content)
     test_content = removeStopword(test_content)
 
-    train_content = emojiHandling(train_content)
-    test_content = emojiHandling(test_content)
+    if extract_model == E2V_PHOBERT:
+        train_content = emojiHandling(train_content)
+        test_content = emojiHandling(test_content)
+
+    e_matrix = getEmojiEmbeddingMatrix() if extract_model == E2V_PHOBERT else None
 
     print(train_content[:10])
-
-    e_matrix = getEmojiEmbeddingMatrix()
- 
-    key = input('Choose feature extractor method:\n1. PhoBERT\n2. PhoW2V\nYour Input: ')
     
-    if key == '1':
-        model = 'phobert'
-    elif key == '2':
-        model = 'phow2v'
-    else:
-        print('Wrong method, please try again')
+    tokenizer = getTokenizer(e_matrix if extract_model == E2V_PHOBERT else None)
+    train_content, train_content_attention = useIdentify(train_content, tokenizer)
+    test_content, test_content_attention = useIdentify(test_content, tokenizer)
 
-    if key == '1':
-        tokenizer = getTokenizer(e_matrix)
-        train_content, train_content_attention = useIdentify(train_content, tokenizer)
-        test_content, test_content_attention = useIdentify(test_content, tokenizer)
+    train_content = extractFeature(device, train_content, train_content_attention, model=model, tokenizer=tokenizer, emoji_matrix=e_matrix)
+    test_content = extractFeature(device, test_content, test_content_attention, model=model, tokenizer=tokenizer, emoji_matrix=e_matrix)
 
-        train_content = extractFeature(device, train_content, train_content_attention, model=model, tokenizer=tokenizer, emoji_matrix=e_matrix)
-        test_content = extractFeature(device, test_content, test_content_attention, model=model, tokenizer=tokenizer, emoji_matrix=e_matrix)
-
-        # train_content = extractFeature(device, train_content, train_content_attention, model=model, tokenizer=tokenizer)
-        # test_content = extractFeature(device, test_content, test_content_attention, model=model, tokenizer=tokenizer)
-
-    else:
-        train_content = extractFeature(device, train_content, model=model)
-        test_content = extractFeature(device, test_content, model=model)
-
-    np.save(f'res/features/{model}_train_content_features_icon.npy', train_content.cpu())
-    np.save(f'res/features/{model}_test_content_features_icon.npy', test_content.cpu())
+    np.save(f'res/features/{extract_model}_{dataset}_train_features.npy', train_content.cpu())
+    np.save(f'res/features/{extract_model}_{dataset}test_content_features.npy', test_content.cpu())

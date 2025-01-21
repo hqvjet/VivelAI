@@ -3,21 +3,7 @@ import torch
 import torchtext.vocab as tvocab
 import numpy as np
 import math
-from feature_extract.vocabulary import Vocabulary
-from constant import DRIVE_PATH
-
-from constant import PHOBERT_VER, PHOBERT_BATCH_SIZE, MAX_LEN
-
-MODEL = ['phobert', 'phow2v']
-
-def extractFeature(device, ids, attentions=[], model='phobert', tokenizer=None, emoji_matrix=None):
-    if model not in MODEL:
-        raise Exception(f'No model named {model}')
-
-    if model == MODEL[0]:
-        return usingPhoBERT(device, ids, attentions, tokenizer, emoji_matrix)
-    else:
-        return usingPhow2v(device, ids)
+from constant import *
 
 def padding(array):
     if len(array) == MAX_LEN:
@@ -27,51 +13,17 @@ def padding(array):
         return array
     return array + [torch.zeros(300) for _ in range(MAX_LEN - len(array))]
 
-def getWordEmbedding(word_embedding, corpus):
-    res = []
-    for word_arr in corpus:
-        temp = []
-        for word in word_arr:
-            if word in word_embedding.stoi:
-                temp.append(word_embedding.vectors[word_embedding.stoi[word]])
-            else:
-                temp.append(torch.rand(300))
+def extractFeature(device, ids, attentions, extract_model, tokenizer, e_matrix):
+    phobert = AutoModel.from_pretrained(PHOBERT_VER if extract_model != VISOBERT else VISOBERT_VER, output_hidden_states=True)
+    phobert.eval()
 
-        temp = padding(temp)
-        temp = torch.stack(temp)
-        res.append(temp)
+    if extract_model == E2V_PHOBERT:
+        phobert.resize_token_embeddings(len(tokenizer))
+        with torch.no_grad():
+            for token in e_matrix.keys():
+                token_id = tokenizer.convert_tokens_to_ids(token)
+                phobert.embeddings.word_embeddings.weight[token_id] = e_matrix[token]
 
-    res = torch.stack(res)
-    return res
-
-def usingPhow2v(device, texts):
-    print('EXTRACTING FEATURE FROM PHOW2V')
-    word_embedding = tvocab.Vectors(name=f'{DRIVE_PATH}/phow2v_300.txt', unk_init=torch.Tensor.normal_)
-    print(f'Phow2v original shape: {word_embedding.vectors.shape}')
-    
-    vocab = Vocabulary()
-    vocab_list = list(word_embedding.stoi.keys())
-    for word in vocab_list:
-        vocab.add(word)
-
-    tensor = vocab.corpus_to_tensor(texts)
-    corpus = vocab.tensor_to_corpus(tensor)
-
-    res = getWordEmbedding(word_embedding, corpus)
-    print(f'Feature shape: {res.size()}')
-    
-    return res
-
-def usingPhoBERT(device, ids, attentions, tokenizer, e_matrix):
-    phobert = AutoModel.from_pretrained(PHOBERT_VER, output_hidden_states=True)
-    phobert.resize_token_embeddings(len(tokenizer))
-
-    with torch.no_grad():
-        for token in e_matrix.keys():
-            token_id = tokenizer.convert_tokens_to_ids(token)
-            phobert.embeddings.word_embeddings.weight[token_id] = e_matrix[token]
-
-    phobert.train()
     phobert = phobert.to(device)
 
     num_batch = math.ceil(len(ids) / PHOBERT_BATCH_SIZE)
