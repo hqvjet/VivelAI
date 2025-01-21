@@ -26,11 +26,11 @@ def extractFeature(device, ids, attentions, extract_model, tokenizer, emoji_matr
 
     phobert = phobert.to(device)
 
-    num_batch = math.ceil(len(ids) / PHOBERT_BATCH_SIZE)
+    num_batch = math.ceil(len(ids) / EXTRACT_BATCH_SIZE)
     final_feature = []
     for size in range(num_batch):
-        batch_id = torch.tensor(ids[PHOBERT_BATCH_SIZE * size : min(PHOBERT_BATCH_SIZE * (size + 1), len(ids))]).to(device)
-        batch_attention = torch.tensor(attentions[PHOBERT_BATCH_SIZE * size : min(PHOBERT_BATCH_SIZE * (size + 1), len(ids))]).to(device)
+        batch_id = torch.tensor(ids[EXTRACT_BATCH_SIZE * size : min(EXTRACT_BATCH_SIZE * (size + 1), len(ids))]).to(device)
+        batch_attention = torch.tensor(attentions[EXTRACT_BATCH_SIZE * size : min(EXTRACT_BATCH_SIZE * (size + 1), len(ids))]).to(device)
         print(batch_id.size(), batch_attention.size())
         
         with torch.no_grad():
