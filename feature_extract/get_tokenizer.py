@@ -7,7 +7,7 @@ def getTokenizer(extract_model, e_matrix=None):
         use_fast=False if extract_model == VISOBERT else True
     )
 
-    if e_matrix==None:
+    if e_matrix != None:
         toks = list(e_matrix.keys())
         num_added = tokenizer.add_tokens(toks)
 
