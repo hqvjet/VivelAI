@@ -20,7 +20,7 @@ def useNormalize(texts, extract_model):
                 j += 1
 
             temp.append(tokens[i])
-        texts[m] = killListForm(' '.join(temp))
+        texts[m] = killListForm(' '.join(temp), extract_model)
     return texts
 
 def killListForm(text, extract_model):
