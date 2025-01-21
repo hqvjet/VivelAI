@@ -1,9 +1,11 @@
 import subprocess
 import time
+from constant import *
 
 MODEL_CMD = ['1\n', '2\n', '3\n']
 DATASET_CMD = ['1\n', '2\n', '3\n']
-TRAINING_CMD = ['2\n1\n2\n1\n', '2\n1\n2\n2\n', '2\n1\n2\n3\n', '2\n1\n2\n4\n', '2\n1\n2\n5\n', '2\n1\n2\n6\n', '2\n1\n2\n7\n', '2\n1\n2\n8\n', '2\n1\n2\n9\n']
+ACT_CMD = ['1\n', '2\n']
+TRAINING_CMD = ['1\n', '2\n', '3\n', '4\n', '5\n', '6\n', '7\n', '8\n', '9\n']
 
 def run(command):
     process = subprocess.Popen(['python', '__init__.py'], stdin=subprocess.PIPE, text=True)
@@ -20,16 +22,18 @@ if key == 'y':
     print('Start Extracting Features')
     for m_c in MODEL_CMD:
         if m_c == '1\n':
-            model = 'E2T-PhoBERT'
+            model = E2T_PHOBERT
         elif m_c == '2\n':
-            model = 'PhoBERT'
+            model = PHOBERT
+        elif m_c == '3\n':
+            model = VISOBERT
         else:
-            model = 'VISOBERT'
+            model = E2V_PHOBERT
 
         print(f'Start Extracting Features with extraction model {model}')
         for d_c in DATASET_CMD:
             print(f'Extracting Features with extraction model {model} and dataset {d_c}')
-            run(m_c + d_c)
+            run(m_c + d_c + ACT_CMD[0])
             print(f'Finish Extracting Features with extraction model {model} and dataset {d_c}')
         print(f'Finish Extracting Features with extraction model {model}')
 
@@ -37,16 +41,39 @@ if key == 'y':
 
 for m_c in MODEL_CMD:
     if m_c == '1\n':
-        model = 'E2T-PhoBERT'
+        model = E2T_PHOBERT
     elif m_c == '2\n':
-        model = 'PhoBERT'
+        model = PHOBERT
+    elif m_c == '3\n':
+        model = VISOBERT
     else:
-        model = 'VISOBERT'
+        model = E2V_PHOBERT
+
+    if t_c == '1\n':
+        t_model = BILSTM
+    elif t_c == '2\n':
+        t_model = XGBOOST
+    elif t_c == '3\n':
+        t_model = LR
+    elif t_c == '4\n':
+        t_model = GRU
+    elif t_c == '5\n':
+        t_model = BIGRU
+    elif t_c == '6\n':
+        t_model = CNN
+    elif t_c == '7\n':
+        t_model = ATTENTION_BILSTM
+    elif t_c == '8\n':
+        t_model = CNN_TRANS_ENC
+    else:
+        t_model = BIGRU_CNN_TRANS_ENC
 
     for d_c in DATASET_CMD:
         print(f'Start Training 9 models with dataset {d_c}, extraction model {model}')
         for t_c in TRAINING_CMD:
-            print(f'Training {model}-{d_c}-{t_c}')
-            run(m_c + d_c + t_c)
-            print(f'Finish Training {model}-{d_c}-{t_c}')
+            print(f'Training {model}-{d_c}-{t_model}')
+            run(m_c + d_c + ACT_CMD[1] + t_c)
+            print(f'Finish Training {model}-{d_c}-{t_model}')
         print(f'Finish Training 9 models with dataset {d_c}, extraction model {model}')
+
+print('NCKH Traning done, please take a look at results')
