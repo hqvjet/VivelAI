@@ -3,7 +3,8 @@ from constant import *
 
 def getTokenizer(extract_model, e_matrix=None):
     tokenizer = AutoTokenizer.from_pretrained(
-        PHOBERT_VER if extract_model != VISOBERT else VISOBERT_VER, 
+        # PHOBERT_VER if extract_model != VISOBERT else VISOBERT_VER, 
+        VISOBERT_VER,
         # use_fast=False if extract_model == VISOBERT else True,
         force_download=True
     )
