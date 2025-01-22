@@ -60,9 +60,9 @@ def startTraining(device, model_name, dataset, extract_model):
     if model_name == BILSTM:
         train(BiLSTM(device=device, dropout=0.1, input_shape=input_shape, num_classes=num_classes), train_input=train_data, train_output=train_rating, test_input=test_data, test_output=test_rating, device=device, extract_model=extract_model)      
     elif model_name == XGBOOST:
-        train(XGBoost(), train_input=train_data, train_output=train_rating, test_input=test_data, test_output=test_rating, device=device, extract_model=extract_model)      
+        train(XGBoost(extract_model), train_input=train_data, train_output=train_rating, test_input=test_data, test_output=test_rating, device=device, extract_model=extract_model)      
     elif model_name == LR:
-        train(LR(), train_input=train_data, train_output=train_rating, test_input=test_data, test_output=test_rating, device=device, extract_model=extract_model)
+        train(LR(extract_model), train_input=train_data, train_output=train_rating, test_input=test_data, test_output=test_rating, device=device, extract_model=extract_model)
     elif model_name == GRU:
         train(GRU(device=device, input_shape=input_shape, dropout=0.1, num_classes=num_classes), train_input=train_data, train_output=train_rating, test_input=test_data, test_output=test_rating, device=device, extract_model=extract_model)
     elif model_name == BiGRU:
