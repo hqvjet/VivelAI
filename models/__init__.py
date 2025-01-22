@@ -18,7 +18,7 @@ from models.BiGRU import BiGRU
 from models.Attention_BiLSTM import AttentionBiLSTM
 from models.CNN_Trans_Enc import CNN_Trans_Enc
 from models.BiGRU_CNN_Trans_Enc import BiGRU_CNN_Trans_Enc
-from constant import DRIVE_PATH, DATASET_PATH
+from constant import *
 
 with open('models/global_config.json', 'r') as file:
     config = json.load(file)
@@ -26,80 +26,58 @@ with open('models/global_config.json', 'r') as file:
 batch_size = config.get('batch_size')
 num_epoch = config.get('num_epoch')
 
-def startTraining(device):
-    key = input('Choose feature source:\n1. PhoBERT\n2. PhoW2V\nYour Input: ')
+def startTraining(device, model_name, dataset, extract_model):
+    train_content = np.load(f'res/features/{extract_model}_{dataset}_train_features.npy')
+    test_content = np.load(f'res/features/{extract_model}_{dataset}_test_features.npy')
 
-    print('Loading extracted feature')
-
-    if key == '1':
-        source = 'phobert'
-    elif key == '2':
-        source = 'phow2v'
-    else:
-        print('Wrong source, please try again')
-
-    train_content = np.load(f'res/features/{source}_train_content_features_icon.npy')
-    test_content = np.load(f'res/features/{source}_test_content_features_icon.npy')
-
-
-    train_data = pd.read_csv(f'{DATASET_PATH}/UIT_VSFC_train_emoji.csv')[:100]
-    test_data = pd.read_csv(f'{DATASET_PATH}/UIT_VSFC_test_emoji.csv')[:100]
+    train_data = pd.read_csv(f'{DATASET_PATH}/{dataset}_train_emoji.csv')[:100]
+    test_data = pd.read_csv(f'{DATASET_PATH}/{dataset}_test_emoji.csv')[:100]
 
     # mapping = {'neg': 0, 'neu': 1, 'pos': 2}
 
     train_rating = train_data['label'].apply(int)
     test_rating = test_data['label'].apply(int)
 
+    num_classes = 3 if dataset != AIVIVN else 2
+
     train_content = torch.tensor(train_content)
     train_rating = torch.tensor(train_rating)
-    train_rating = torch.nn.functional.one_hot(train_rating, num_classes=3)
+    train_rating = torch.nn.functional.one_hot(train_rating, num_classes=num_classes)
 
     test_content = torch.tensor(test_content)
     test_rating = torch.tensor(test_rating)
-    test_rating = torch.nn.functional.one_hot(test_rating, num_classes=3)
+    test_rating = torch.nn.functional.one_hot(test_rating, num_classes=num_classes)
 
     print('Loading Done')
     print(f'Content Shape: {train_content.size()}')
     print(f'Label Shape: {train_rating.size()}')
 
-    key = input('Use Title and Content ?\n1. Yes\n2. No\nYour Input: ')
-    if key == '1':
-        train_data = train_content
-        test_data = test_content
-    else:
-        train_data = train_content
-        test_data = test_content
-    useTitle = False if key == '2' else True
+    train_data = train_content
+    test_data = test_content
 
-    key = input('Choose one of these classification to train:')
-    emb_tech = 1 if source == 'phobert' else 2
     input_shape = train_data.size()
 
-    if key == '1':
-        train(BiLSTM(device=device, dropout=0.1, emb_tech=emb_tech, input_shape=input_shape), train_input=train_data, train_output=train_rating, test_input=test_data, test_output=test_rating, device=device, useTitle=useTitle)      
-    elif key == '2':
-        train(XGBoost(emb_tech=emb_tech, useTitle=useTitle), train_input=train_data, train_output=train_rating, test_input=test_data, test_output=test_rating, device=device, useTitle=useTitle)      
-    elif key == '3':
-        train(LR(emb_tech=emb_tech, useTitle=useTitle), train_input=train_data, train_output=train_rating, test_input=test_data, test_output=test_rating, device=device, useTitle=useTitle)
-    elif key == '4':
-        train(GRU(device=device, input_shape=input_shape, emb_tech=emb_tech, dropout=0.1), train_input=train_data, train_output=train_rating, test_input=test_data, test_output=test_rating, device=device, useTitle=useTitle)
-    elif key == '5':
-        train(BiGRU(device=device, input_shape=input_shape, emb_tech=emb_tech, dropout=0.1), train_input=train_data, train_output=train_rating, test_input=test_data, test_output=test_rating, device=device, useTitle=useTitle)
-    elif key == '6':
-        train(CNN2d(device=device, input_shape=input_shape, emb_tech=emb_tech, dropout=0.1), train_input=train_data, train_output=train_rating, test_input=test_data, test_output=test_rating, device=device, useTitle=useTitle)
-    elif key == '7':
-        train(AttentionBiLSTM(device=device, dropout=0.1, emb_tech=emb_tech, input_shape=input_shape), train_input=train_data, train_output=train_rating, test_input=test_data, test_output=test_rating, device=device, useTitle=useTitle)      
-    elif key == '8':
-        train(CNN_Trans_Enc(input_shape=input_shape, emb_tech=emb_tech, dropout=0.1), train_input=train_data, train_output=train_rating, test_input=test_data, test_output=test_rating, device=device, useTitle=useTitle)
-    elif key == '9':
-        train(BiGRU_CNN_Trans_Enc(input_shape=input_shape, device=device, emb_tech=emb_tech, dropout=0.1), train_input=train_data, train_output=train_rating, test_input=test_data, test_output=test_rating, device=device, useTitle=useTitle)
-    else:
-        print('Wrong key of model, please choose again')
+    if model_name == BILSTM:
+        train(BiLSTM(device=device, dropout=0.1, input_shape=input_shape, num_classes=num_classes), train_input=train_data, train_output=train_rating, test_input=test_data, test_output=test_rating, device=device)      
+    elif model_name == XGBOOST:
+        train(XGBoost(), train_input=train_data, train_output=train_rating, test_input=test_data, test_output=test_rating, device=device)      
+    elif model_name == LR:
+        train(LR(), train_input=train_data, train_output=train_rating, test_input=test_data, test_output=test_rating, device=device)
+    elif model_name == GRU:
+        train(GRU(device=device, input_shape=input_shape, dropout=0.1, num_classes=num_classes), train_input=train_data, train_output=train_rating, test_input=test_data, test_output=test_rating, device=device)
+    elif model_name == BiGRU:
+        train(BiGRU(device=device, input_shape=input_shape, dropout=0.1, num_classes=num_classes), train_input=train_data, train_output=train_rating, test_input=test_data, test_output=test_rating, device=device)
+    elif model_name == CNN:
+        train(CNN2d(device=device, input_shape=input_shape, dropout=0.1, num_classes=num_classes), train_input=train_data, train_output=train_rating, test_input=test_data, test_output=test_rating, device=device)
+    elif model_name == ATTENTION_BILSTM:
+        train(AttentionBiLSTM(device=device, dropout=0.1, input_shape=input_shape, num_classes=num_classes), train_input=train_data, train_output=train_rating, test_input=test_data, test_output=test_rating, device=device)
+    elif model_name == CNN_TRANS_ENCODER:
+        train(CNN_Trans_Enc(input_shape=input_shape, dropout=0.1, num_classes=num_classes), train_input=train_data, train_output=train_rating, test_input=test_data, test_output=test_rating, device=device)
+    elif model_name == BI_GRU_CNN_TRANS_ENCODER:
+        train(BiGRU_CNN_Trans_Enc(input_shape=input_shape, device=device, dropout=0.1, num_classes=num_classes), train_input=train_data, train_output=train_rating, test_input=test_data, test_output=test_rating, device=device)
 
-def train(model, train_input, train_output, test_input, test_output, device, useTitle):
+def train(model, train_input, train_output, test_input, test_output, device):
     model.to(device)
-    direction = 'with_title' if useTitle else 'no_title'
-    model_direction = 'phobert' if model.emb_tech == 1 else 'phow2v'
     ML_model = ['XGBoost', 'Logistic_Regression', 'SVM']
 
     # Splitting dataset
@@ -188,7 +166,7 @@ def train(model, train_input, train_output, test_input, test_output, device, use
 
             # Compare current model with previous model
             if best_acc < accuracy or (best_acc == accuracy and best_loss > avg_val_loss):
-                torch.save(model.state_dict(), f'res/models/{direction}/{model_direction}/{model.model_name}_icon.pth')
+                torch.save(model.state_dict(), f'res/models/{extract_model}/{model.model_name}.pth')
                 best_acc = accuracy
                 best_loss = avg_val_loss
                 print('Model saved, current accuracy:', best_acc)
@@ -198,8 +176,8 @@ def train(model, train_input, train_output, test_input, test_output, device, use
 
         # Test model performance
         test_bar = tqdm(test_data, desc=f"Epoch {epoch + 1}/{num_epoch}:")
-        model.load_state_dict(torch.load(f'res/models/{direction}/{model_direction}/{model.model_name}_icon.pth'))
-        torch.save(model.state_dict(), f'{DRIVE_PATH}/models/{direction}/{model_direction}/{model.model_name}_icon.pth')
+        model.load_state_dict(torch.load(f'res/models/{extract_model}/{model.model_name}.pth'))
+        torch.save(model.state_dict(), f'{DRIVE_PATH}/models/{extract_model}/{model.model_name}.pth')
         model.eval()
 
         predicted = []
@@ -227,9 +205,9 @@ def train(model, train_input, train_output, test_input, test_output, device, use
         print(report)
 
     # Save report
-    with open(f'{DRIVE_PATH}/report/{direction}/{model_direction}/{model.model_name}_icon.txt', 'w') as file:
+    with open(f'{DRIVE_PATH}/report/{extract_model}/{model.model_name}.txt', 'w') as file:
         file.write(report)
-    print(f'REPORT saved - {DRIVE_PATH}/report/{direction}/{model_direction}/{model.model_name}_icon.txt')
+    print(f'REPORT saved - {DRIVE_PATH}/report/{extract_model}/{model.model_name}.txt')
 
     # Visualize model val train processing
     plt.figure()
@@ -238,7 +216,7 @@ def train(model, train_input, train_output, test_input, test_output, device, use
     plt.ylabel('Accuracy')
     plt.xlabel('Epoch')
     plt.legend()
-    plt.savefig(f'{DRIVE_PATH}/train_process/{direction}/{model_direction}/{model.model_name}_icon.png')
+    plt.savefig(f'{DRIVE_PATH}/train_process/{extract_model}/{model.model_name}.png')
     plt.close()
 
-    print(f'Image saved - {DRIVE_PATH}/train_process/{direction}/{model_direction}/{model.model_name}_icon.png')
+    print(f'Image saved - {DRIVE_PATH}/train_process/{extract_model}/{model.model_name}.png')

@@ -3,13 +3,10 @@ import torch.nn as nn
 import torch.nn.functional as F
 import numpy as np
 
-num_classes = 3
-
 class CNN_Trans_Enc(nn.Module):
-    def __init__(self, input_shape, emb_tech, kerner_size=[2,3,4,5], cnn_filter=128, trans_layer=2, num_head=8, dropout=0.1):
+    def __init__(self, input_shape, emb_tech, kerner_size=[2,3,4,5], cnn_filter=128, trans_layer=2, num_head=8, dropout=0.1, num_classes=3):
         super(CNN_Trans_Enc, self).__init__()
         self.model_name = 'CNN_Trans_Enc'
-        self.emb_tech = emb_tech
 
         self.convs = nn.ModuleList([
             nn.Conv1d(in_channels=input_shape[-1], out_channels=cnn_filter, kernel_size=k, padding='same', padding_mode='zeros')

@@ -57,7 +57,7 @@ if __name__ == '__main__':
         else:
             model = BIGRU_CNN_TRANS_ENC
 
-        startTraining(device, model=model, dataset=ds, extract_model=ext_model)
+        startTraining(device, model_name=model, dataset=ds, extract_model=ext_model)
 
     elif act_key == '3':
         import uvicorn
