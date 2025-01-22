@@ -12,7 +12,7 @@ from sklearn.metrics import classification_report, accuracy_score
 from models.BiLSTM import BiLSTM
 from models.CNN import CNN2d
 from models.XGBoost import XGBoost
-from models.LR import LR
+from models.LR import LR as LogisticRegression
 from models.GRU import GRU
 from models.BiGRU import BiGRU
 from models.Attention_BiLSTM import AttentionBiLSTM
@@ -62,7 +62,7 @@ def startTraining(device, model_name, dataset, extract_model):
     elif model_name == XGBOOST:
         train(XGBoost(extract_model), train_input=train_data, train_output=train_rating, test_input=test_data, test_output=test_rating, device=device, extract_model=extract_model)      
     elif model_name == LR:
-        train(LR(extract_model), train_input=train_data, train_output=train_rating, test_input=test_data, test_output=test_rating, device=device, extract_model=extract_model)
+        train(LogisticRegression(extract_model), train_input=train_data, train_output=train_rating, test_input=test_data, test_output=test_rating, device=device, extract_model=extract_model)
     elif model_name == GRU:
         train(GRU(device=device, input_shape=input_shape, dropout=0.1, num_classes=num_classes), train_input=train_data, train_output=train_rating, test_input=test_data, test_output=test_rating, device=device, extract_model=extract_model)
     elif model_name == BiGRU:
