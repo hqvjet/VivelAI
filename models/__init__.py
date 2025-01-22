@@ -209,14 +209,15 @@ def train(model, train_input, train_output, test_input, test_output, device, ext
         file.write(report)
     print(f'REPORT saved - {DRIVE_PATH}/report/{extract_model}/{model.model_name}.txt')
 
-    # Visualize model val train processing
-    plt.figure()
-    plt.plot(val_train_history['accuracy'], label='Valid Accuracy')
-    plt.title(f'{model.model_name} Training Process')
-    plt.ylabel('Accuracy')
-    plt.xlabel('Epoch')
-    plt.legend()
-    plt.savefig(f'{DRIVE_PATH}/train_process/{extract_model}/{model.model_name}.png')
-    plt.close()
+    if model.model_name in ML_model:
+        # Visualize model val train processing
+        plt.figure()
+        plt.plot(val_train_history['accuracy'], label='Valid Accuracy')
+        plt.title(f'{model.model_name} Training Process')
+        plt.ylabel('Accuracy')
+        plt.xlabel('Epoch')
+        plt.legend()
+        plt.savefig(f'{DRIVE_PATH}/train_process/{extract_model}/{model.model_name}.png')
+        plt.close()
 
-    print(f'Image saved - {DRIVE_PATH}/train_process/{extract_model}/{model.model_name}.png')
+        print(f'Image saved - {DRIVE_PATH}/train_process/{extract_model}/{model.model_name}.png')
