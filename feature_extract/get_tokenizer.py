@@ -6,6 +6,7 @@ def getTokenizer(extract_model, e_matrix=None):
         # PHOBERT_VER if extract_model != VISOBERT else VISOBERT_VER, 
         VISOBERT_VER,
         # use_fast=False if extract_model == VISOBERT else True,
+        use_fast=False,
         force_download=True
     )
 
