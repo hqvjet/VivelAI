@@ -15,7 +15,7 @@ def extractFeature(device, ids, attentions, extract_model, tokenizer, emoji_matr
         with torch.no_grad():
             for token in emoji_matrix.keys():
                 token_id = tokenizer.convert_tokens_to_ids(token)
-                phobert.embeddings.word_embeddings.weight[token_id] = e_matrix[token]
+                phobert.embeddings.word_embeddings.weight[token_id] = emoji_matrix[token]
 
     phobert = phobert.to(device)
 
