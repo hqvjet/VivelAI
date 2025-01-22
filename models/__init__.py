@@ -58,25 +58,25 @@ def startTraining(device, model_name, dataset, extract_model):
     input_shape = train_data.size()
 
     if model_name == BILSTM:
-        train(BiLSTM(device=device, dropout=0.1, input_shape=input_shape, num_classes=num_classes), train_input=train_data, train_output=train_rating, test_input=test_data, test_output=test_rating, device=device)      
+        train(BiLSTM(device=device, dropout=0.1, input_shape=input_shape, num_classes=num_classes), train_input=train_data, train_output=train_rating, test_input=test_data, test_output=test_rating, device=device, extract_model=extract_model)      
     elif model_name == XGBOOST:
-        train(XGBoost(), train_input=train_data, train_output=train_rating, test_input=test_data, test_output=test_rating, device=device)      
+        train(XGBoost(), train_input=train_data, train_output=train_rating, test_input=test_data, test_output=test_rating, device=device, extract_model=extract_model)      
     elif model_name == LR:
-        train(LR(), train_input=train_data, train_output=train_rating, test_input=test_data, test_output=test_rating, device=device)
+        train(LR(), train_input=train_data, train_output=train_rating, test_input=test_data, test_output=test_rating, device=device, extract_model=extract_model)
     elif model_name == GRU:
-        train(GRU(device=device, input_shape=input_shape, dropout=0.1, num_classes=num_classes), train_input=train_data, train_output=train_rating, test_input=test_data, test_output=test_rating, device=device)
+        train(GRU(device=device, input_shape=input_shape, dropout=0.1, num_classes=num_classes), train_input=train_data, train_output=train_rating, test_input=test_data, test_output=test_rating, device=device, extract_model=extract_model)
     elif model_name == BiGRU:
-        train(BiGRU(device=device, input_shape=input_shape, dropout=0.1, num_classes=num_classes), train_input=train_data, train_output=train_rating, test_input=test_data, test_output=test_rating, device=device)
+        train(BiGRU(device=device, input_shape=input_shape, dropout=0.1, num_classes=num_classes), train_input=train_data, train_output=train_rating, test_input=test_data, test_output=test_rating, device=device, extract_model=extract_model)
     elif model_name == CNN:
-        train(CNN2d(device=device, input_shape=input_shape, dropout=0.1, num_classes=num_classes), train_input=train_data, train_output=train_rating, test_input=test_data, test_output=test_rating, device=device)
+        train(CNN2d(device=device, input_shape=input_shape, dropout=0.1, num_classes=num_classes), train_input=train_data, train_output=train_rating, test_input=test_data, test_output=test_rating, device=device, extract_model=extract_model)
     elif model_name == ATTENTION_BILSTM:
-        train(AttentionBiLSTM(device=device, dropout=0.1, input_shape=input_shape, num_classes=num_classes), train_input=train_data, train_output=train_rating, test_input=test_data, test_output=test_rating, device=device)
+        train(AttentionBiLSTM(device=device, dropout=0.1, input_shape=input_shape, num_classes=num_classes), train_input=train_data, train_output=train_rating, test_input=test_data, test_output=test_rating, device=device, extract_model=extract_model)
     elif model_name == CNN_TRANS_ENCODER:
-        train(CNN_Trans_Enc(input_shape=input_shape, dropout=0.1, num_classes=num_classes), train_input=train_data, train_output=train_rating, test_input=test_data, test_output=test_rating, device=device)
+        train(CNN_Trans_Enc(input_shape=input_shape, dropout=0.1, num_classes=num_classes), train_input=train_data, train_output=train_rating, test_input=test_data, test_output=test_rating, device=device, extract_model=extract_model)
     elif model_name == BI_GRU_CNN_TRANS_ENCODER:
-        train(BiGRU_CNN_Trans_Enc(input_shape=input_shape, device=device, dropout=0.1, num_classes=num_classes), train_input=train_data, train_output=train_rating, test_input=test_data, test_output=test_rating, device=device)
+        train(BiGRU_CNN_Trans_Enc(input_shape=input_shape, device=device, dropout=0.1, num_classes=num_classes), train_input=train_data, train_output=train_rating, test_input=test_data, test_output=test_rating, device=device, extract_model=extract_model)
 
-def train(model, train_input, train_output, test_input, test_output, device):
+def train(model, train_input, train_output, test_input, test_output, device, extract_model):
     model.to(device)
     ML_model = ['XGBoost', 'Logistic_Regression', 'SVM']
 
