@@ -53,7 +53,7 @@ def useFeatureExtractor(device, extract_model, dataset):
 
     print(train_content[:10])
     
-    tokenizer = getTokenizer(e_matrix if extract_model == E2V_PHOBERT else None)
+    tokenizer = getTokenizer(extract_model, e_matrix if extract_model == E2V_PHOBERT else None)
     print(tokenizer, extract_model)
     train_content, train_content_attention = useIdentify(train_content, tokenizer)
     test_content, test_content_attention = useIdentify(test_content, tokenizer)
