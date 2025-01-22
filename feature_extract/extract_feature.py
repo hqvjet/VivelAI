@@ -5,19 +5,11 @@ import numpy as np
 import math
 from constant import *
 
-def padding(array):
-    if len(array) == MAX_LEN:
-        return array
-    if len(array) > MAX_LEN:
-        array = array[0:MAX_LEN]
-        return array
-    return array + [torch.zeros(300) for _ in range(MAX_LEN - len(array))]
-
 def extractFeature(device, ids, attentions, extract_model, tokenizer, emoji_matrix):
     phobert = AutoModel.from_pretrained(PHOBERT_VER if extract_model != VISOBERT else VISOBERT_VER, output_hidden_states=True)
     phobert.eval()
 
-    if extract_model == E2V_PHOBERT:
+    if emoji_matrix != None:
         phobert.resize_token_embeddings(len(tokenizer))
         with torch.no_grad():
             for token in e_matrix.keys():
