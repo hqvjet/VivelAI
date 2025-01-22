@@ -20,7 +20,7 @@ class AttentionBiLSTM(nn.Module):
                             num_layers=self.num_layers, device=device, dropout=dropout,\
                             batch_first=True, bidirectional=True)
 
-        first_emb = 256 if emb_tech == 1 else 32
+        first_emb = 256
         self.attention_w = nn.Linear(self.hidden_size*2, 1)
         self.fc1 = nn.Linear(self.hidden_size*2, 256)
         self.fc2 = nn.Linear(first_emb, 128)
