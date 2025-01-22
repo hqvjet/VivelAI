@@ -209,7 +209,7 @@ def train(model, train_input, train_output, test_input, test_output, device, ext
         file.write(report)
     print(f'REPORT saved - {DRIVE_PATH}/report/{extract_model}/{model.model_name}.txt')
 
-    if model.model_name in ML_model:
+    if model.model_name not in ML_model:
         # Visualize model val train processing
         plt.figure()
         plt.plot(val_train_history['accuracy'], label='Valid Accuracy')
