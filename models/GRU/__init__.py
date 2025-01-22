@@ -8,7 +8,7 @@ with open('models/GRU/config.json', 'r') as file:
 phobert_config = config['phobert']
 
 class GRU(nn.Module):
-    def __init__(self, device, input_shape, emb_tech, dropout=0.1, num_classes=3):
+    def __init__(self, device, input_shape, dropout=0.1, num_classes=3):
         super(GRU, self).__init__()
         config = phobert_config
         self.model_name = 'GRU'

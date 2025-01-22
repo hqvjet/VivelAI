@@ -10,7 +10,7 @@ config = config['phobert']
 filters = [2, 3, 4]
 
 class CNN2d(nn.Module):
-    def __init__(self, device, input_shape, emb_tech, dropout=0.1, num_classes=3):
+    def __init__(self, device, input_shape, dropout=0.1, num_classes=3):
         super(CNN2d, self).__init__()
         self.model_name = 'CNN'
         self.num_filter = config['num_filter']

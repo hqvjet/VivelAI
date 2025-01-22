@@ -8,7 +8,7 @@ with open('models/BiGRU/config.json', 'r') as file:
 phobert_config = config['phobert']
 
 class BiGRU(nn.Module):
-    def __init__(self, device, input_shape, emb_tech, dropout=0.1, num_classes=3):
+    def __init__(self, device, input_shape, dropout=0.1, num_classes=3):
         super(BiGRU, self).__init__()
         config = phobert_config
         self.model_name = 'BiGRU'

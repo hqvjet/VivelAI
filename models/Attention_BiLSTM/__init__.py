@@ -9,7 +9,7 @@ with open('models/Attention_BiLSTM/config.json', 'r') as file:
 phobert_config = config['phobert']
 
 class AttentionBiLSTM(nn.Module):
-    def __init__(self, device, input_shape, emb_tech, dropout=0.1, num_classes=3):
+    def __init__(self, device, input_shape, dropout=0.1, num_classes=3):
         super(AttentionBiLSTM, self).__init__()
         config = phobert_config
         self.model_name = 'AttentionBiLSTM'
