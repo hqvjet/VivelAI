@@ -71,9 +71,9 @@ def startTraining(device, model_name, dataset, extract_model):
         train(CNN_model(device=device, input_shape=input_shape, dropout=0.1, num_classes=num_classes), train_input=train_data, train_output=train_rating, test_input=test_data, test_output=test_rating, device=device, extract_model=extract_model)
     elif model_name == ATTENTION_BILSTM:
         train(AttentionBiLSTM_model(device=device, dropout=0.1, input_shape=input_shape, num_classes=num_classes), train_input=train_data, train_output=train_rating, test_input=test_data, test_output=test_rating, device=device, extract_model=extract_model)
-    elif model_name == CNN_TRANS_ENCODER:
+    elif model_name == CNN_TRANS_ENC:
         train(CNN_Trans_Enc_model(input_shape=input_shape, dropout=0.1, num_classes=num_classes), train_input=train_data, train_output=train_rating, test_input=test_data, test_output=test_rating, device=device, extract_model=extract_model)
-    elif model_name == BI_GRU_CNN_TRANS_ENCODER:
+    elif model_name == BIGRU_CNN_TRANS_ENC:
         train(BiGRU_CNN_Trans_Enc_model(input_shape=input_shape, device=device, dropout=0.1, num_classes=num_classes), train_input=train_data, train_output=train_rating, test_input=test_data, test_output=test_rating, device=device, extract_model=extract_model)
 
 def train(model, train_input, train_output, test_input, test_output, device, extract_model):
