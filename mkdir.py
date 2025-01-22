@@ -3,50 +3,26 @@ from constant import *
 
 PRE = 'res/models'
 
-if not os.path.exists(PRE + '/' + BILSTM):
-    os.makedirs(PRE + '/' + BILSTM)
+if not os.path.exists(PRE + '/' + E2T_PHOBERT):
+    os.makedirs(PRE + '/' + E2T_PHOBERT)
+    print('mkdir ' + PRE + '/' + E2T_PHOBERT)
 else:
-    print('Folder exists: ' + PRE + '/' + BILSTM)
+    print('mkdir ' + PRE + '/' + E2T_PHOBERT + ' already exists')
 
-if not os.path.exists(PRE + '/' + XGBOOST):
-    os.makedirs(PRE + '/' + XGBOOST)
+if not os.path.exists(PRE + '/' + E2V_PHOBERT):
+    os.makedirs(PRE + '/' + E2V_PHOBERT)
+    print('mkdir ' + PRE + '/' + E2V_PHOBERT)
 else:
-    print('Folder exists: ' + PRE + '/' + XGBOOST)
+    print('mkdir ' + PRE + '/' + E2V_PHOBERT + ' already exists')
 
-if not os.path.exists(PRE + '/' + LR):
-    os.makedirs(PRE + '/' + LR)
+if not os.path.exists(PRE + '/' + PHOBERT):
+    os.makedirs(PRE + '/' + PHOBERT)
+    print('mkdir ' + PRE + '/' + PHOBERT)
 else:
-    print('Folder exists: ' + PRE + '/' + LR)
+    print('mkdir ' + PRE + '/' + PHOBERT + ' already exists')
 
-if not os.path.exists(PRE + '/' + GRU):
-    os.makedirs(PRE + '/' + GRU)
+if not os.path.exists(PRE + '/' + VISOBERT):
+    os.makedirs(PRE + '/' + VISOBERT)
+    print('mkdir ' + PRE + '/' + VISOBERT)
 else:
-    print('Folder exists: ' + PRE + '/' + GRU)
-
-if not os.path.exists(PRE + '/' + BIGRU):
-    os.makedirs(PRE + '/' + BIGRU)
-else:
-    print('Folder exists: ' + PRE + '/' + BIGRU)
-
-if not os.path.exists(PRE + '/' + CNN):
-    os.makedirs(PRE + '/' + CNN)
-else:
-    print('Folder exists: ' + PRE + '/' + CNN)
-
-if not os.path.exists(PRE + '/' + ATTENTION_BILSTM):
-    os.makedirs(PRE + '/' + ATTENTION_BILSTM)
-else:
-    print('Folder exists: ' + PRE + '/' + ATTENTION_BILSTM)
-
-if not os.path.exists(PRE + '/' + CNN_TRANS_ENC):
-    os.makedirs(PRE + '/' + CNN_TRANS_ENC)
-else:
-    print('Folder exists: ' + PRE + '/' + CNN_TRANS_ENC)
-
-if not os.path.exists(PRE + '/' + BIGRU_CNN_TRANS_ENC):
-    os.makedirs(PRE + '/' + BIGRU_CNN_TRANS_ENC)
-else:
-    print('Folder exists: ' + PRE + '/' + BIGRU_CNN_TRANS_ENC)
-
-
-
+    print('mkdir ' + PRE + '/' + VISOBERT + ' already exists')
