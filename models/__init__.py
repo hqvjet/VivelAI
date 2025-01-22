@@ -16,8 +16,8 @@ from models.LR import LR as LG_model
 from models.GRU import GRU as GRU_model
 from models.BiGRU import BiGRU as BiGRU_model
 from models.Attention_BiLSTM import AttentionBiLSTM as AttentionBiLSTM_model
-from models.CNN_Trans_Enc import CNN_Trans_Enc as CNN_Trans_Enc
-from models.BiGRU_CNN_Trans_Enc import BiGRU_CNN_Trans_Enc as BiGRU_CNN_Trans_Enc
+from models.CNN_Trans_Enc import CNN_Trans_Enc as CNN_Trans_Enc_model
+from models.BiGRU_CNN_Trans_Enc import BiGRU_CNN_Trans_Enc as BiGRU_CNN_Trans_Enc_model
 from constant import *
 
 with open('models/global_config.json', 'r') as file:
