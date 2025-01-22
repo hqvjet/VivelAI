@@ -9,15 +9,15 @@ import queue
 import pandas as pd
 from torch.utils.data import DataLoader, TensorDataset
 from sklearn.metrics import classification_report, accuracy_score
-from models.BiLSTM import BiLSTM
-from models.CNN import CNN2d
-from models.XGBoost import XGBoost
-from models.LR import LR as LogisticRegression
-from models.GRU import GRU
-from models.BiGRU import BiGRU
-from models.Attention_BiLSTM import AttentionBiLSTM
-from models.CNN_Trans_Enc import CNN_Trans_Enc
-from models.BiGRU_CNN_Trans_Enc import BiGRU_CNN_Trans_Enc
+from models.BiLSTM import BiLSTM as BiLSTM_model
+from models.CNN import CNN2d as CNN_model
+from models.XGBoost import XGBoost as XGBoost_model
+from models.LR import LR as LG_model
+from models.GRU import GRU as GRU_model
+from models.BiGRU import BiGRU as BiGRU_model
+from models.Attention_BiLSTM import AttentionBiLSTM as AttentionBiLSTM_model
+from models.CNN_Trans_Enc import CNN_Trans_Enc as CNN_Trans_Enc
+from models.BiGRU_CNN_Trans_Enc import BiGRU_CNN_Trans_Enc as BiGRU_CNN_Trans_Enc
 from constant import *
 
 with open('models/global_config.json', 'r') as file:
@@ -58,23 +58,23 @@ def startTraining(device, model_name, dataset, extract_model):
     input_shape = train_data.size()
 
     if model_name == BILSTM:
-        train(BiLSTM(device=device, dropout=0.1, input_shape=input_shape, num_classes=num_classes), train_input=train_data, train_output=train_rating, test_input=test_data, test_output=test_rating, device=device, extract_model=extract_model)      
+        train(BiLSTM_model(device=device, dropout=0.1, input_shape=input_shape, num_classes=num_classes), train_input=train_data, train_output=train_rating, test_input=test_data, test_output=test_rating, device=device, extract_model=extract_model)      
     elif model_name == XGBOOST:
-        train(XGBoost(extract_model), train_input=train_data, train_output=train_rating, test_input=test_data, test_output=test_rating, device=device, extract_model=extract_model)      
+        train(XGBoost_model(extract_model), train_input=train_data, train_output=train_rating, test_input=test_data, test_output=test_rating, device=device, extract_model=extract_model)      
     elif model_name == LR:
-        train(LogisticRegression(extract_model), train_input=train_data, train_output=train_rating, test_input=test_data, test_output=test_rating, device=device, extract_model=extract_model)
+        train(LG_model(extract_model), train_input=train_data, train_output=train_rating, test_input=test_data, test_output=test_rating, device=device, extract_model=extract_model)
     elif model_name == GRU:
-        train(GRU(device=device, input_shape=input_shape, dropout=0.1, num_classes=num_classes), train_input=train_data, train_output=train_rating, test_input=test_data, test_output=test_rating, device=device, extract_model=extract_model)
+        train(GRU_model(device=device, input_shape=input_shape, dropout=0.1, num_classes=num_classes), train_input=train_data, train_output=train_rating, test_input=test_data, test_output=test_rating, device=device, extract_model=extract_model)
     elif model_name == BiGRU:
-        train(BiGRU(device=device, input_shape=input_shape, dropout=0.1, num_classes=num_classes), train_input=train_data, train_output=train_rating, test_input=test_data, test_output=test_rating, device=device, extract_model=extract_model)
+        train(BiGRU_model(device=device, input_shape=input_shape, dropout=0.1, num_classes=num_classes), train_input=train_data, train_output=train_rating, test_input=test_data, test_output=test_rating, device=device, extract_model=extract_model)
     elif model_name == CNN:
-        train(CNN2d(device=device, input_shape=input_shape, dropout=0.1, num_classes=num_classes), train_input=train_data, train_output=train_rating, test_input=test_data, test_output=test_rating, device=device, extract_model=extract_model)
+        train(CNN_model(device=device, input_shape=input_shape, dropout=0.1, num_classes=num_classes), train_input=train_data, train_output=train_rating, test_input=test_data, test_output=test_rating, device=device, extract_model=extract_model)
     elif model_name == ATTENTION_BILSTM:
-        train(AttentionBiLSTM(device=device, dropout=0.1, input_shape=input_shape, num_classes=num_classes), train_input=train_data, train_output=train_rating, test_input=test_data, test_output=test_rating, device=device, extract_model=extract_model)
+        train(AttentionBiLSTM_model(device=device, dropout=0.1, input_shape=input_shape, num_classes=num_classes), train_input=train_data, train_output=train_rating, test_input=test_data, test_output=test_rating, device=device, extract_model=extract_model)
     elif model_name == CNN_TRANS_ENCODER:
-        train(CNN_Trans_Enc(input_shape=input_shape, dropout=0.1, num_classes=num_classes), train_input=train_data, train_output=train_rating, test_input=test_data, test_output=test_rating, device=device, extract_model=extract_model)
+        train(CNN_Trans_Enc_model(input_shape=input_shape, dropout=0.1, num_classes=num_classes), train_input=train_data, train_output=train_rating, test_input=test_data, test_output=test_rating, device=device, extract_model=extract_model)
     elif model_name == BI_GRU_CNN_TRANS_ENCODER:
-        train(BiGRU_CNN_Trans_Enc(input_shape=input_shape, device=device, dropout=0.1, num_classes=num_classes), train_input=train_data, train_output=train_rating, test_input=test_data, test_output=test_rating, device=device, extract_model=extract_model)
+        train(BiGRU_CNN_Trans_Enc_model(input_shape=input_shape, device=device, dropout=0.1, num_classes=num_classes), train_input=train_data, train_output=train_rating, test_input=test_data, test_output=test_rating, device=device, extract_model=extract_model)
 
 def train(model, train_input, train_output, test_input, test_output, device, extract_model):
     model.to(device)
