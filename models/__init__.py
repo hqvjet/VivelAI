@@ -100,7 +100,7 @@ def train(model, train_input, train_output, test_input, test_output, device, ext
         model.eval()
         pred = model(x=test_data, train=False)
 
-        report = classification_report(test_label, pred)
+        report = classification_report(test_label, pred, digits=4)
         print(report)
 
     else:
@@ -201,7 +201,7 @@ def train(model, train_input, train_output, test_input, test_output, device, ext
 
         predicted = np.array(predicted[0])
         label = np.array(label[0])
-        report = classification_report(label, predicted)
+        report = classification_report(label, predicted, digits=4)
         print(report)
 
     # Save report
