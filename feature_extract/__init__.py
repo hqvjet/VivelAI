@@ -51,7 +51,7 @@ def useFeatureExtractor(device, extract_model, dataset):
 
     e_matrix = getEmojiEmbeddingMatrix() if extract_model == E2V_PHOBERT else None
 
-    print(train_content[:10])
+    print(train_content[:100])
     
     tokenizer = getTokenizer(extract_model, e_matrix if extract_model == E2V_PHOBERT else None)
     train_content, train_content_attention = useIdentify(train_content, tokenizer)
