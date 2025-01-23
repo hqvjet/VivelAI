@@ -19,7 +19,7 @@ class BiGRU(nn.Module):
                             num_layers=self.num_layers, device=device, dropout=dropout,\
                             batch_first=True, bidirectional=True)
 
-        first_emb = 128 if emb_tech == 1 else 32
+        first_emb = 128
         self.fc1 = nn.Linear(self.hidden_size*2, num_classes)
         self.fc2 = nn.Linear(first_emb, num_classes)
         self.softmax = nn.Softmax(dim=1)
