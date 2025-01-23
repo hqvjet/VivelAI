@@ -23,8 +23,8 @@ def replace_emoji_with_unicode(text):
 
 def replace_emoji_with_text(text):
     def emoji_to_text(match):
-        emoji_char = match.group(0)
-        return emoji_dict[emoji_char]
+        if match.group(0) in emoji_dict:
+            return emoji_dict[match.group(0)]
 
     emoji_pattern = re.compile("[" + "".join(emoji.EMOJI_DATA.keys()) + "]")
 
