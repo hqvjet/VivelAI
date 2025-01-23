@@ -10,6 +10,7 @@ import torch.nn as nn
 word_embedding = tvocab.Vectors(name=f'res/emoji2vec.txt', unk_init=torch.Tensor.normal_)
 with open('res/emoji_dict.json', 'r', encoding='utf-8') as f:
     emoji_dict = json.load(f)
+emoji_dict = emoji_dict['dict']
 
 print(emoji_dict)
 
