@@ -12,8 +12,6 @@ with open('res/emoji_dict.json', 'r', encoding='utf-8') as f:
     emoji_dict = json.load(f)
 emoji_dict = emoji_dict['dict']
 
-print(emoji_dict)
-
 def replace_emoji_with_unicode(text):
     def emoji_to_unicode(match):
         emoji_char = match.group(0)
@@ -28,11 +26,9 @@ def replace_emoji_with_text(text):
     def emoji_to_text(match):
         emoji = match.group(0)
         if emoji in emoji_dict:
-            print(emoji)
             e_text = emoji_dict[emoji]
             if e_text is None:
                 return ''
-            print(e_text)
             return e_text
         else:
             return ''
