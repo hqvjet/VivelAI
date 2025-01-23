@@ -25,9 +25,11 @@ def replace_emoji_with_text(text):
     def emoji_to_text(match):
         if match.group(0) in emoji_dict:
             e_text = emoji_dict[match.group(0)]
-        if e_text is None:
+            if e_text is None:
+                return ''
+            return e_text
+        else:
             return ''
-        return e_text
 
     emoji_pattern = re.compile("[" + "".join(emoji.EMOJI_DATA.keys()) + "]")
 
