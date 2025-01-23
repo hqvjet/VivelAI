@@ -27,6 +27,7 @@ def replace_emoji_with_text(text):
             e_text = emoji_dict[match.group(0)]
             if e_text is None:
                 return ''
+            print(e_text)
             return e_text
         else:
             return ''
