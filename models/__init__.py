@@ -30,8 +30,8 @@ def startTraining(device, model_name, dataset, extract_model):
     train_content = np.load(f'res/features/{extract_model}_{dataset}_train_features.npy')
     test_content = np.load(f'res/features/{extract_model}_{dataset}_test_features.npy')
 
-    train_data = pd.read_csv(f'{DATASET_PATH}/{dataset}_train_emoji.csv')
-    test_data = pd.read_csv(f'{DATASET_PATH}/{dataset}_test_emoji.csv')
+    train_data = pd.read_csv(f'{DATASET_PATH}/{dataset}_train_emoji.csv')[:100]
+    test_data = pd.read_csv(f'{DATASET_PATH}/{dataset}_test_emoji.csv')[:100]
 
     # mapping = {'neg': 0, 'neu': 1, 'pos': 2}
 
@@ -58,25 +58,25 @@ def startTraining(device, model_name, dataset, extract_model):
     input_shape = train_data.size()
 
     if model_name == BILSTM:
-        train(BiLSTM_model(device=device, dropout=0.1, input_shape=input_shape, num_classes=num_classes), train_input=train_data, train_output=train_rating, test_input=test_data, test_output=test_rating, device=device, extract_model=extract_model)      
+        train(BiLSTM_model(device=device, dropout=0.1, input_shape=input_shape, num_classes=num_classes), train_input=train_data, train_output=train_rating, test_input=test_data, test_output=test_rating, device=device, extract_model=extract_model, dataset=dataset)      
     elif model_name == XGBOOST:
-        train(XGBoost_model(extract_model), train_input=train_data, train_output=train_rating, test_input=test_data, test_output=test_rating, device=device, extract_model=extract_model)      
+        train(XGBoost_model(extract_model, dataset), train_input=train_data, train_output=train_rating, test_input=test_data, test_output=test_rating, device=device, extract_model=extract_model, dataset=dataset)      
     elif model_name == LR:
-        train(LG_model(extract_model), train_input=train_data, train_output=train_rating, test_input=test_data, test_output=test_rating, device=device, extract_model=extract_model)
+        train(LG_model(extract_model, dataset), train_input=train_data, train_output=train_rating, test_input=test_data, test_output=test_rating, device=device, extract_model=extract_model, dataset=dataset)
     elif model_name == GRU:
-        train(GRU_model(device=device, input_shape=input_shape, dropout=0.1, num_classes=num_classes), train_input=train_data, train_output=train_rating, test_input=test_data, test_output=test_rating, device=device, extract_model=extract_model)
+        train(GRU_model(device=device, input_shape=input_shape, dropout=0.1, num_classes=num_classes), train_input=train_data, train_output=train_rating, test_input=test_data, test_output=test_rating, device=device, extract_model=extract_model, dataset=dataset)
     elif model_name == BiGRU:
-        train(BiGRU_model(device=device, input_shape=input_shape, dropout=0.1, num_classes=num_classes), train_input=train_data, train_output=train_rating, test_input=test_data, test_output=test_rating, device=device, extract_model=extract_model)
+        train(BiGRU_model(device=device, input_shape=input_shape, dropout=0.1, num_classes=num_classes), train_input=train_data, train_output=train_rating, test_input=test_data, test_output=test_rating, device=device, extract_model=extract_model, dataset=dataset)
     elif model_name == CNN:
-        train(CNN_model(device=device, input_shape=input_shape, dropout=0.1, num_classes=num_classes), train_input=train_data, train_output=train_rating, test_input=test_data, test_output=test_rating, device=device, extract_model=extract_model)
+        train(CNN_model(device=device, input_shape=input_shape, dropout=0.1, num_classes=num_classes), train_input=train_data, train_output=train_rating, test_input=test_data, test_output=test_rating, device=device, extract_model=extract_model, dataset=dataset)
     elif model_name == ATTENTION_BILSTM:
-        train(AttentionBiLSTM_model(device=device, dropout=0.1, input_shape=input_shape, num_classes=num_classes), train_input=train_data, train_output=train_rating, test_input=test_data, test_output=test_rating, device=device, extract_model=extract_model)
+        train(AttentionBiLSTM_model(device=device, dropout=0.1, input_shape=input_shape, num_classes=num_classes), train_input=train_data, train_output=train_rating, test_input=test_data, test_output=test_rating, device=device, extract_model=extract_model, dataset=dataset)
     elif model_name == CNN_TRANS_ENC:
-        train(CNN_Trans_Enc_model(input_shape=input_shape, dropout=0.1, num_classes=num_classes), train_input=train_data, train_output=train_rating, test_input=test_data, test_output=test_rating, device=device, extract_model=extract_model)
+        train(CNN_Trans_Enc_model(input_shape=input_shape, dropout=0.1, num_classes=num_classes), train_input=train_data, train_output=train_rating, test_input=test_data, test_output=test_rating, device=device, extract_model=extract_model, dataset=dataset)
     elif model_name == BIGRU_CNN_TRANS_ENC:
-        train(BiGRU_CNN_Trans_Enc_model(input_shape=input_shape, device=device, dropout=0.1, num_classes=num_classes), train_input=train_data, train_output=train_rating, test_input=test_data, test_output=test_rating, device=device, extract_model=extract_model)
+        train(BiGRU_CNN_Trans_Enc_model(input_shape=input_shape, device=device, dropout=0.1, num_classes=num_classes), train_input=train_data, train_output=train_rating, test_input=test_data, test_output=test_rating, device=device, extract_model=extract_model, dataset=dataset)
 
-def train(model, train_input, train_output, test_input, test_output, device, extract_model):
+def train(model, train_input, train_output, test_input, test_output, device, extract_model, dataset):
     model.to(device)
     ML_model = ['XGBoost', 'Logistic_Regression', 'SVM']
 
@@ -166,7 +166,7 @@ def train(model, train_input, train_output, test_input, test_output, device, ext
 
             # Compare current model with previous model
             if best_acc < accuracy or (best_acc == accuracy and best_loss > avg_val_loss):
-                torch.save(model.state_dict(), f'res/models/{extract_model}/{model.model_name}.pth')
+                torch.save(model.state_dict(), f'res/models/{extract_model}/{dataset}/{model.model_name}.pth')
                 best_acc = accuracy
                 best_loss = avg_val_loss
                 print('Model saved, current accuracy:', best_acc)
@@ -176,8 +176,8 @@ def train(model, train_input, train_output, test_input, test_output, device, ext
 
         # Test model performance
         test_bar = tqdm(test_data, desc=f"Epoch {epoch + 1}/{num_epoch}:")
-        model.load_state_dict(torch.load(f'res/models/{extract_model}/{model.model_name}.pth'))
-        torch.save(model.state_dict(), f'{DRIVE_PATH}/models/{extract_model}/{model.model_name}.pth')
+        model.load_state_dict(torch.load(f'res/models/{extract_model}/{dataset}/{model.model_name}.pth'))
+        torch.save(model.state_dict(), f'{DRIVE_PATH}/models/{extract_model}/{dataset}/{model.model_name}.pth')
         model.eval()
 
         predicted = []
@@ -205,9 +205,9 @@ def train(model, train_input, train_output, test_input, test_output, device, ext
         print(report)
 
     # Save report
-    with open(f'{DRIVE_PATH}/report/{extract_model}/{model.model_name}.txt', 'w') as file:
+    with open(f'{DRIVE_PATH}/report/{extract_model}/{dataset}/{model.model_name}.txt', 'w') as file:
         file.write(report)
-    print(f'REPORT saved - {DRIVE_PATH}/report/{extract_model}/{model.model_name}.txt')
+    print(f'REPORT saved - {DRIVE_PATH}/report/{extract_model}/{dataset}/{model.model_name}.txt')
 
     if model.model_name not in ML_model:
         # Visualize model val train processing
@@ -217,7 +217,7 @@ def train(model, train_input, train_output, test_input, test_output, device, ext
         plt.ylabel('Accuracy')
         plt.xlabel('Epoch')
         plt.legend()
-        plt.savefig(f'{DRIVE_PATH}/train_process/{extract_model}/{model.model_name}.png')
+        plt.savefig(f'{DRIVE_PATH}/train_process/{extract_model}/{dataset}/{model.model_name}.png')
         plt.close()
 
-        print(f'Image saved - {DRIVE_PATH}/train_process/{extract_model}/{model.model_name}.png')
+        print(f'Image saved - {DRIVE_PATH}/train_process/{extract_model}/{dataset}/{model.model_name}.png')
