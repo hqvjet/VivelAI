@@ -11,6 +11,8 @@ word_embedding = tvocab.Vectors(name=f'res/emoji2vec.txt', unk_init=torch.Tensor
 with open('res/emoji_dict.json', 'r', encoding='utf-8') as f:
     emoji_dict = json.load(f)
 
+print(emoji_dict)
+
 def replace_emoji_with_unicode(text):
     def emoji_to_unicode(match):
         emoji_char = match.group(0)
