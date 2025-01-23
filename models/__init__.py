@@ -30,8 +30,8 @@ def startTraining(device, model_name, dataset, extract_model):
     train_content = np.load(f'res/features/{extract_model}_{dataset}_train_features.npy')
     test_content = np.load(f'res/features/{extract_model}_{dataset}_test_features.npy')
 
-    train_data = pd.read_csv(f'{DATASET_PATH}/{dataset}_train_emoji.csv')[:100]
-    test_data = pd.read_csv(f'{DATASET_PATH}/{dataset}_test_emoji.csv')[:100]
+    train_data = pd.read_csv(f'{DATASET_PATH}/{dataset}_train_emoji.csv')
+    test_data = pd.read_csv(f'{DATASET_PATH}/{dataset}_test_emoji.csv')
 
     # mapping = {'neg': 0, 'neu': 1, 'pos': 2}
 

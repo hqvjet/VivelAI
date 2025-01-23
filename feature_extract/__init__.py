@@ -21,7 +21,7 @@ def getDataset(file_path):
 
 def makeData(data):
     # titles = data['title'].apply(str)
-    contents = data['comment'].apply(str)[:100]
+    contents = data['comment'].apply(str)
 
     # return titles, contents
     return contents
