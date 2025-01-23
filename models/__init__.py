@@ -65,7 +65,7 @@ def startTraining(device, model_name, dataset, extract_model):
         train(LG_model(extract_model, dataset), train_input=train_data, train_output=train_rating, test_input=test_data, test_output=test_rating, device=device, extract_model=extract_model, dataset=dataset)
     elif model_name == GRU:
         train(GRU_model(device=device, input_shape=input_shape, dropout=0.1, num_classes=num_classes), train_input=train_data, train_output=train_rating, test_input=test_data, test_output=test_rating, device=device, extract_model=extract_model, dataset=dataset)
-    elif model_name == BiGRU:
+    elif model_name == BIGRU:
         train(BiGRU_model(device=device, input_shape=input_shape, dropout=0.1, num_classes=num_classes), train_input=train_data, train_output=train_rating, test_input=test_data, test_output=test_rating, device=device, extract_model=extract_model, dataset=dataset)
     elif model_name == CNN:
         train(CNN_model(device=device, input_shape=input_shape, dropout=0.1, num_classes=num_classes), train_input=train_data, train_output=train_rating, test_input=test_data, test_output=test_rating, device=device, extract_model=extract_model, dataset=dataset)

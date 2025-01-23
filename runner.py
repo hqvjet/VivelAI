@@ -6,7 +6,8 @@ import os
 MODEL_CMD = ['1\n', '2\n', '3\n']
 DATASET_CMD = ['1\n', '2\n', '3\n']
 ACT_CMD = ['1\n', '2\n']
-TRAINING_CMD = ['1\n', '2\n', '3\n', '4\n', '5\n', '6\n', '7\n', '8\n', '9\n']
+# TRAINING_CMD = ['1\n', '2\n', '3\n', '4\n', '5\n', '6\n', '7\n', '8\n', '9\n']
+TRAINING_CMD = ['5\n']
 
 def run(command):
     process = subprocess.Popen(['python', '__init__.py'], stdin=subprocess.PIPE, text=True)
