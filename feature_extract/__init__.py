@@ -45,9 +45,9 @@ def useFeatureExtractor(device, extract_model, dataset):
     train_content = removeStopword(train_content)
     test_content = removeStopword(test_content)
 
-    if extract_model == E2V_PHOBERT:
-        train_content = emojiHandling(train_content)
-        test_content = emojiHandling(test_content)
+    if extract_model == E2V_PHOBERT or extract_model == E2T_PHOBERT:
+        train_content = emojiHandling(train_content, mode='unicode' if extract_model == E2V_PHOBERT else 'text')
+        test_content = emojiHandling(test_content, mode='unicode' if extract_model == E2V_PHOBERT else 'text')
 
     e_matrix = getEmojiEmbeddingMatrix() if extract_model == E2V_PHOBERT else None
 

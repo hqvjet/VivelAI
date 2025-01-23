@@ -1,5 +1,6 @@
 import emoji
 from constant import *
+import json
 import pandas as pd
 import re
 import torch
@@ -7,6 +8,8 @@ import torchtext.vocab as tvocab
 import torch.nn as nn
 
 word_embedding = tvocab.Vectors(name=f'res/emoji2vec.txt', unk_init=torch.Tensor.normal_)
+with open('res/emoji_dict.json', 'r', encoding='utf-8') as f:
+    emoji_dict = json.load(f)
 
 def replace_emoji_with_unicode(text):
     def emoji_to_unicode(match):
@@ -18,10 +21,27 @@ def replace_emoji_with_unicode(text):
 
     return emoji_pattern.sub(lambda m: f"{emoji_to_unicode(m)}", text)
 
-def emojiHandling(texts):
+def replace_emoji_with_text(text):
+    def emoji_to_text(match):
+        emoji_char = match.group(0)
+        return emoji_dict[emoji_char]
+
+    emoji_pattern = re.compile("[" + "".join(emoji.EMOJI_DATA.keys()) + "]")
+
+    return emoji_pattern.sub(lambda m: f"{emoji_to_text(m)}", text)
+
+def emojiHandling(texts, mode=None):
+    MODE_LIST = ['unicode', 'text']
+    if mode not in MODE_LIST:
+        raise ValueError(f"Emoji handling mode must be one of {MODE_LIST}")
+
     returned = []
-    for i in range(len(texts)):
-        returned.append(replace_emoji_with_unicode(texts[i])) 
+    if mode == MODE_LIST[0]:
+        for i in range(len(texts)):
+            returned.append(replace_emoji_with_unicode(texts[i])) 
+    elif mode == MODE_LIST[1]:
+        for i in range(len(texts)):
+            returned.append(replace_emoji_with_text(texts[i]))
 
     return returned
 
