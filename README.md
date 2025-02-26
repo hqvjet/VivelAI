@@ -9,16 +9,7 @@
 - `mv vi-vocab tools/vncorenlp/models/wordsegmenter/`
 - `mv wordsegmenter.rdr tools/vncorenlp/models/wordsegmenter/`
 ### Setup Model Folders:
-- `mkdir res/features`
-- `mkdir res/models`
-- `mkdir res/models/no_title`
-- `mkdir res/models/no_title/phobert`
-- `mkdir res/models/with_title`
-- `mkdir res/models/with_title/phobert`
-- `mkdir res/models/with_icon`
-- `mkdir res/models/with_icon/phobert`
-- `mkdir res/report/with_icon/phobert`
-- `mkdir res/train_process/with_icon/phobert`
+- Run `python3 mkdir.py` for creating the required folders
 ### Install Requirements Libs:
 - `python3 -m venv venv` for creating virtual enviroment, you can active this env by `source venv/bin/activate` - Linux or `venv/script/activate` - Window
 - `pip install -r res/requirements.py`
