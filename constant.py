@@ -6,7 +6,7 @@ MAX_LEN = 200
 EXTRACT_BATCH_SIZE = 512
 
 DRIVE_PATH = '/content/drive/My Drive/NCKH_resultsAndModels'
-DATASET_PATH = '/content/drive/My Drive/arxiv_datasets'
+DATASET_PATH = 'res'
 
 PHOBERT = 'PHOBERT'
 E2T_PHOBERT = 'E2T-PHOBERT'

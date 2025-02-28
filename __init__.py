@@ -9,25 +9,16 @@ if __name__ == '__main__':
         print('USING CPU')
         device = torch.device('cpu')
 
-    ext_model_key = input('Choose feature extraction model:\n1. E2T-PhoBERT\n2. PhoBERT\n3. VISOBERT\n4. E2V-PhoBERT\nYour Input:\n')
-    ds_key = input('Choose dataset:\n1. AIVIVN\n2. UIT-ViHSD\n3. UIT-VSFC\nYour Input:\n')
-    act_key = input('What do you want to do ?:\n1. Extract Feature\n2. Train Model\n3. Run server\nYour Input:\n')
+    ds_key = input('Choose dataset:\n1. UIT-ViHSD\n2. UIT-VSFC\nYour Input:\n')
+    act_key = input('What do you want to do ?:\n1. Extract Feature\n2. Train Model\nYour Input:\n')
 
-    if ext_model_key == '1':
-        ext_model = E2T_PHOBERT
-    elif ext_model_key == '2':
-        ext_model = PHOBERT
-    elif ext_model_key == '3':
-        ext_model = VISOBERT
-    elif ext_model_key == '4':
-        ext_model = E2V_PHOBERT
-
+    ext_model = E2T_PHOBERT
     if ds_key == '1':
-        ds = AIVIVN
-    elif ds_key == '2':
         ds = UIT_VIHSD
-    else:
+    elif ds_key == '2':
         ds = UIT_VSFC
+    else:
+        print('Dataset Key error!')
 
     if act_key == '1':
         from feature_extract import useFeatureExtractor
@@ -54,8 +45,10 @@ if __name__ == '__main__':
             model = ATTENTION_BILSTM
         elif model_key == '8':
             model = CNN_TRANS_ENC
-        else:
+        elif model_key == '9':
             model = BIGRU_CNN_TRANS_ENC
+        else:
+            print('Model Key error!')
 
         startTraining(device, model_name=model, dataset=ds, extract_model=ext_model)
 
