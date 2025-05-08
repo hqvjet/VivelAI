@@ -1,7 +1,8 @@
 from fastapi import FastAPI
 # from fastapi.middleware.cors import CORSMiddleware
 from schemas import Title_Comment, Comment
-from input_handler import handle_input_with_title, handle_input_no_title
+from input_handler import handle_input_using_E2VPhoBERT
+from constant import *
 
 app = FastAPI()
 
@@ -15,25 +16,12 @@ app = FastAPI()
 #     allow_headers=["*"],
 # )
 
-@app.post("/api/v1/predict/title")
-def read_root(req: Title_Comment):
-    res = handle_input_with_title(req)[0]
-    if res == 0:
-        res = 'Negative'
-    elif res == 1:
-        res = 'Neutral'
-    else:
-        res = 'Positive'
-
-    return {'Sentiment': res}
-
-@app.post("/api/v1/predict/notitle")
+@app.post("/api/v1/E2V-PhoBERT/predict")
 def read_root(req: Comment):
-    res = handle_input_no_title(req)[0]
+    ext_model = E2V_PHOBERT
+    res = handle_input_using_E2VPhoBERT(req, extract_model=ext_model)[0]
     if res == 0:
         res = 'Negative'
-    elif res == 1:
-        res = 'Neutral'
     else:
         res = 'Positive'
 

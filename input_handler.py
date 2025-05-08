@@ -9,9 +9,11 @@ from feature_extract.tokenize import useTokenize
 from feature_extract.remove_stopword import removeStopword
 from feature_extract.identify import useIdentify
 from feature_extract.extract_feature import extractFeature
+from feature_extract.emoji_handling import emojiHandling, getEmojiEmbeddingMatrix
+from feature_extract.get_tokenizer import getTokenizer
+from constant import *
 
-from models.LSTM import LSTM
-from models.CNN_BILSTM import CNNnBiLSTM
+from models.BiGRU import BiGRU
 
 if torch.cuda.is_available():
     print('USING GPU')
@@ -21,59 +23,28 @@ else:
     device = torch.device('cpu')
     
 title_size = torch.Size((1, 6144))
-comment_size = torch.Size((1, 3072))
+emoji_size = torch.Size((1, 3072))
 
-title_model = LSTM(device, emb_tech=1, dropout=0.3, input_shape=title_size)
-title_model = title_model.to(device)
-title_model.load_state_dict(torch.load('res/models/with_title/phobert/LSTM.pth'))
-title_model.eval()
+emoji_model = BiGRU(device=device, input_shape=emoji_size, num_classes=2)
+emoji_model = emoji_model.to(device)
+emoji_model.load_state_dict(torch.load('res/models/E2V-PHOBERT/AIVIVN/BiGRU.pth'))
+emoji_model.eval()
+e_matrix = getEmojiEmbeddingMatrix()
+tokenizer = getTokenizer(E2V_PHOBERT, e_matrix)
 
-comment_model = CNNnBiLSTM(device, input_shape=comment_size, emb_tech=1, useTitle=False)
-comment_model = comment_model.to(device)
-comment_model.load_state_dict(torch.load('res/models/no_title/phobert/Ensemble_CNN_BiLSTM.pth'))
-comment_model.eval()
-
-def handle_input_with_title(input: Title_Comment):
-    title = pd.Series([input.title])
+def handle_input_using_E2VPhoBERT(input: Comment, extract_model=None):
     comment = pd.Series([input.comment])
 
-    title = useNormalize(title)
-    comment = useNormalize(comment)
-
-    title = useLemma(title)
+    comment = useNormalize(comment, extract_model)
     comment = useLemma(comment)
-
-    title = useTokenize(title)
     comment = useTokenize(comment)
-
-    title, title_attention = useIdentify(title)
-    comment, comment_attention = useIdentify(comment)
-
-    title = extractFeature(device, title, title_attention)
-    comment = extractFeature(device, comment, comment_attention)
-
-    inp = torch.cat((title, comment), dim=-1)
-    inp = inp.to(device)
-    pred = title_model(inp)
-    _, pred = torch.max(pred.data, 1)
-
-    return pred.cpu().tolist()
-
-def handle_input_no_title(input: Comment):
-    comment = pd.Series([input.comment])
-
-    comment = useNormalize(comment)
-
-    comment = useLemma(comment)
-
-    comment = useTokenize(comment)
-
-    comment, comment_attention = useIdentify(comment)
-
-    comment = extractFeature(device, comment, comment_attention)
+    comment = removeStopword(comment)
+    comment = emojiHandling(comment, mode='unicode') 
+    comment, comment_attention = useIdentify(comment, tokenizer)
+    comment = extractFeature(device, comment, comment_attention, extract_model=extract_model, tokenizer=tokenizer, emoji_matrix=e_matrix)
 
     inp = comment.to(device)
-    pred = comment_model(inp)
+    pred = emoji_model(inp)
     _, pred = torch.max(pred.data, 1)
 
     return pred.cpu().tolist()
