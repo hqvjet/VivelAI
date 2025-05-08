@@ -7,7 +7,7 @@ export default function Navbar() {
   return (
     <header className="navbar">
       <div className="navbar__logo">
-        AI SENTIMENT ANALYSIS
+        AI SENTIMENT ANALYSIS - VKU CEREVEX
       </div>
       <nav className="navbar__links">
         <NavLink

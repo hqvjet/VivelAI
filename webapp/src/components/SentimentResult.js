@@ -15,18 +15,18 @@ export default function SentimentResult({ result, visible }) {
 
   if (!result) return null;
 
-  const { sentiment, scores } = result;
+  const { Sentiment } = result;
   const emoji =
-    sentiment === 'Positive' ? '😊' :
-    sentiment === 'Neutral'  ? '😐' : '😡';
+    Sentiment === 'Positive' ? '😊' :
+    Sentiment === 'Neutral'  ? '😐' : '😡';
 
   return (
     <div className={`result-card ${show ? 'show' : ''}`}>
       <div className="result-header">
         <span className="result-emoji">{emoji}</span>
-        <span className="result-label">{sentiment}</span>
+        <span className="result-label">{Sentiment}</span>
       </div>
-      <div className="result-bars">
+      {/*<div className="result-bars">
         {Object.entries(scores).map(([key, val]) => (
           <div className="bar-wrapper" key={key}>
             <span className="bar-label">
@@ -43,7 +43,7 @@ export default function SentimentResult({ result, visible }) {
             </span>
           </div>
         ))}
-      </div>
+      </div>*/}
     </div>
   );
 }

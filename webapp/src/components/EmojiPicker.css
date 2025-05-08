@@ -1,16 +1,56 @@
-/* src/components/EmojiPicker.css */
 .emoji-picker {
   display: flex;
+  flex-direction: column;
   gap: 1rem;
+}
+
+.emoji-category {
   margin-bottom: 1rem;
 }
+
+.category-header {
+  font-size: 1.2rem;
+  font-weight: bold;
+  color: #5d4037;
+  background: #ffe0b2;
+  padding: 0.5rem;
+  border: none;
+  width: 100%;
+  text-align: left;
+  cursor: pointer;
+  border-radius: 8px;
+  transition: background 0.3s, transform 0.3s;
+}
+
+.category-header:hover {
+  background: #fb8c00;
+  transform: scale(1.05);
+}
+
+.emoji-row {
+  display: flex;
+  gap: 0.5rem;
+  flex-wrap: wrap;
+  opacity: 0;
+  max-height: 0;
+  overflow: hidden;
+  transition: opacity 0.5s ease, max-height 0.5s ease;
+}
+
+.emoji-row.open {
+  opacity: 1;
+  max-height: 1000px; /* Giới hạn chiều cao khi mở */
+}
+
 .emoji-btn {
-  font-size: 1.5rem;
+  font-size: 1.6rem;
   background: none;
   border: none;
   cursor: pointer;
   transition: transform 0.2s;
 }
+
 .emoji-btn:hover {
   transform: scale(1.3);
 }
+

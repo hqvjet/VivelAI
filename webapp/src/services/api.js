@@ -1,14 +1,25 @@
 import axios from 'axios';
 
 // Thay URL bằng endpoint thật của bạn
-const API_BASE = 'https://your-domain.com/api';
+const API_BASE = 'http://localhost:8000/api/v1';
 
-export async function analyzeSentiment({ title, content, emoji }) {
-  const resp = await axios.post(`${API_BASE}/sentiment`, {
-    title,
-    content,
-    emoji,
-  });
-  return resp.data; 
-  // mong trả về { sentiment: 'Positive', scores: { positive:0.7, neutral:0.2, negative:0.1 } }
+export async function analyzeSentiment({title, comment, approach}) {
+    let resp = {};
+    if (approach === 'app3') {
+        resp = await axios.post(`${API_BASE}/E2V-PhoBERT/predict`, {
+            comment,
+        });
+    }
+    else if (approach === 'app2') {
+        resp = await axios.post(`${API_BASE}/VED-PhoBERT/predict`, {
+            comment,
+        });
+    }
+    // else {
+    //     resp = await axios.post(`${API_BASE}/app1/predict`, {
+    //         title,
+    //         comment
+    //     });
+    // }
+    return resp.data; 
 }
