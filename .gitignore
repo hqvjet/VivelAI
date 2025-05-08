@@ -2,7 +2,6 @@ tools
 feature_extract/__pycache__
 venv
 res/features
-__pycache__
-**/__pycache__
+__pycache__/
 .vector_cache
 res/models
