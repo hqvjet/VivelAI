@@ -1,0 +1,64 @@
+.info {
+  max-width: 1000px;
+  margin: 2rem auto;
+  padding: 0 1rem;
+}
+
+/* Title */
+.info__title {
+  font-size: 2rem;
+  color: #5d4037;
+  margin-bottom: 1rem;
+}
+
+/* Motivation */
+.info__motivation h2 {
+  font-size: 1.5rem;
+  color: #5d4037;
+  margin-bottom: 0.5rem;
+}
+.info__motivation p {
+  font-size: 1rem;
+  color: #4e342e;
+  line-height: 1.6;
+  margin-bottom: 1rem;
+}
+
+/* Publications */
+.info__papers h2 {
+  font-size: 1.5rem;
+  color: #5d4037;
+  margin: 2rem 0 1rem;
+}
+
+.paper-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+  gap: 1.5rem;
+}
+
+.paper-card {
+  background: #ffffff;
+  border-radius: 8px;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.06);
+  padding: 1rem;
+  transition: transform 0.2s;
+}
+.paper-card:hover {
+  transform: translateY(-4px);
+}
+
+.paper-card__title {
+  font-size: 1.1rem;
+  font-weight: 600;
+  color: #bf360c;
+  margin-bottom: 0.5rem;
+}
+.paper-card__authors,
+.paper-card__conf,
+.paper-card__proc,
+.paper-card__idx {
+  font-size: 0.9rem;
+  color: #4e342e;
+  margin-bottom: 0.25rem;
+}

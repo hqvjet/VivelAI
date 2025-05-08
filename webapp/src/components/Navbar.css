@@ -1,0 +1,37 @@
+.navbar {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 1rem 2rem;
+  background: #fff8e1;      /* màu nền nhẹ */
+}
+
+.navbar__logo {
+  font-family: sans-serif;
+  font-size: 1.25rem;
+  font-weight: bold;
+  color: #5d4037;            /* nâu đậm */
+  text-transform: uppercase;
+  letter-spacing: 1px;
+}
+
+.navbar__links {
+  display: flex;
+  gap: 2rem;
+}
+
+.navbar__link {
+  text-decoration: none;
+  font-size: 1rem;
+  color: #5d4037;            /* nâu đậm */
+  transition: color 0.2s;
+}
+
+.navbar__link:hover {
+  color: #8d6e63;            /* nâu nhạt khi hover */
+}
+
+.navbar__link--active {
+  color: #bf360c;            /* cam đậm cho link active */
+  font-weight: 600;
+}

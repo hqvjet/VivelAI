@@ -1,0 +1,16 @@
+/* src/components/EmojiPicker.css */
+.emoji-picker {
+  display: flex;
+  gap: 1rem;
+  margin-bottom: 1rem;
+}
+.emoji-btn {
+  font-size: 1.5rem;
+  background: none;
+  border: none;
+  cursor: pointer;
+  transition: transform 0.2s;
+}
+.emoji-btn:hover {
+  transform: scale(1.3);
+}
