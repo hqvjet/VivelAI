@@ -11,3 +11,4 @@ mv vi-vocab tools/vncorenlp/models/wordsegmenter/
 mv wordsegmenter.rdr tools/vncorenlp/models/wordsegmenter/
 
 python3 mkdir.py
+mkdir res/features

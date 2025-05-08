@@ -10,7 +10,6 @@ def extractFeature(device, ids, attentions, extract_model, tokenizer, emoji_matr
     phobert.eval()
 
     if emoji_matrix != None:
-        print('AAAAAAAAAAAAAAAAAAAAAA')
         phobert.resize_token_embeddings(len(tokenizer))
         with torch.no_grad():
             for token in emoji_matrix.keys():

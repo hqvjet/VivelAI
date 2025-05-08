@@ -177,7 +177,6 @@ def train(model, train_input, train_output, test_input, test_output, device, ext
         # Test model performance
         test_bar = tqdm(test_data, desc=f"Epoch {epoch + 1}/{num_epoch}:")
         model.load_state_dict(torch.load(f'res/models/{extract_model}/{dataset}/{model.model_name}.pth'))
-        torch.save(model.state_dict(), f'{DRIVE_PATH}/models/{extract_model}/{dataset}/{model.model_name}.pth')
         model.eval()
 
         predicted = []
@@ -205,9 +204,8 @@ def train(model, train_input, train_output, test_input, test_output, device, ext
         print(report)
 
     # Save report
-    with open(f'{DRIVE_PATH}/report/{extract_model}/{dataset}/{model.model_name}.txt', 'w') as file:
+    with open(f'{DATASET_PATH}/report/{extract_model}/{dataset}/{model.model_name}.txt', 'w') as file:
         file.write(report)
-    print(f'REPORT saved - {DRIVE_PATH}/report/{extract_model}/{dataset}/{model.model_name}.txt')
 
     if model.model_name not in ML_model:
         # Visualize model val train processing
@@ -217,7 +215,6 @@ def train(model, train_input, train_output, test_input, test_output, device, ext
         plt.ylabel('Accuracy')
         plt.xlabel('Epoch')
         plt.legend()
-        plt.savefig(f'{DRIVE_PATH}/train_process/{extract_model}/{dataset}/{model.model_name}.png')
+        plt.savefig(f'{DATASET_PATH}/train_process/{extract_model}/{dataset}/{model.model_name}.png')
         plt.close()
 
-        print(f'Image saved - {DRIVE_PATH}/train_process/{extract_model}/{dataset}/{model.model_name}.png')

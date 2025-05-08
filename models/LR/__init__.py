@@ -3,7 +3,6 @@ import torch
 import torch.nn as nn
 from tqdm import tqdm
 import joblib
-from constant import DRIVE_PATH
 
 class LR(nn.Module):
     def __init__(self, extract_model, dataset):
@@ -17,7 +16,6 @@ class LR(nn.Module):
         if train:
             self.model.fit(x, y)
             joblib.dump(self.model, (f'res/models/{self.extract_model}/{self.dataset}/{self.model_name}.pkl'))
-            joblib.dump(self.model, (f'{DRIVE_PATH}/models/{self.extract_model}/{self.dataset}/{self.model_name}.pkl'))
 
         else:
             self.model = joblib.load(f'res/models/{self.extract_model}/{self.dataset}/{self.model_name}.pkl')
