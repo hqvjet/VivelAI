@@ -10,3 +10,6 @@ scikit-learn==1.5.2
 matplotlib==3.9.3
 joblib==1.4.2
 emoji==2.14.0
+fastapi==0.115.12
+uvicorn==0.34.2
+

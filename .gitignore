@@ -5,3 +5,4 @@ res/features
 __pycache__/
 .vector_cache
 res/models
+.env
